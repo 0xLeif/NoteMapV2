@@ -9,12 +9,13 @@
 import UIKit
 
 class ViewController: UIViewController {
+	@IBOutlet weak var noteMapScrollView: NoteMapScrollView!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		//Add Note
-		let note = Note(atCenter: .init(x: 100, y: 100), withColor: .blue)
-		view.addSubview(note)
+		hideKeyboardWithBackgroundTap()
+		view.backgroundColor = .gray
 	}
+	
+	
 }
