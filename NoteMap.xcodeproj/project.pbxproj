@@ -68,6 +68,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		928B79301EFF4ED9001E9269 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				92906FC41EFE146000B31025 /* ViewController+NM.swift */,
+				92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		928B79311EFF4EE8001E9269 /* NM */ = {
+			isa = PBXGroup;
+			children = (
+				92BD400B1EFE1B120054DBD7 /* Cluster.swift */,
+				92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */,
+				92906FC21EFE0CF700B31025 /* NoteMap.swift */,
+				929129E21EFDC61700F76383 /* Note.swift */,
+			);
+			path = NM;
+			sourceTree = "<group>";
+		};
 		929129B61EFDC5F400F76383 = {
 			isa = PBXGroup;
 			children = (
@@ -91,16 +111,12 @@
 			children = (
 				929129C21EFDC5F400F76383 /* AppDelegate.swift */,
 				929129C41EFDC5F400F76383 /* ViewController.swift */,
-				92906FC41EFE146000B31025 /* ViewController+NM.swift */,
-				92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */,
-				92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */,
-				92906FC21EFE0CF700B31025 /* NoteMap.swift */,
+				928B79301EFF4ED9001E9269 /* Extensions */,
+				928B79311EFF4EE8001E9269 /* NM */,
 				929129C61EFDC5F400F76383 /* Main.storyboard */,
 				929129C91EFDC5F400F76383 /* Assets.xcassets */,
 				929129CB1EFDC5F400F76383 /* LaunchScreen.storyboard */,
 				929129CE1EFDC5F400F76383 /* Info.plist */,
-				929129E21EFDC61700F76383 /* Note.swift */,
-				92BD400B1EFE1B120054DBD7 /* Cluster.swift */,
 			);
 			path = NoteMap;
 			sourceTree = "<group>";
