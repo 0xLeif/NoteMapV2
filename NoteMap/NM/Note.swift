@@ -31,7 +31,7 @@ class Note: UITextView {
 		backgroundColor = color
 		layer.borderColor = UIColor.white.cgColor
 		layer.cornerRadius = 15
-		
+		layer.zPosition = 10
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
 		
