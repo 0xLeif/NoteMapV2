@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A4815FB1FA939BF004BBC4F /* CGPoint+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4815FA1FA939BF004BBC4F /* CGPoint+NM.swift */; };
 		92906FBF1EFE0AC200B31025 /* NoteMapScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */; };
 		92906FC11EFE0B3200B31025 /* UIScreen+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */; };
 		92906FC31EFE0CF700B31025 /* NoteMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FC21EFE0CF700B31025 /* NoteMap.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7A4815FA1FA939BF004BBC4F /* CGPoint+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+NM.swift"; sourceTree = "<group>"; };
 		92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteMapScrollView.swift; sourceTree = "<group>"; };
 		92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+NM.swift"; sourceTree = "<group>"; };
 		92906FC21EFE0CF700B31025 /* NoteMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteMap.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 		928B79301EFF4ED9001E9269 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				7A4815FA1FA939BF004BBC4F /* CGPoint+NM.swift */,
 				92906FC41EFE146000B31025 /* ViewController+NM.swift */,
 				92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */,
 			);
@@ -231,6 +234,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A4815FB1FA939BF004BBC4F /* CGPoint+NM.swift in Sources */,
 				92906FBF1EFE0AC200B31025 /* NoteMapScrollView.swift in Sources */,
 				929129C51EFDC5F400F76383 /* ViewController.swift in Sources */,
 				92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */,
