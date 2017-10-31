@@ -13,9 +13,9 @@ class NoteMap: UIView {
 		let multiplier: CGFloat = 10
 		return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
 	}
-	fileprivate var notes: [(UIView, Note)] = []
+    fileprivate var clusters: [Cluster] = []
+    fileprivate var notes: [Note] = []
 	var selectedColor: UIColor = .cyan
-	var cluster: Cluster = Cluster()
 	
 	init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
@@ -36,16 +36,28 @@ class NoteMap: UIView {
 	}
 	
 	private func addNote(atCenter point: CGPoint) {
-		let note = Note(atCenter: point, withColor: selectedColor)
-		let length = sqrt(pow(note.bounds.width / 2, 2) + pow(note.bounds.height / 2, 2)) * 2
-		let clusterView = Cluster()
-		clusterView.backgroundColor = .black
-		clusterView.layer.cornerRadius = length / 2
-		notes.append((clusterView, note))
-		cluster.notes.append(note)
-		
-        addSubview(clusterView)
-		addSubview(note)
+		var note = Note(atCenter: point, withColor: selectedColor)
+       
+        let noClusterInRange = clusters.map{ $0.check(note: note) }.filter{ $0 }.isEmpty
+        
+        if noClusterInRange { 
+            let cluster = Cluster(note: note)
+            clusters.append(cluster)
+            addSubview(cluster)
+        } else {
+            let collidedClusters = clusters.filter{ $0.check(note: note) }
+            var distFromNote: [CGFloat: Cluster] = [:]
+            collidedClusters.forEach{ distFromNote[$0.centerPoint.distanceFrom(point: note.center)] = $0 }
+            let min = collidedClusters.map{ $0.centerPoint.distanceFrom(point: note.center) }.sorted(by: <).first!
+            let cluster = distFromNote[min]
+            cluster?.add(note: note)
+        }
+        notes.append(note)
+        addSubview(note)
 	}
+    
+    private func checkForClusterCollision() -> Bool {
+        return true
+    }
 	
 }
