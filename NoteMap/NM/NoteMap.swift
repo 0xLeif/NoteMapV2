@@ -38,21 +38,13 @@ class NoteMap: UIView {
 	private func addNote(atCenter point: CGPoint) {
 		let note = Note(atCenter: point, withColor: selectedColor)
 		let length = sqrt(pow(note.bounds.width / 2, 2) + pow(note.bounds.height / 2, 2)) * 2
-		let clusterView = Cluster(frame: CGRect(origin: CGPoint(x: point.x - length / 2, y: point.y - length / 2 ), size: CGSize(width: length, height: length)))
+		let clusterView = Cluster()
 		clusterView.backgroundColor = .black
 		clusterView.layer.cornerRadius = length / 2
-		
 		notes.append((clusterView, note))
 		cluster.notes.append(note)
 		
-		// TODO: Find size
-		
-		
-		let v = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 5))
-		v.backgroundColor = .purple
-		v.center = cluster.findCenterPointForNotes()
-		addSubview(v)
-		addSubview(clusterView)
+        addSubview(clusterView)
 		addSubview(note)
 	}
 	
