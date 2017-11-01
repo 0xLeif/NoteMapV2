@@ -1,5 +1,7 @@
 NoteMap V2
 
+V2 is meant to get the most basic functionality perfected, so that V3 can be developed quickly.
+
 NoteMap is built to be simple and intuitive. There are 2 main components of a Note Map: notes, and clusters
 
 The NoteMap itself is a large sized UIScrollView with a grey background.
