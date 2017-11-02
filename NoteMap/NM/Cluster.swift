@@ -28,19 +28,8 @@ class Cluster: UIView {
     }
     
     var sizeForNotes: CGFloat {
-        return max(currentWidth, currentHeight)
-    }
-    
-    var currentWidth: CGFloat {
         let currentCenter = centerPoint
-        let maxNoteDistance = notes.map{ abs($0.center.x - currentCenter.x) }.sorted(by: >).first ?? 0
-        return maxNoteDistance * 2
-    }
-    
-    var currentHeight: CGFloat {
-        let currentCenter = centerPoint
-        let maxNoteDistance = notes.map{ abs($0.center.y - currentCenter.y) }.sorted(by: >).first ?? 0
-        return maxNoteDistance * 2
+        return (notes.map{ ($0.center.distanceFrom(point: currentCenter)) + 100}.sorted(by: >).first ?? 0) * 2
     }
     
     init(note: Note) {
