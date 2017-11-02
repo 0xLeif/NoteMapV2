@@ -52,12 +52,23 @@ class NoteMap: UIView {
             let cluster = distFromNote[min]
             cluster?.add(note: note)
         }
+		
+		
+		for cluster in clusters {
+			let collidingClusters = clusters.filter{ check(lhs: cluster, rhs: $0) }
+			if !collidingClusters.isEmpty {
+				let clusterToConsume = collidingClusters.first!
+				let clusterIndex = clusters.index(of: clusterToConsume)!
+				cluster.consume(cluster: clusterToConsume)
+				clusters.remove(at: clusterIndex).removeFromSuperview()
+			}
+		}
+		
         notes.append(note)
         addSubview(note)
 	}
-    
-    private func checkForClusterCollision() -> Bool {
-        return true
-    }
 	
+	private func check(lhs: Cluster, rhs: Cluster) -> Bool {
+		return lhs.canConsume(cluster: rhs) && lhs !== rhs
+    }
 }

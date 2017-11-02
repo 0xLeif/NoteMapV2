@@ -60,7 +60,6 @@ class Cluster: UIView {
     
     func add(note: Note) {
         notes.append(note)
-        //addSubview(note)
     }
     
     func updateView() {
@@ -78,4 +77,14 @@ class Cluster: UIView {
     func check(note: Note) -> Bool{
         return note.center.distanceFrom(point: centerPoint) <= (sizeForNotes / 2) + checkingPadding
     }
+	
+	func canConsume(cluster: Cluster) -> Bool {
+		return frame.intersection(cluster.frame).size != .zero
+	}
+	
+	func consume(cluster: Cluster) {
+		let clustersNotes = cluster.notes
+		cluster.notes = []
+		notes.append(contentsOf: clustersNotes)
+	}
 }
