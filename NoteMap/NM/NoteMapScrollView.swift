@@ -17,7 +17,7 @@ class NoteMapScrollView: UIScrollView {
 		addSubview(noteMap)
 		contentSize = noteMap.bounds.size
 		delegate = self
-		minimumZoomScale = 0.1
+		minimumZoomScale = 0.01
 		maximumZoomScale = 4
 	}
 }

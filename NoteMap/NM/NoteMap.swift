@@ -10,7 +10,7 @@ import UIKit
 
 class NoteMap: UIView {
 	fileprivate var noteMapSize: CGSize {
-		let multiplier: CGFloat = 10
+		let multiplier: CGFloat = 100
 		return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
 	}
     fileprivate var clusters: [Cluster] = []
@@ -57,10 +57,11 @@ class NoteMap: UIView {
 		for cluster in clusters {
 			let collidingClusters = clusters.filter{ check(lhs: cluster, rhs: $0) }
 			if !collidingClusters.isEmpty {
-				let clusterToConsume = collidingClusters.first!
-				let clusterIndex = clusters.index(of: clusterToConsume)!
-				cluster.consume(cluster: clusterToConsume)
-				clusters.remove(at: clusterIndex).removeFromSuperview()
+				for c in collidingClusters {
+					let clusterIndex = clusters.index(of: c)!
+					cluster.consume(cluster: c)
+					clusters.remove(at: clusterIndex).removeFromSuperview()
+				}
 			}
 		}
 		
