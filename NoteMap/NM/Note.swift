@@ -17,6 +17,7 @@ enum NoteImportance: CGFloat {
 
 class Note: UITextView {
 	fileprivate let noteSize = CGSize(width: 100, height: 100)
+	var parentCluster: Cluster?
 	var importance: NoteImportance = .none {
 		didSet {
 			layer.borderWidth = importance.rawValue
@@ -41,9 +42,22 @@ class Note: UITextView {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	func setNew(parent: Cluster?) {
+		parentCluster = parent
+	}
+	
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
+		guard let parent = parentCluster else {
+			return
+		}
+		parent.updateView()
+		if !parent.check(note: self) {
+			parent.remove(note: self)
+		} else {
+			parent.noteDidPan()
+		}
 	}
 }

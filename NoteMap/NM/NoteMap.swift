@@ -35,38 +35,53 @@ class NoteMap: UIView {
 		addNote(atCenter: sender.location(in: self))
 	}
 	
+	func addCluster(forNote note: Note) {
+		if let parent = note.parentCluster {
+			print("WARNING: Note already has a parent!")
+		}
+		
+		let noClusterInRange = clusters.map{ $0.check(note: note) }.filter{ $0 }.isEmpty
+		
+		if noClusterInRange {
+			let cluster = Cluster(note: note)
+			cluster.notemap = self
+			clusters.append(cluster)
+			addSubview(cluster)
+			sendSubview(toBack: cluster)
+		} else {
+			let collidedClusters = clusters.filter{ $0.check(note: note) }
+			var distFromNote: [CGFloat: Cluster] = [:]
+			collidedClusters.forEach{ distFromNote[$0.centerPoint.distanceFrom(point: note.center)] = $0 }
+			let min = collidedClusters.map{ $0.centerPoint.distanceFrom(point: note.center) }.sorted(by: <).first!
+			let cluster = distFromNote[min]
+			cluster?.add(note: note)
+		}
+	}
+	
 	private func addNote(atCenter point: CGPoint) {
 		var note = Note(atCenter: point, withColor: selectedColor)
-       
-        let noClusterInRange = clusters.map{ $0.check(note: note) }.filter{ $0 }.isEmpty
-        
-        if noClusterInRange { 
-            let cluster = Cluster(note: note)
-            clusters.append(cluster)
-            addSubview(cluster)
-        } else {
-            let collidedClusters = clusters.filter{ $0.check(note: note) }
-            var distFromNote: [CGFloat: Cluster] = [:]
-            collidedClusters.forEach{ distFromNote[$0.centerPoint.distanceFrom(point: note.center)] = $0 }
-            let min = collidedClusters.map{ $0.centerPoint.distanceFrom(point: note.center) }.sorted(by: <).first!
-            let cluster = distFromNote[min]
-            cluster?.add(note: note)
-        }
 		
+		addCluster(forNote: note)
 		
+		checkConsume()
+		
+        notes.append(note)
+        addSubview(note)
+	}
+	
+	func checkConsume() {
 		for cluster in clusters {
 			let collidingClusters = clusters.filter{ check(lhs: cluster, rhs: $0) }
 			if !collidingClusters.isEmpty {
 				for c in collidingClusters {
-					let clusterIndex = clusters.index(of: c)!
+					guard let clusterIndex = clusters.index(of: c) else {
+						return
+					}
 					cluster.consume(cluster: c)
 					clusters.remove(at: clusterIndex).removeFromSuperview()
 				}
 			}
 		}
-		
-        notes.append(note)
-        addSubview(note)
 	}
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {

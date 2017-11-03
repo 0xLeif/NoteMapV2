@@ -9,6 +9,8 @@
 import UIKit
 
 class Cluster: UIView {
+	var notemap: NoteMap?
+	///////////////////
     private var checkingCircle: UIView = UIView()
     private let checkingPadding: CGFloat = 250
     var notes: [Note] = [] {
@@ -16,6 +18,10 @@ class Cluster: UIView {
             updateView()
         }
     }
+	var maxRadius: CGFloat {
+		return CGFloat(notes.count * 150)
+	}
+	
 	
     var centerPoint: CGPoint {
         let centerPoints = notes.map{ $0.center }
@@ -49,13 +55,23 @@ class Cluster: UIView {
     
     func add(note: Note) {
         notes.append(note)
+		note.setNew(parent: self)
     }
+	
+	func remove(note: Note) {
+		guard let index = notes.index(of: note) else {
+			return
+		}
+		notes.remove(at: index)
+		note.setNew(parent: nil)
+		notemap?.addCluster(forNote: note)
+	}
     
     func updateView() {
         frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
         center = centerPoint
         layer.cornerRadius = sizeForNotes / 2
-        
+		
         let checkSize = sizeForNotes + checkingPadding
         checkingCircle.frame = CGRect(origin: .zero, size: CGSize(width: checkSize, height: checkSize))
         checkingCircle.center = CGPoint(x: sizeForNotes/2, y: sizeForNotes/2)
@@ -64,15 +80,21 @@ class Cluster: UIView {
     }
     
     func check(note: Note) -> Bool{
-        return note.center.distanceFrom(point: centerPoint) <= (sizeForNotes / 2) + checkingPadding
+		let checkingDistance = (sizeForNotes / 2) + checkingPadding
+        return note.center.distanceFrom(point: centerPoint) <= min(checkingDistance, maxRadius)
     }
 	
 	func canConsume(cluster: Cluster) -> Bool {
 		return frame.intersection(cluster.frame).size != .zero
 	}
 	
+	func noteDidPan() {
+		notemap?.checkConsume()
+	}
+	
 	func consume(cluster: Cluster) {
 		let clustersNotes = cluster.notes
+		clustersNotes.forEach{ $0.setNew(parent: self) }
 		cluster.notes = []
 		notes.append(contentsOf: clustersNotes)
 	}
