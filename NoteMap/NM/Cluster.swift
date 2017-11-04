@@ -40,7 +40,7 @@ class Cluster: UIView {
     
     init(note: Note) {
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
-        backgroundColor = .black
+        backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
         center = note.center
         layer.zPosition = 5
         checkingCircle.layer.zPosition = 2
@@ -76,7 +76,7 @@ class Cluster: UIView {
         checkingCircle.frame = CGRect(origin: .zero, size: CGSize(width: checkSize, height: checkSize))
         checkingCircle.center = CGPoint(x: sizeForNotes/2, y: sizeForNotes/2)
         checkingCircle.layer.cornerRadius = checkSize / 2
-        checkingCircle.backgroundColor = UIColor(red: 0, green: 0, blue: 1, alpha: 0.3)
+        checkingCircle.backgroundColor = backgroundColor?.withAlphaComponent(0.1)
     }
     
     func check(note: Note) -> Bool{

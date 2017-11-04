@@ -15,18 +15,17 @@ class NoteMap: UIView {
 	}
     fileprivate var clusters: [Cluster] = []
     fileprivate var notes: [Note] = []
-	var selectedColor: UIColor = .cyan
-	
+    var selectedColor: UIColor?
+    
 	init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
-		backgroundColor = .lightGray
+		backgroundColor = .black
 		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		
-		
 		addGestureRecognizer(doubleTapGestureRecognizer)
+        
 	}
-	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -59,7 +58,11 @@ class NoteMap: UIView {
 	}
 	
 	private func addNote(atCenter point: CGPoint) {
-		var note = Note(atCenter: point, withColor: selectedColor)
+        guard let color = selectedColor else {
+            print("invalid color")
+            return
+        }
+		let note = Note(atCenter: point, withColor: color)
 		
 		addCluster(forNote: note)
 		

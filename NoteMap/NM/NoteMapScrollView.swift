@@ -20,6 +20,11 @@ class NoteMapScrollView: UIScrollView {
 		minimumZoomScale = 0.01
 		maximumZoomScale = 4
 	}
+    
+    func handleNewGlobalColor(color: UIColor?){
+        noteMap.selectedColor = color
+        
+    }
 }
 
 extension NoteMapScrollView: UIScrollViewDelegate {
