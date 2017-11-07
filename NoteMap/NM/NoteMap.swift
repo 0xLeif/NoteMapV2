@@ -19,7 +19,7 @@ class NoteMap: UIView {
     
 	init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
-		backgroundColor = .black
+		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
 		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		
@@ -88,6 +88,6 @@ class NoteMap: UIView {
 	}
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {
-		return lhs.canConsume(cluster: rhs) && lhs !== rhs
+		return lhs.canConsume(cluster: rhs) && lhs !== rhs && lhs.backgroundColor == rhs.backgroundColor
     }
 }

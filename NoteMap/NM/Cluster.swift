@@ -11,15 +11,15 @@ import UIKit
 class Cluster: UIView {
 	var notemap: NoteMap?
 	///////////////////
-    private var checkingCircle: UIView = UIView()
-    private let checkingPadding: CGFloat = 250
+    private let checkingPadding: CGFloat = 600
     var notes: [Note] = [] {
         didSet {
+			isHidden = notes.count == 1
             updateView()
         }
     }
 	var maxRadius: CGFloat {
-		return CGFloat(notes.count * 150)
+		return CGFloat(notes.count) * checkingPadding
 	}
 	
 	
@@ -35,7 +35,7 @@ class Cluster: UIView {
     
     var sizeForNotes: CGFloat {
         let currentCenter = centerPoint
-        return (notes.map{ ($0.center.distanceFrom(point: currentCenter)) + 100}.sorted(by: >).first ?? 0) * 2
+        return (notes.map{ ($0.center.distanceFrom(point: currentCenter)) + 500}.sorted(by: >).first ?? 0) * 2
     }
     
     init(note: Note) {
@@ -43,8 +43,6 @@ class Cluster: UIView {
         backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
         center = note.center
         layer.zPosition = 5
-        checkingCircle.layer.zPosition = 2
-        addSubview(checkingCircle)
         layer.masksToBounds = false
         add(note: note)
     }
@@ -71,17 +69,11 @@ class Cluster: UIView {
         frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
         center = centerPoint
         layer.cornerRadius = sizeForNotes / 2
-		
-        let checkSize = sizeForNotes + checkingPadding
-        checkingCircle.frame = CGRect(origin: .zero, size: CGSize(width: checkSize, height: checkSize))
-        checkingCircle.center = CGPoint(x: sizeForNotes/2, y: sizeForNotes/2)
-        checkingCircle.layer.cornerRadius = checkSize / 2
-        checkingCircle.backgroundColor = backgroundColor?.withAlphaComponent(0.1)
     }
     
     func check(note: Note) -> Bool{
 		let checkingDistance = (sizeForNotes / 2) + checkingPadding
-        return note.center.distanceFrom(point: centerPoint) <= min(checkingDistance, maxRadius)
+        return note.center.distanceFrom(point: centerPoint) <= min(checkingDistance, maxRadius) && note.backgroundColor == notes.first?.backgroundColor
     }
 	
 	func canConsume(cluster: Cluster) -> Bool {
