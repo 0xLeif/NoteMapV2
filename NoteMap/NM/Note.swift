@@ -16,7 +16,7 @@ enum NoteImportance: CGFloat {
 }
 
 class Note: UITextView {
-	fileprivate let noteSize = CGSize(width: 100, height: 100)
+	fileprivate let noteSize = CGSize(width: 500, height: 500)
 	var parentCluster: Cluster?
 	var importance: NoteImportance = .none {
 		didSet {
@@ -33,9 +33,10 @@ class Note: UITextView {
 		layer.borderColor = UIColor.white.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
+		isScrollEnabled = false
+		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
-		
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
