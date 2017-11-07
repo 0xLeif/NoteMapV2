@@ -20,31 +20,30 @@ class ViewController: UIViewController {
 	@IBOutlet weak var noteMapScrollView: NoteMapScrollView!
     
     let colorPickView = UIPickerView()
-    let colorData = [UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.blue, UIColor.purple]
+    let colorData = [UIColor.rgba(231, 76, 60,1.0), UIColor.rgba(230, 126, 34,1.0), UIColor.rgba(241, 196, 15,1.0), UIColor.rgba(46, 204, 113,1.0), UIColor.rgba(52, 152, 219,1.0), UIColor.rgba(142, 68, 173,1.0)]
     var colorBottomField : UITextField = UITextField()
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		hideKeyboardWithBackgroundTap()
-		view.backgroundColor = .gray
-        
-        
+		view.backgroundColor = UIColor.rgba(127, 140, 141,1.0)
+		
         load()
-        
+		noteMapScrollView.scrollToCenter()
 	}
     
     func load(){
         createColorButton()
         //TODO: createSettingScrollView()
     }
-    
+	
     func createColorButton(){
         //creating textfields with a pickerview
-        colorPickView.backgroundColor = .lightGray
         colorPickView.delegate = self
         colorPickView.dataSource = self
         colorPickView.frame = CGRect(x: 100, y: 100, width: 25, height: 300)
-        
+		colorPickView.backgroundColor = .black
+		
         colorBottomField = UITextField()
         colorBottomField.center = CGPoint(x: UIScreen.width-96, y: UIScreen.height-96)
         colorBottomField.frame.size = CGSize(width: 192, height: 192)

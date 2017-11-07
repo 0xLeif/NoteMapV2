@@ -10,6 +10,9 @@ import UIKit
 
 class NoteMapScrollView: UIScrollView {
 	fileprivate var noteMap: NoteMap
+	var centerViewPoint: CGPoint {
+		return contentOffset
+	}
 	
 	required init?(coder aDecoder: NSCoder) {
 		noteMap = NoteMap()
@@ -25,6 +28,14 @@ class NoteMapScrollView: UIScrollView {
         noteMap.selectedColor = color
         
     }
+	
+	func scrollTo(point: CGPoint) {
+		setContentOffset(point, animated: true)
+	}
+	
+	func scrollToCenter() {
+		scrollTo(point: noteMap.center)
+	}
 }
 
 extension NoteMapScrollView: UIScrollViewDelegate {
