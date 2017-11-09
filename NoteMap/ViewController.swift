@@ -26,7 +26,7 @@ class ViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		hideKeyboardWithBackgroundTap()
-		view.backgroundColor = UIColor.rgba(127, 140, 141,1.0)
+		view.backgroundColor = .white
 		
         load()
 		noteMapScrollView.scrollToCenter()
