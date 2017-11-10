@@ -23,7 +23,7 @@ class Cluster: UIView {
 	}
 	var sizeForNotes: CGFloat {
 		let currentCenter = centerPoint
-		return (notes.map{ ($0.center.distanceFrom(point: currentCenter)) + 500}.sorted(by: >).first ?? 0) * 2
+		return (notes.map{ ($0.center.distanceFrom(point: currentCenter)) + checkingPadding}.sorted(by: >).first ?? 0) * 2
 	}
 	
 	

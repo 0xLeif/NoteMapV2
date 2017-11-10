@@ -35,7 +35,7 @@ class NoteMap: UIView {
 	}
 	
 	func addCluster(forNote note: Note) {
-		if let parent = note.parentCluster {
+		if note.parentCluster != nil {
 			print("WARNING: Note already has a parent!")
 		}
 		
