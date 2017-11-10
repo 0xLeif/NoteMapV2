@@ -15,18 +15,17 @@ class NoteMap: UIView {
 	}
     fileprivate var clusters: [Cluster] = []
     fileprivate var notes: [Note] = []
-	var selectedColor: UIColor = .cyan
-	
+    var selectedColor: UIColor?
+    
 	init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
-		backgroundColor = .lightGray
+		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
 		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		
-		
 		addGestureRecognizer(doubleTapGestureRecognizer)
+        
 	}
-	
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -36,7 +35,7 @@ class NoteMap: UIView {
 	}
 	
 	func addCluster(forNote note: Note) {
-		if let parent = note.parentCluster {
+		if note.parentCluster != nil {
 			print("WARNING: Note already has a parent!")
 		}
 		
@@ -59,7 +58,11 @@ class NoteMap: UIView {
 	}
 	
 	private func addNote(atCenter point: CGPoint) {
-		var note = Note(atCenter: point, withColor: selectedColor)
+        guard let color = selectedColor else {
+            print("invalid color")
+            return
+        }
+		let note = Note(atCenter: point, withColor: color)
 		
 		addCluster(forNote: note)
 		
@@ -85,6 +88,6 @@ class NoteMap: UIView {
 	}
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {
-		return lhs.canConsume(cluster: rhs) && lhs !== rhs
+		return lhs.canConsume(cluster: rhs) && lhs !== rhs && lhs.backgroundColor == rhs.backgroundColor
     }
 }
