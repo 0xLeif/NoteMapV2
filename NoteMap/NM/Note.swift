@@ -29,11 +29,13 @@ class Note: UITextView {
 		adjustsFontForContentSizeCategory = true
 		font = UIFont.systemFont(ofSize: 16)
 		center = point
+        delegate = self
 		backgroundColor = color
 		layer.borderColor = UIColor.white.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
+        
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
@@ -60,5 +62,34 @@ class Note: UITextView {
 		} else {
 			parent.noteDidPan()
 		}
-	}
+    }
+}
+
+extension Note: UITextViewDelegate {
+    //max characters: 384
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        textAlignment = NSTextAlignment.center
+        
+        let textViewSize = textView.frame.size
+        let fixedWidth = textViewSize.width-100
+        let expectSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(1000)))
+        
+        var expectFont = textView.font
+        if (expectSize.height > textViewSize.height) {
+            while (textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(500))).height > textViewSize.height && (textView.font!.pointSize > CGFloat(24))) {
+                print("sizeFIT-: \(textView.sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height ) textHeight: \(textViewSize.height) ")
+                expectFont = textView.font!.withSize(textView.font!.pointSize - 1)
+                textView.font = expectFont
+            }
+        }
+        else {
+            while (textView.sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height < textViewSize.height && (textView.font!.pointSize < CGFloat(100))) {
+                print("sizeFit+: \(textView.sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height ) textViewSize.height \(textViewSize.height)")
+                expectFont = textView.font;
+                textView.font = textView.font!.withSize(textView.font!.pointSize + 1)
+            }
+            textView.font = expectFont
+        }
+        return true;
+    }
 }
