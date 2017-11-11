@@ -24,6 +24,7 @@ class Note: UITextView {
 
 	var parentCluster: Cluster?
     var disposeBag = DisposeBag()
+    var centerVariable = PublishSubject<CGPoint?>()
 
     var importance: NoteImportance = .none {
 		didSet {
@@ -41,6 +42,8 @@ class Note: UITextView {
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
+
+
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
@@ -53,7 +56,10 @@ class Note: UITextView {
 	func setNew(parent: Cluster?) {
 		parentCluster = parent
         if (parentCluster != nil) {
-            self.rx.observe(CGPoint.self, "center").bind(to: parentCluster!.noteCenter).disposed(by: disposeBag)
+            self.rx.observe(CGPoint.self, "center").bind(to: centerVariable).disposed(by: disposeBag)
+            parentCluster!.noteObservable = centerVariable.asObservable().map{ note in
+                return self
+            }
         }
 	}
 
@@ -64,11 +70,11 @@ class Note: UITextView {
 		guard let parent = parentCluster else {
 			return
 		}
-		parent.updateView()
-		if !parent.check(note: self) {
+		//parent.updateView()
+		/*if !parent.check(note: self) {
 			parent.remove(note: self)
 		} else {
 			parent.noteDidPan()
-		}
+		}*/
 	}
 }

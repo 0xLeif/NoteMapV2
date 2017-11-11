@@ -14,6 +14,7 @@ class Cluster: UIView {
 
     var notemap: NoteMap?
     var noteCenter = PublishSubject<CGPoint?>()
+    var noteObservable: Observable<Note>!
 
     private let checkingPadding: CGFloat = 500
 
@@ -50,9 +51,28 @@ class Cluster: UIView {
         layer.masksToBounds = false
         add(note: note)
 
-        noteCenter.asObservable().subscribe(onNext: { center in
-            print("in center NoteModel : \(center!)")
+        noteObservable.subscribe(onNext: { [weak self] currentNote in
+            self!.updateView()
+
+            if !self!.check(note:  currentNote) {
+                self!.remove(note: currentNote)
+            } else {
+                self!.noteDidPan()
+            }
         })
+  /*      noteObservable = noteCenter.asObservable().map{ center in
+            return
+        }
+*/
+/*        noteCenter.asObservable().subscribe(onNext: { center in
+            self.updateView()
+
+            if !self.check(note: center as! Note) {
+                self.remove(note: center as! Note)
+            } else {
+                self.noteDidPan()
+            }
+        })*/
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
