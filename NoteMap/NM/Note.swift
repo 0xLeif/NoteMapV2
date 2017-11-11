@@ -23,9 +23,6 @@ class Note: UITextView {
 			layer.borderWidth = importance.rawValue
 		}
 	}
-    var colorPickerView: UIView = UIView()
-    
-    
 	
 	init(atCenter point: CGPoint, withColor color: UIColor) {
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
@@ -38,13 +35,11 @@ class Note: UITextView {
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
-        
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
         
-        let localColorPicker = setUpLocalColorPicker()
-        inputAccessoryView = localColorPicker
+        inputAccessoryView = setUpLocalColorPicker()
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -56,22 +51,31 @@ class Note: UITextView {
 	}
 	
     func setUpLocalColorPicker() -> UIView{
-        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 40))
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
         for color in colorData{
             guard let index = colorData.index(of: color) else{
                 return UIView()
             }
             let width  = Int(UIScreen.width) / colorData.count
-            let button : UIButton = UIButton(frame: CGRect(x: index * width, y: 0, width: width, height: 40))
+            let button : UIButton = UIButton(frame: CGRect(x: index * width, y: 0, width: width, height: 48))
             button.backgroundColor = color
+            button.layer.borderColor = UIColor.white.cgColor
+            button.layer.borderWidth = color == backgroundColor ? 2 : 0
             button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
             view.addSubview(button)
         }
         return view
     }
     @objc func localColorPicked(sender: UIButton){
+        let buttons = inputAccessoryView?.subviews.flatMap{ $0 as? UIButton }
+        for button in buttons!{
+            button.layer.borderWidth = 0
+        }
+        sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
         updateParent()
+        
+        
     }
     
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
