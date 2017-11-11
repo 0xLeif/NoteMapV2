@@ -7,12 +7,17 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
 
 class Cluster: UIView {
-	var notemap: NoteMap?
-	///////////////////
+
+    var notemap: NoteMap?
+    var noteCenter = PublishSubject<CGPoint?>()
+
     private let checkingPadding: CGFloat = 500
-    var notes: [Note] = [] {
+
+	var notes: [Note] = [] {
         didSet {
 			isHidden = notes.count == 1
             updateView()
@@ -44,6 +49,10 @@ class Cluster: UIView {
         layer.zPosition = 5
         layer.masksToBounds = false
         add(note: note)
+
+        noteCenter.asObservable().subscribe(onNext: { center in
+            print("in center NoteModel : \(center!)")
+        })
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
