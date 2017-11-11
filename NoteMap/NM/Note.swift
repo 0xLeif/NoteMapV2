@@ -23,6 +23,9 @@ class Note: UITextView {
 			layer.borderWidth = importance.rawValue
 		}
 	}
+    var colorPickerView: UIView = UIView()
+    
+    
 	
 	init(atCenter point: CGPoint, withColor color: UIColor) {
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
@@ -39,6 +42,9 @@ class Note: UITextView {
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
+        
+        let localColorPicker = setUpLocalColorPicker()
+        inputAccessoryView = localColorPicker
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
@@ -49,19 +55,42 @@ class Note: UITextView {
 		parentCluster = parent
 	}
 	
+    func setUpLocalColorPicker() -> UIView{
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 40))
+        for color in colorData{
+            guard let index = colorData.index(of: color) else{
+                return UIView()
+            }
+            let width  = Int(UIScreen.width) / colorData.count
+            let button : UIButton = UIButton(frame: CGRect(x: index * width, y: 0, width: width, height: 40))
+            button.backgroundColor = color
+            button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
+            view.addSubview(button)
+        }
+        return view
+    }
+    @objc func localColorPicked(sender: UIButton){
+        backgroundColor = sender.backgroundColor
+        updateParent()
+    }
+    
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
-		guard let parent = parentCluster else {
-			return
-		}
-		parent.updateView()
-		if !parent.check(note: self) {
-			parent.remove(note: self)
-		} else {
-			parent.noteDidPan()
-		}
+		updateParent()
+    }
+    
+    private func updateParent() {
+        guard let parent = parentCluster else {
+            return
+        }
+        if !parent.check(note: self) {
+            parent.remove(note: self)
+        } else {
+            parent.noteDidPan()
+        }
+        parent.updateView()
     }
 }
 
@@ -77,14 +106,12 @@ extension Note: UITextViewDelegate {
         var expectFont = textView.font
         if (expectSize.height > textViewSize.height) {
             while (textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(500))).height > textViewSize.height && (textView.font!.pointSize > CGFloat(24))) {
-                print("sizeFIT-: \(textView.sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height ) textHeight: \(textViewSize.height) ")
                 expectFont = textView.font!.withSize(textView.font!.pointSize - 1)
                 textView.font = expectFont
             }
         }
         else {
             while (textView.sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height < textViewSize.height && (textView.font!.pointSize < CGFloat(100))) {
-                print("sizeFit+: \(textView.sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height ) textViewSize.height \(textViewSize.height)")
                 expectFont = textView.font;
                 textView.font = textView.font!.withSize(textView.font!.pointSize + 1)
             }

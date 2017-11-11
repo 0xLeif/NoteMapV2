@@ -85,7 +85,7 @@ class Cluster: UIView {
     
     func check(note: Note) -> Bool{
 		let checkingDistance = (sizeForNotes / 2) + (notes.count == 1 ? checkingPadding : 0)
-        return note.center.distanceFrom(point: centerPoint) < min(checkingDistance, maxRadius) && note.backgroundColor == notes.first?.backgroundColor
+        return note.center.distanceFrom(point: centerPoint) < min(checkingDistance, maxRadius) && note.backgroundColor == backgroundColor?.withAlphaComponent(1)
     }
 	
 	func canConsume(cluster: Cluster) -> Bool {

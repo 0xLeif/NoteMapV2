@@ -16,11 +16,12 @@ enum Colors {
     case purple
 }
 
+let colorData = [UIColor.rgba(231, 76, 60,1.0), UIColor.rgba(230, 126, 34,1.0), UIColor.rgba(241, 196, 15,1.0), UIColor.rgba(46, 204, 113,1.0), UIColor.rgba(52, 152, 219,1.0), UIColor.rgba(122, 68, 193,1.0), UIColor.rgba(130, 16, 34,1.0)]
 class ViewController: UIViewController {
 	@IBOutlet weak var noteMapScrollView: NoteMapScrollView!
     
     let colorPickView = UIPickerView()
-    let colorData = [UIColor.rgba(231, 76, 60,1.0), UIColor.rgba(230, 126, 34,1.0), UIColor.rgba(241, 196, 15,1.0), UIColor.rgba(46, 204, 113,1.0), UIColor.rgba(52, 152, 219,1.0), UIColor.rgba(142, 68, 173,1.0)]
+    
     var colorBottomField : UITextField = UITextField()
     
 	override func viewDidLoad() {
