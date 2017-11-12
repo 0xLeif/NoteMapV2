@@ -17,12 +17,31 @@ class Cluster: UIView {
     var noteObservable: Observable<Note>!
 
     private let checkingPadding: CGFloat = 500
+    private let disposeBag = DisposeBag()
 
 	var notes: [Note] = [] {
         didSet {
 			isHidden = notes.count == 1
             updateView()
-        }
+
+            print("size : \(notes.count)")
+            var a = [Observable<Note>]()
+            for i in notes {
+                a.append(i.noteObservable)
+            }
+			Observable.merge(a).subscribe { event in
+                event.map { note in
+
+                    self.updateView()
+
+                    if !self.check(note:  note) {
+                        self.remove(note: note)
+                    } else {
+                        self.noteDidPan()
+                    }
+                }
+            }.disposed(by: disposeBag)
+            }
     }
 	var maxRadius: CGFloat {
 		return CGFloat(notes.count) * checkingPadding
@@ -51,7 +70,7 @@ class Cluster: UIView {
         layer.masksToBounds = false
         add(note: note)
 
-        noteObservable.subscribe(onNext: { [weak self] currentNote in
+        /*noteObservable.subscribe(onNext: { [weak self] currentNote in
             self!.updateView()
 
             if !self!.check(note:  currentNote) {
@@ -59,21 +78,8 @@ class Cluster: UIView {
             } else {
                 self!.noteDidPan()
             }
-        })
-  /*      noteObservable = noteCenter.asObservable().map{ center in
-            return
-        }
-*/
-/*        noteCenter.asObservable().subscribe(onNext: { center in
-            self.updateView()
+        }).disposed(by: disposeBag)*/
 
-            if !self.check(note: center as! Note) {
-                self.remove(note: center as! Note)
-            } else {
-                self.noteDidPan()
-            }
-        })*/
-		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
     }
@@ -83,8 +89,8 @@ class Cluster: UIView {
     }
     
     func add(note: Note) {
-        notes.append(note)
 		note.setNew(parent: self)
+        notes.append(note)
     }
 	
 	func remove(note: Note) {

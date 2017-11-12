@@ -24,7 +24,7 @@ class Note: UITextView {
 
 	var parentCluster: Cluster?
     var disposeBag = DisposeBag()
-    var centerVariable = PublishSubject<CGPoint?>()
+    var noteObservable: Observable<Note>!
 
     var importance: NoteImportance = .none {
 		didSet {
@@ -56,10 +56,12 @@ class Note: UITextView {
 	func setNew(parent: Cluster?) {
 		parentCluster = parent
         if (parentCluster != nil) {
+            let centerVariable = PublishSubject<CGPoint?>()
             self.rx.observe(CGPoint.self, "center").bind(to: centerVariable).disposed(by: disposeBag)
-            parentCluster!.noteObservable = centerVariable.asObservable().map{ note in
+            self.noteObservable = centerVariable.asObservable().map{ item in
                 return self
             }
+
         }
 	}
 
