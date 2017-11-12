@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
+
 enum NoteImportance: CGFloat {
 	// The values are for the borderWidth
 	case none = 0
@@ -16,9 +19,14 @@ enum NoteImportance: CGFloat {
 }
 
 class Note: UITextView {
+
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
+
 	var parentCluster: Cluster?
-	var importance: NoteImportance = .none {
+    var disposeBag = DisposeBag()
+    var noteObservable: Observable<Note>!
+
+    var importance: NoteImportance = .none {
 		didSet {
 			layer.borderWidth = importance.rawValue
 		}
@@ -34,31 +42,30 @@ class Note: UITextView {
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
-		
+
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
 	}
-	
+
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
 	func setNew(parent: Cluster?) {
 		parentCluster = parent
+        if (parentCluster != nil) {
+            let centerVariable = PublishSubject<CGPoint?>()
+            self.rx.observe(CGPoint.self, "center").bind(to: centerVariable).disposed(by: disposeBag)
+            self.noteObservable = centerVariable.asObservable().map{ item in
+                return self
+            }
+
+        }
 	}
-	
+
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
-		guard let parent = parentCluster else {
-			return
-		}
-		parent.updateView()
-		if !parent.check(note: self) {
-			parent.remove(note: self)
-		} else {
-			parent.noteDidPan()
-		}
 	}
 }
