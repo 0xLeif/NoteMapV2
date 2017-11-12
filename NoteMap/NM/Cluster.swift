@@ -24,23 +24,13 @@ class Cluster: UIView {
 			isHidden = notes.count == 1
             updateView()
 
-            print("size : \(notes.count)")
-            var a = [Observable<Note>]()
-            for i in notes {
-                a.append(i.noteObservable)
-            }
-			Observable.merge(a).subscribe { event in
+            var arrayOfNoteObservables = [Observable<Note>]()
+            notes.map{ (arrayOfNoteObservables.append($0.noteObservable))}
+			Observable.merge(arrayOfNoteObservables).subscribe { event in
                 event.map { note in
-
-                    self.updateView()
-
-                    if !self.check(note:  note) {
-                        self.remove(note: note)
-                    } else {
-                        self.noteDidPan()
+                    self.noteDidPan(forNote: note)
                     }
-                }
-            }.disposed(by: disposeBag)
+                }.disposed(by: disposeBag)
             }
     }
 	var maxRadius: CGFloat {
@@ -50,8 +40,6 @@ class Cluster: UIView {
 		let currentCenter = centerPoint
 		return (notes.map{ ($0.center.distanceFrom(point: currentCenter)) + checkingPadding}.sorted(by: >).first ?? 0) * 2
 	}
-	
-	
     var centerPoint: CGPoint {
         let centerPoints = notes.map{ $0.center }
         let numberOfPoints: CGFloat = CGFloat(centerPoints.count)
@@ -69,16 +57,6 @@ class Cluster: UIView {
         layer.zPosition = 5
         layer.masksToBounds = false
         add(note: note)
-
-        /*noteObservable.subscribe(onNext: { [weak self] currentNote in
-            self!.updateView()
-
-            if !self!.check(note:  currentNote) {
-                self!.remove(note: currentNote)
-            } else {
-                self!.noteDidPan()
-            }
-        }).disposed(by: disposeBag)*/
 
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
@@ -127,7 +105,7 @@ class Cluster: UIView {
 		return center.distanceFrom(point: cluster.center) <= (sizeForNotes / 2) + 250
 	}
 	
-	func noteDidPan() {
+	func checkConsume() {
 		notemap?.checkConsume()
 	}
 	
@@ -137,12 +115,21 @@ class Cluster: UIView {
 		cluster.notes = []
 		notes.append(contentsOf: clustersNotes)
 	}
+
+    private func noteDidPan(forNote note: Note) {
+        self.updateView()
+        if !self.check(note:  note) {
+            self.remove(note: note)
+        } else {
+            self.checkConsume()
+        }
+    }
 	
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
 		notes.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * self.transform.a, y: $0.center.y + translation.y * self.transform.a) }
-		noteDidPan()
+		checkConsume()
 	}
 }

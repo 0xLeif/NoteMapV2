@@ -43,8 +43,6 @@ class Note: UITextView {
 		layer.zPosition = 10
 		isScrollEnabled = false
 
-
-		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
 	}
@@ -69,14 +67,5 @@ class Note: UITextView {
 		let translation = sender.translation(in: self)
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
-		guard let parent = parentCluster else {
-			return
-		}
-		//parent.updateView()
-		/*if !parent.check(note: self) {
-			parent.remove(note: self)
-		} else {
-			parent.noteDidPan()
-		}*/
 	}
 }
