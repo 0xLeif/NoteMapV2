@@ -35,10 +35,7 @@ class NoteMap: UIView {
 	}
 	
 	func addCluster(forNote note: Note) {
-		if note.parentCluster != nil {
-			print("WARNING: Note already has a parent!")
-		}
-		
+
 		let noClusterInRange = clusters.map{ $0.check(note: note) }.filter{ $0 }.isEmpty
 		
 		if noClusterInRange {
