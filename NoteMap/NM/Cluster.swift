@@ -18,6 +18,8 @@ class Cluster: UIView {
     private let disposeBag = DisposeBag()
 
     private var notes: Variable<[Note]> = Variable([])
+    var clusterObservable: Observable<Cluster>!
+    private var centerVariable = PublishSubject<CGPoint?>()
 
 	var maxRadius: CGFloat {
 		return CGFloat(notes.value.count) * checkingPadding
@@ -43,10 +45,16 @@ class Cluster: UIView {
         layer.zPosition = 5
         layer.masksToBounds = false
         notesObservable().disposed(by: disposeBag)
+        self.rx.observe(CGPoint.self, "center").bind(to: centerVariable).disposed(by: disposeBag)
+        self.clusterObservable = centerVariable.asObservable().map{ item in
+            return self
+        }
+
         add(note: note)
 
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -100,13 +108,13 @@ class Cluster: UIView {
 		let clustersNotes = cluster.notes
 		clustersNotes.value.forEach{ $0.newParentCluster(parent: self) }
 		cluster.notes = Variable([])
+        centerVariable.dispose()
         notes.value.append(contentsOf: clustersNotes.value)
 	}
 
     private func notesObservable()-> Disposable{
         return notes.asObservable().subscribe(onNext: { note in
             if (self.notes.value.count != 0) {
-                print("Last note : \(note[self.notes.value.endIndex - 1].center)")
 
                 self.isHidden = self.notes.value.count == 1
                 self.updateView()
@@ -136,6 +144,6 @@ class Cluster: UIView {
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
 		notes.value.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * self.transform.a, y: $0.center.y + translation.y * self.transform.a) }
-		checkConsume()
+        //checkConsume()
 	}
 }
