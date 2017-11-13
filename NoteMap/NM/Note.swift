@@ -22,7 +22,6 @@ class Note: UITextView {
 
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
 
-	var parentCluster: Cluster?
     var disposeBag = DisposeBag()
     var noteObservable: Observable<Note>!
 
@@ -51,9 +50,8 @@ class Note: UITextView {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	func setNew(parent: Cluster?) {
-		parentCluster = parent
-        if (parentCluster != nil) {
+	func newParentCluster(parent: Cluster?) {
+        if (parent != nil) {
             let centerVariable = PublishSubject<CGPoint?>()
             self.rx.observe(CGPoint.self, "center").bind(to: centerVariable).disposed(by: disposeBag)
             self.noteObservable = centerVariable.asObservable().map{ item in

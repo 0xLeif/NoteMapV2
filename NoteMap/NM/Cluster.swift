@@ -67,7 +67,7 @@ class Cluster: UIView {
     }
     
     func add(note: Note) {
-		note.setNew(parent: self)
+		note.newParentCluster(parent: self)
         notes.append(note)
     }
 	
@@ -76,7 +76,7 @@ class Cluster: UIView {
 			return
 		}
 		notes.remove(at: index)
-		note.setNew(parent: nil)
+		note.newParentCluster(parent: nil)
 		notemap?.addCluster(forNote: note)
 	}
     
@@ -111,7 +111,7 @@ class Cluster: UIView {
 	
 	func consume(cluster: Cluster) {
 		let clustersNotes = cluster.notes
-		clustersNotes.forEach{ $0.setNew(parent: self) }
+		clustersNotes.forEach{ $0.newParentCluster(parent: self) }
 		cluster.notes = []
 		notes.append(contentsOf: clustersNotes)
 	}
