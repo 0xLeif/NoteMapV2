@@ -19,6 +19,7 @@ class Cluster: UIView {
 
     private var notes: Variable<[Note]> = Variable([])
     var clusterObservable: Observable<Cluster>!
+    let removedNoteObservable = PublishSubject<Note>()
     private var centerVariable = PublishSubject<CGPoint?>()
 
 	var maxRadius: CGFloat {
@@ -71,8 +72,10 @@ class Cluster: UIView {
 			return
 		}
 		notes.value.remove(at: index)
+        removedNoteObservable.onNext(note)
 		note.newParentCluster(parent: nil)
 		notemap?.addCluster(forNote: note)
+        print("cluster.remove")
 	}
     
     func updateView() {
@@ -108,6 +111,7 @@ class Cluster: UIView {
 		let clustersNotes = cluster.notes
 		clustersNotes.value.forEach{ $0.newParentCluster(parent: self) }
 		cluster.notes = Variable([])
+        //cluster.removedNoteObservable.dispose()
         centerVariable.dispose()
         notes.value.append(contentsOf: clustersNotes.value)
 	}
@@ -116,13 +120,14 @@ class Cluster: UIView {
         return notes.asObservable().subscribe(onNext: { note in
             if (self.notes.value.count != 0) {
 
-                self.isHidden = self.notes.value.count == 1
+                //self.isHidden = self.notes.value.count == 1
                 self.updateView()
 
                 var arrayOfNoteObservables = [Observable<Note>]()
                 self.notes.value.map{ (arrayOfNoteObservables.append($0.noteObservable)) }
                 Observable.merge(arrayOfNoteObservables).subscribe { event in
                     event.map { note in
+                        print("did pan")
                         self.noteDidPan(forNote: note)
                     }
                 }.disposed(by: self.disposeBag)
@@ -135,7 +140,7 @@ class Cluster: UIView {
         if !self.check(note:  note) {
             self.remove(note: note)
         } else {
-            self.checkConsume()
+            //self.checkConsume()
         }
     }
 	
@@ -144,6 +149,5 @@ class Cluster: UIView {
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
 		notes.value.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * self.transform.a, y: $0.center.y + translation.y * self.transform.a) }
-        //checkConsume()
 	}
 }

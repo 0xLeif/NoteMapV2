@@ -17,7 +17,6 @@ class NoteMap: UIView {
 	}
     private var clusters: Variable<[Cluster]> = Variable([])
     //fileprivate var clusters: [Cluster] = []
-    fileprivate var notes: [Note] = []
     var selectedColor: UIColor?
     private let disposeBag = DisposeBag()
 
@@ -37,9 +36,19 @@ class NoteMap: UIView {
                 self.clusters.value.map{ (arrayOfNoteObservables.append($0.clusterObservable)) }
                 Observable.merge(arrayOfNoteObservables).subscribe { event in
                     event.map { note in
+                        print("note did pan")
                         self.checkConsume()
                     }
                 }.disposed(by: self.disposeBag)
+
+                print(" inside notemape size :\(self.clusters.value.count)")
+				var arrayOfRemoval = [Observable<Note>]()
+                self.clusters.value.map{ (arrayOfRemoval.append($0.removedNoteObservable)) }
+                Observable.merge(arrayOfRemoval).subscribe { event in
+                    event.map { note in
+                        print("note removed")
+                    }
+                }
             }
         })
 	}
@@ -61,6 +70,7 @@ class NoteMap: UIView {
 			clusters.value.append(cluster)
 			addSubview(cluster)
 			sendSubview(toBack: cluster)
+            print("not consuming")
 		} else {
 			let collidedClusters = clusters.value.filter{ $0.check(note: note) }
 			var distFromNote: [CGFloat: Cluster] = [:]
@@ -68,6 +78,7 @@ class NoteMap: UIView {
 			let min = collidedClusters.map{ $0.centerPoint.distanceFrom(point: note.center) }.sorted(by: <).first!
 			let cluster = distFromNote[min]
 			cluster?.add(note: note)
+            print("consumed")
 		}
 	}
 	
@@ -82,7 +93,6 @@ class NoteMap: UIView {
 		
 		checkConsume()
 		
-        notes.append(note)
         addSubview(note)
 	}
 	
@@ -94,6 +104,9 @@ class NoteMap: UIView {
 					guard let clusterIndex = clusters.value.index(of: c) else {
 						return
 					}
+                    //c.removedNoteObservable.dispose()
+                    //self.clusters.value[clusterIndex].removedNoteObservable.dispose()
+                    print(" will consume ")
 					cluster.consume(cluster: c)
 					clusters.value.remove(at: clusterIndex).removeFromSuperview()
 				}
