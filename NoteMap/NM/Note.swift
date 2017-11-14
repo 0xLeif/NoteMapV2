@@ -79,10 +79,16 @@ class Note: UITextView {
     }
     
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
+        guard let parentCluster = parentCluster,
+            let notemap = parentCluster.notemap else{
+                return
+        }
 		let translation = sender.translation(in: self)
-		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
-		sender.setTranslation(CGPoint.zero, in: self)
-		updateParent()
+        if notemap.checkBounds(of: parentCluster, forTranslation: translation){
+            sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
+            sender.setTranslation(CGPoint.zero, in: self)
+            updateParent()
+        }
     }
     
     private func updateParent() {

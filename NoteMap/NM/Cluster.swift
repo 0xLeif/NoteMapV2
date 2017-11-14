@@ -12,9 +12,10 @@ class Cluster: UIView {
 	var notemap: NoteMap?
 	///////////////////
     private let checkingPadding: CGFloat = 500
+    private var isPanning = false
     var notes: [Note] = [] {
         didSet {
-			isHidden = notes.count == 1
+			//isHidden = notes.count == 1
             updateView()
         }
     }
@@ -94,6 +95,7 @@ class Cluster: UIView {
 	
 	func noteDidPan() {
 		notemap?.checkConsume()
+        
 	}
 	
 	func consume(cluster: Cluster) {
@@ -102,12 +104,23 @@ class Cluster: UIView {
 		cluster.notes = []
 		notes.append(contentsOf: clustersNotes)
 	}
-	
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
+        guard let notemap = notemap else {
+            return
+        }
 		let translation = sender.translation(in: self)
-		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
-		sender.setTranslation(CGPoint.zero, in: self)
-		notes.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * self.transform.a, y: $0.center.y + translation.y * self.transform.a) }
-		noteDidPan()
+        if notemap.checkBounds(of: self, forTranslation: translation) {
+            sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
+            sender.setTranslation(CGPoint.zero, in: self)
+            notes.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * self.transform.a, y: $0.center.y + translation.y * self.transform.a) }
+            noteDidPan()
+            isPanning = false
+        }else{
+            if !isPanning {
+                let generator = UINotificationFeedbackGenerator()
+                generator.notificationOccurred(.error)
+                isPanning = true
+            }
+        }
 	}
 }

@@ -31,7 +31,7 @@ class NoteMap: UIView {
 	}
 	
 	@objc func doubleTap(sender: UITapGestureRecognizer) {
-		addNote(atCenter: sender.location(in: self))
+        addNote(atCenter: sender.location(in: self))
 	}
 	
 	func addCluster(forNote note: Note) {
@@ -86,6 +86,12 @@ class NoteMap: UIView {
 			}
 		}
 	}
+    
+    
+    func checkBounds(of: Cluster, forTranslation point: CGPoint) -> Bool {
+        let badNotes = of.notes.filter{ !bounds.contains(CGPoint(x: $0.center.x + point.x, y: $0.center.y + point.y)) }
+        return badNotes.isEmpty
+    }
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {
 		return lhs.canConsume(cluster: rhs) && lhs !== rhs && lhs.backgroundColor == rhs.backgroundColor
