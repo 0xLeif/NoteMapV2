@@ -19,8 +19,11 @@ class Cluster: UIView {
 
     private var notes: Variable<[Note]> = Variable([])
     var clusterObservable: Observable<Cluster>!
-    let removedNoteObservable = PublishSubject<Note>()
+    var clusterSizeObservable: Observable<Cluster>!
+    var removedNoteObservable = PublishSubject<Note>()
+    var doNoteDidPanEvent = PublishSubject<Note>()
     private var centerVariable = PublishSubject<CGPoint?>()
+    private var sizeObservable = PublishSubject<CGFloat?>()
 
 	var maxRadius: CGFloat {
 		return CGFloat(notes.value.count) * checkingPadding
@@ -46,8 +49,12 @@ class Cluster: UIView {
         layer.zPosition = 5
         layer.masksToBounds = false
         notesObservable().disposed(by: disposeBag)
+        self.rx.observe(CGFloat.self, "layer.cornerRadius").bind(to: sizeObservable).disposed(by: disposeBag)
         self.rx.observe(CGPoint.self, "center").bind(to: centerVariable).disposed(by: disposeBag)
-        self.clusterObservable = centerVariable.asObservable().map{ item in
+        clusterObservable = centerVariable.asObservable().map{ item in
+            return self
+        }
+        clusterSizeObservable = sizeObservable.asObservable().map{ item in
             return self
         }
 
@@ -113,8 +120,21 @@ class Cluster: UIView {
 		cluster.notes = Variable([])
         //cluster.removedNoteObservable.dispose()
         centerVariable.dispose()
+        cluster.sizeObservable.dispose()
         notes.value.append(contentsOf: clustersNotes.value)
 	}
+
+/*    func consume(cluster: Cluster) {
+        let clustersNotes = cluster.notes.value
+        cluster.sizeObservable.dispose()
+        cluster.centerVariable.dispose()
+        cluster.removedNoteObservable.dispose()
+        cluster.notesObservable().dispose()
+        clustersNotes.forEach { add(note: $0) }
+        centerVariable.dispose()
+        cluster.notes.value.removeAll()
+        //notes.value.append(contentsOf: clustersNotes)
+    }*/
 
     private func notesObservable()-> Disposable{
         return notes.asObservable().subscribe(onNext: { note in
@@ -127,8 +147,9 @@ class Cluster: UIView {
                 self.notes.value.map{ (arrayOfNoteObservables.append($0.noteObservable)) }
                 Observable.merge(arrayOfNoteObservables).subscribe { event in
                     event.map { note in
-                        print("did pan")
+                        //print("did pan")
                         self.noteDidPan(forNote: note)
+                        self.doNoteDidPanEvent.onNext(note)
                     }
                 }.disposed(by: self.disposeBag)
             }
@@ -140,7 +161,7 @@ class Cluster: UIView {
         if !self.check(note:  note) {
             self.remove(note: note)
         } else {
-            //self.checkConsume()
+            self.checkConsume()
         }
     }
 	

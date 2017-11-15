@@ -36,17 +36,31 @@ class NoteMap: UIView {
                 self.clusters.value.map{ (arrayOfNoteObservables.append($0.clusterObservable)) }
                 Observable.merge(arrayOfNoteObservables).subscribe { event in
                     event.map { note in
-                        print("note did pan")
+                        //print("note did pan")
                         self.checkConsume()
                     }
                 }.disposed(by: self.disposeBag)
 
-                print(" inside notemape size :\(self.clusters.value.count)")
+                var arrayOfClusterSizeObservables = [Observable<Cluster>]()
+                self.clusters.value.map{ (arrayOfClusterSizeObservables.append($0.clusterSizeObservable))}
+                Observable.merge(arrayOfClusterSizeObservables).subscribe { event in
+                    event.map { clusterResize in
+                    }
+                }.disposed(by: self.disposeBag)
+
 				var arrayOfRemoval = [Observable<Note>]()
                 self.clusters.value.map{ (arrayOfRemoval.append($0.removedNoteObservable)) }
                 Observable.merge(arrayOfRemoval).subscribe { event in
                     event.map { note in
                         print("note removed")
+                    }
+                }
+
+                var arrayOfDidPanEvent = [Observable<Note>]()
+                self.clusters.value.map{ (arrayOfDidPanEvent.append($0.doNoteDidPanEvent)) }
+                Observable.merge(arrayOfDidPanEvent).subscribe { event in
+                    event.map { note in
+                        print("note did pan")
                     }
                 }
             }
@@ -70,7 +84,6 @@ class NoteMap: UIView {
 			clusters.value.append(cluster)
 			addSubview(cluster)
 			sendSubview(toBack: cluster)
-            print("not consuming")
 		} else {
 			let collidedClusters = clusters.value.filter{ $0.check(note: note) }
 			var distFromNote: [CGFloat: Cluster] = [:]
@@ -78,7 +91,6 @@ class NoteMap: UIView {
 			let min = collidedClusters.map{ $0.centerPoint.distanceFrom(point: note.center) }.sorted(by: <).first!
 			let cluster = distFromNote[min]
 			cluster?.add(note: note)
-            print("consumed")
 		}
 	}
 	
@@ -106,7 +118,6 @@ class NoteMap: UIView {
 					}
                     //c.removedNoteObservable.dispose()
                     //self.clusters.value[clusterIndex].removedNoteObservable.dispose()
-                    print(" will consume ")
 					cluster.consume(cluster: c)
 					clusters.value.remove(at: clusterIndex).removeFromSuperview()
 				}
