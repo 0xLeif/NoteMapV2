@@ -16,9 +16,41 @@ class NoteMap: UIView {
 		return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
 	}
     private var clusters: Variable<[Cluster]> = Variable([])
-    //fileprivate var clusters: [Cluster] = []
     var selectedColor: UIColor?
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
+
+    lazy var theArray:() -> Disposable = {
+        return self.clusters.asObservable().subscribe(onNext: { cluster in
+            if (self.clusters.value.count != 0) {
+
+                var arrayOfRemoval = [Observable<Note>]()
+                self.clusters.value.forEach { (arrayOfRemoval.append($0.removedNoteObservable)) }
+                self.theRemovalMerge(arrayOfRemoval).disposed(by: self.disposeBag)
+
+                var arrayOfDidPanEvent = [Observable<()>]()
+                self.clusters.value.forEach { (arrayOfDidPanEvent.append($0.checkNotemapConsume)) }
+                self.thePanEventMerge(arrayOfDidPanEvent).disposed(by: self.disposeBag)
+            }
+        })
+    }
+
+    lazy var theRemovalMerge:([Observable<Note>]) -> Disposable = { arrayOfRemoval in
+        return Observable.merge(arrayOfRemoval).subscribe { event in
+            event.map { note in
+                print("note removed \(note)")
+                print("array of removals : \(arrayOfRemoval.count)")
+                self.addCluster(forNote: note)
+            }
+        }
+    }
+
+    lazy var thePanEventMerge:([Observable<()>]) -> Disposable = { arrayOfDidPanEvent in
+        return Observable.merge(arrayOfDidPanEvent).subscribe { event in
+            event.map { note in
+                self.checkConsume()
+            }
+        }
+    }
 
     init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
@@ -29,43 +61,9 @@ class NoteMap: UIView {
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		addGestureRecognizer(doubleTapGestureRecognizer)
 
-        clusters.asObservable().subscribe(onNext: { cluster in
-            if (self.clusters.value.count != 0) {
-                //print("Last note : \(note[self.notes.value.endIndex - 1].center)")
-                var arrayOfNoteObservables = [Observable<Cluster>]()
-                self.clusters.value.map{ (arrayOfNoteObservables.append($0.clusterObservable)) }
-                Observable.merge(arrayOfNoteObservables).subscribe { event in
-                    event.map { note in
-                        //print("note did pan")
-                        self.checkConsume()
-                    }
-                }.disposed(by: self.disposeBag)
-
-                var arrayOfClusterSizeObservables = [Observable<Cluster>]()
-                self.clusters.value.map{ (arrayOfClusterSizeObservables.append($0.clusterSizeObservable))}
-                Observable.merge(arrayOfClusterSizeObservables).subscribe { event in
-                    event.map { clusterResize in
-                    }
-                }.disposed(by: self.disposeBag)
-
-				var arrayOfRemoval = [Observable<Note>]()
-                self.clusters.value.map{ (arrayOfRemoval.append($0.removedNoteObservable)) }
-                Observable.merge(arrayOfRemoval).subscribe { event in
-                    event.map { note in
-                        print("note removed")
-                    }
-                }
-
-                var arrayOfDidPanEvent = [Observable<Note>]()
-                self.clusters.value.map{ (arrayOfDidPanEvent.append($0.doNoteDidPanEvent)) }
-                Observable.merge(arrayOfDidPanEvent).subscribe { event in
-                    event.map { note in
-                        print("note did pan")
-                    }
-                }
-            }
-        })
+        theArray().disposed(by: self.disposeBag)
 	}
+
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -81,6 +79,8 @@ class NoteMap: UIView {
 		if noClusterInRange {
 			let cluster = Cluster(note: note)
 			cluster.notemap = self
+            disposeBag = DisposeBag()
+            theArray().disposed(by: disposeBag)
 			clusters.value.append(cluster)
 			addSubview(cluster)
 			sendSubview(toBack: cluster)
@@ -116,9 +116,9 @@ class NoteMap: UIView {
 					guard let clusterIndex = clusters.value.index(of: c) else {
 						return
 					}
-                    //c.removedNoteObservable.dispose()
-                    //self.clusters.value[clusterIndex].removedNoteObservable.dispose()
 					cluster.consume(cluster: c)
+                    disposeBag = DisposeBag()
+                    theArray().disposed(by: disposeBag)
 					clusters.value.remove(at: clusterIndex).removeFromSuperview()
 				}
 			}

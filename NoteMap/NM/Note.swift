@@ -24,6 +24,8 @@ class Note: UITextView {
 
     var disposeBag = DisposeBag()
     var noteObservable: Observable<Note>!
+	var theNoteObservable = PublishSubject<Note>()
+    var fixedNoteObservable = PublishSubject<Note>()
 
     var importance: NoteImportance = .none {
 		didSet {
@@ -50,20 +52,10 @@ class Note: UITextView {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	func newParentCluster(parent: Cluster?) {
-        if (parent != nil) {
-            let centerVariable = PublishSubject<CGPoint?>()
-            self.rx.observe(CGPoint.self, "center").bind(to: centerVariable).disposed(by: disposeBag)
-            self.noteObservable = centerVariable.asObservable().map{ item in
-                return self
-            }
-
-        }
-	}
-
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
+        fixedNoteObservable.onNext(self)
 	}
 }
