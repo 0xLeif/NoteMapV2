@@ -12,8 +12,6 @@ import RxSwift
 
 class Cluster: UIView {
 
-    var notemap: NoteMap?
-
     private let checkingPadding: CGFloat = 500
     private var disposeBag = DisposeBag()
 
@@ -79,7 +77,6 @@ class Cluster: UIView {
     }
     
     func add(note: Note) {
-        print("added not : \(note.text)")
         notes.value.append(note)
     }
 	
@@ -91,7 +88,6 @@ class Cluster: UIView {
         disposeBag = DisposeBag()
         theArray().disposed(by: disposeBag)
         removedNoteObservable.onNext(note)
-        print("cluster.remove")
 	}
     
     func updateView() {

@@ -37,8 +37,6 @@ class NoteMap: UIView {
     lazy var theRemovalMerge:([Observable<Note>]) -> Disposable = { arrayOfRemoval in
         return Observable.merge(arrayOfRemoval).subscribe { event in
             event.map { note in
-                print("note removed \(note)")
-                print("array of removals : \(arrayOfRemoval.count)")
                 self.addCluster(forNote: note)
             }
         }
@@ -78,7 +76,6 @@ class NoteMap: UIView {
 		
 		if noClusterInRange {
 			let cluster = Cluster(note: note)
-			cluster.notemap = self
             disposeBag = DisposeBag()
             theArray().disposed(by: disposeBag)
 			clusters.value.append(cluster)
