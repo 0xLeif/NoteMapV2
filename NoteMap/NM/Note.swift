@@ -38,6 +38,7 @@ class Note: UITextView {
 		adjustsFontForContentSizeCategory = true
 		font = UIFont.systemFont(ofSize: 16)
 		center = point
+        delegate = self
 		backgroundColor = color
 		layer.borderColor = UIColor.white.cgColor
 		layer.cornerRadius = 15
@@ -46,16 +47,78 @@ class Note: UITextView {
 
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
+        
+        inputAccessoryView = setUpLocalColorPicker()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	
+	func setNew(parent: Cluster?) {
+		parentCluster = parent
+	}
+	
+    func setUpLocalColorPicker() -> UIView{
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
+        for color in colorData{
+            guard let index = colorData.index(of: color) else{
+                return UIView()
+            }
+            let width  = Int(UIScreen.width) / colorData.count
+            let button : UIButton = UIButton(frame: CGRect(x: index * width, y: 0, width: width, height: 48))
+            button.backgroundColor = color
+            button.layer.borderColor = UIColor.white.cgColor
+            button.layer.borderWidth = color == backgroundColor ? 2 : 0
+            button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
+            view.addSubview(button)
+        }
+        return view
+    }
+    @objc func localColorPicked(sender: UIButton){
+        let buttons = inputAccessoryView?.subviews.flatMap{ $0 as? UIButton }
+        for button in buttons!{
+            button.layer.borderWidth = 0
+        }
+        sender.layer.borderWidth = 2
+        backgroundColor = sender.backgroundColor
+        updateParent()
+        
+        
+    }
+    
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
         fixedNoteObservable.onNext(self)
 	}
+}
+
+extension Note: UITextViewDelegate {
+    //max characters: 384
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        textAlignment = NSTextAlignment.center
+        
+        let textViewSize = textView.frame.size
+        let fixedWidth = textViewSize.width-100
+        let expectSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(1000)))
+        
+        var expectFont = textView.font
+        if (expectSize.height > textViewSize.height) {
+            while (textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(500))).height > textViewSize.height && (textView.font!.pointSize > CGFloat(24))) {
+                expectFont = textView.font!.withSize(textView.font!.pointSize - 1)
+                textView.font = expectFont
+            }
+        }
+        else {
+            while (textView.sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height < textViewSize.height && (textView.font!.pointSize < CGFloat(100))) {
+                expectFont = textView.font;
+                textView.font = textView.font!.withSize(textView.font!.pointSize + 1)
+            }
+            textView.font = expectFont
+        }
+        return true;
+    }
 }
