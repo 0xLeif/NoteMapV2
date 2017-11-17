@@ -19,6 +19,14 @@ class Cluster: UIView {
     var removedNoteObservable = PublishSubject<Note>()
     var checkNotemapConsume = PublishSubject<Void>()
 
+    private lazy var updateParentMergedObservable:([Observable<()>]) -> Disposable = { forArray in
+        return Observable.merge(forArray).subscribe { event in
+            event.map { note in
+                self.updateView()
+            }
+        }
+    }
+
     private lazy var theMerge:([Observable<Note>]) -> Disposable = { forArray in
         return Observable.merge(forArray).subscribe { event in
             event.map { note in
@@ -31,11 +39,11 @@ class Cluster: UIView {
         return self.notes.asObservable().subscribe(onNext: { note in
             if (self.notes.value.count != 0) {
 
-                //self.isHidden = self.notes.value.count == 1
+                self.isHidden = self.notes.value.count == 1
                 self.updateView()
 
                 var arrayOfNoteObservables = [Observable<Note>]()
-                self.notes.value.forEach{ (arrayOfNoteObservables.append($0.fixedNoteObservable)) }
+                self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
                 self.theMerge(arrayOfNoteObservables).disposed(by: self.disposeBag)
             }
         })
@@ -85,8 +93,7 @@ class Cluster: UIView {
 			return
 		}
 		notes.value.remove(at: index)
-        disposeBag = DisposeBag()
-        theArray().disposed(by: disposeBag)
+        rebindArray()
         removedNoteObservable.onNext(note)
 	}
     
@@ -107,7 +114,7 @@ class Cluster: UIView {
 	}
     
     func check(note: Note) -> Bool{
-		let checkingDistance = (sizeForNotes / 2) + (notes.count == 1 ? checkingPadding : 0)
+		let checkingDistance = (sizeForNotes / 2) + (notes.value.count == 1 ? checkingPadding : 0)
         return note.center.distanceFrom(point: centerPoint) < min(checkingDistance, maxRadius) && note.backgroundColor == backgroundColor?.withAlphaComponent(1)
     }
 	
@@ -124,12 +131,11 @@ class Cluster: UIView {
         cluster.disposeBag = DisposeBag()
 		cluster.notes = Variable([])
         clustersNotes.value.forEach { self.add(note: $0) }
-        disposeBag = DisposeBag()
-        theArray().disposed(by: self.disposeBag)
 	}
 
-    private func disposeMerge(a: Disposable) {
-        a.dispose()
+    private func rebindArray() {
+        disposeBag = DisposeBag()
+        theArray().disposed(by: self.disposeBag)
     }
 
     func noteDidPan(forNote note: Note) {

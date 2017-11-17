@@ -76,8 +76,7 @@ class NoteMap: UIView {
 		
 		if noClusterInRange {
 			let cluster = Cluster(note: note)
-            disposeBag = DisposeBag()
-            theArray().disposed(by: disposeBag)
+            rebindArray()
 			clusters.value.append(cluster)
 			addSubview(cluster)
 			sendSubview(toBack: cluster)
@@ -90,6 +89,11 @@ class NoteMap: UIView {
 			cluster?.add(note: note)
 		}
 	}
+
+    private func rebindArray() {
+        disposeBag = DisposeBag()
+        theArray().disposed(by: disposeBag)
+    }
 	
 	private func addNote(atCenter point: CGPoint) {
         guard let color = selectedColor else {
@@ -114,8 +118,7 @@ class NoteMap: UIView {
 						return
 					}
 					cluster.consume(cluster: c)
-                    disposeBag = DisposeBag()
-                    theArray().disposed(by: disposeBag)
+                    rebindArray()
 					clusters.value.remove(at: clusterIndex).removeFromSuperview()
 				}
 			}

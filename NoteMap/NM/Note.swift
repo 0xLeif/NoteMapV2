@@ -23,9 +23,8 @@ class Note: UITextView {
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
 
     var disposeBag = DisposeBag()
-    var noteObservable: Observable<Note>!
-	var theNoteObservable = PublishSubject<Note>()
-    var fixedNoteObservable = PublishSubject<Note>()
+    var noteDidPanObservable = PublishSubject<Note>()
+    var updateParentObservable = PublishSubject<Void>()
 
     var importance: NoteImportance = .none {
 		didSet {
@@ -54,11 +53,6 @@ class Note: UITextView {
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-
-	
-	func setNew(parent: Cluster?) {
-		parentCluster = parent
-	}
 	
     func setUpLocalColorPicker() -> UIView{
         let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
@@ -76,6 +70,7 @@ class Note: UITextView {
         }
         return view
     }
+
     @objc func localColorPicked(sender: UIButton){
         let buttons = inputAccessoryView?.subviews.flatMap{ $0 as? UIButton }
         for button in buttons!{
@@ -83,16 +78,15 @@ class Note: UITextView {
         }
         sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
-        updateParent()
-        
-        
+        updateParentObservable.onNext(())
+
     }
     
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
 		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
-        fixedNoteObservable.onNext(self)
+        noteDidPanObservable.onNext(self)
 	}
 }
 
