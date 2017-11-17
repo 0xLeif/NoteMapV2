@@ -35,7 +35,7 @@ class Cluster: UIView {
         }
     }
 
-    private lazy var theArray:() -> Disposable = {
+    private lazy var notesArraySubscriber:() -> Disposable = {
         return self.notes.asObservable().subscribe(onNext: { note in
             if (self.notes.value.count != 0) {
 
@@ -72,7 +72,7 @@ class Cluster: UIView {
         center = note.center
         layer.zPosition = 5
         layer.masksToBounds = false
-        theArray().disposed(by: disposeBag)
+        notesArraySubscriber().disposed(by: disposeBag)
         add(note: note)
 
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
@@ -131,7 +131,7 @@ class Cluster: UIView {
 
     private func rebindArray() {
         disposeBag = DisposeBag()
-        theArray().disposed(by: disposeBag)
+        notesArraySubscriber().disposed(by: disposeBag)
     }
 
     func noteDidPan(forNote note: Note) {

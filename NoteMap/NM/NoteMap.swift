@@ -19,14 +19,16 @@ class NoteMap: UIView {
     var selectedColor: UIColor?
     private var disposeBag = DisposeBag()
 
-    lazy var theArray:() -> Disposable = {
+    lazy var clusterArraySubscriber:() -> Disposable = {
         return self.clusters.asObservable().subscribe(onNext: { cluster in
             if (self.clusters.value.count != 0) {
 
-				var arrayOfRemoval = self.clusters.value.map{ $0.removedNoteObservable }
+                var arrayOfRemoval = [Observable<Note>]()
+                self.clusters.value.forEach { (arrayOfRemoval.append($0.removedNoteObservable)) }
                 self.theRemovalMerge(arrayOfRemoval).disposed(by: self.disposeBag)
 
-				var arrayOfDidPanEvent = self.clusters.value.map{ $0.checkNotemapConsume }
+                var arrayOfDidPanEvent = [Observable<()>]()
+                self.clusters.value.forEach { (arrayOfDidPanEvent.append($0.checkNotemapConsume)) }
                 self.thePanEventMerge(arrayOfDidPanEvent).disposed(by: self.disposeBag)
             }
         })
@@ -57,7 +59,7 @@ class NoteMap: UIView {
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		addGestureRecognizer(doubleTapGestureRecognizer)
 
-        theArray().disposed(by: self.disposeBag)
+        clusterArraySubscriber().disposed(by: self.disposeBag)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -90,7 +92,7 @@ class NoteMap: UIView {
 
     private func rebindArray() {
         disposeBag = DisposeBag()
-        theArray().disposed(by: disposeBag)
+        clusterArraySubscriber().disposed(by: disposeBag)
     }
 	
 	private func addNote(atCenter point: CGPoint) {
