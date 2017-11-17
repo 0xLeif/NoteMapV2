@@ -59,7 +59,7 @@ class NoteMap: UIView {
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		addGestureRecognizer(doubleTapGestureRecognizer)
 
-        clusterArraySubscriber().disposed(by: self.disposeBag)
+        clusterArraySubscriber().disposed(by: disposeBag)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
