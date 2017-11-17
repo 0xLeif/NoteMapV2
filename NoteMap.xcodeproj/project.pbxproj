@@ -21,6 +21,7 @@
 		929129E31EFDC61700F76383 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929129E21EFDC61700F76383 /* Note.swift */; };
 		92B945DA1FB11450004AE9A8 /* UIColor+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B945D91FB11450004AE9A8 /* UIColor+NM.swift */; };
 		92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD400B1EFE1B120054DBD7 /* Cluster.swift */; };
+		92FF004A1FBA80D0008B75BD /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FF00491FBA80D0008B75BD /* BottomSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		929129E21EFDC61700F76383 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		92B945D91FB11450004AE9A8 /* UIColor+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NM.swift"; sourceTree = "<group>"; };
 		92BD400B1EFE1B120054DBD7 /* Cluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cluster.swift; sourceTree = "<group>"; };
+		92FF00491FBA80D0008B75BD /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 				92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */,
 				92906FC21EFE0CF700B31025 /* NoteMap.swift */,
 				929129E21EFDC61700F76383 /* Note.swift */,
+				92FF00491FBA80D0008B75BD /* BottomSheet.swift */,
 			);
 			path = NM;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 			files = (
 				926F96431FA94FF000A4A98D /* CGPoint+NM.swift in Sources */,
 				92906FBF1EFE0AC200B31025 /* NoteMapScrollView.swift in Sources */,
+				92FF004A1FBA80D0008B75BD /* BottomSheet.swift in Sources */,
 				929129C51EFDC5F400F76383 /* ViewController.swift in Sources */,
 				92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */,
 				929129C31EFDC5F400F76383 /* AppDelegate.swift in Sources */,

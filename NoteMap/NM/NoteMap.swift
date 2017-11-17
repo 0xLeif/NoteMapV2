@@ -8,6 +8,9 @@
 
 import UIKit
 
+var selectedColor: UIColor?
+var selectedImportance: NoteImportance = .none
+
 class NoteMap: UIView {
 	fileprivate var noteMapSize: CGSize {
 		let multiplier: CGFloat = 100
@@ -15,14 +18,13 @@ class NoteMap: UIView {
 	}
     fileprivate var clusters: [Cluster] = []
     fileprivate var notes: [Note] = []
-    var selectedColor: UIColor?
     
 	init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
-		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+//		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+		backgroundColor = UIColor.rgba(246, 239, 221, 1)
 		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
-		
 		addGestureRecognizer(doubleTapGestureRecognizer)
         
 	}
@@ -63,7 +65,7 @@ class NoteMap: UIView {
             return
         }
 		let note = Note(atCenter: point, withColor: color)
-		
+		note.importance = selectedImportance
 		addCluster(forNote: note)
 		
 		checkConsume()

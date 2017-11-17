@@ -10,9 +10,9 @@ import UIKit
 enum NoteImportance: CGFloat {
 	// The values are for the borderWidth
 	case none = 0
-	case low = 3
-	case medium = 6
-	case high = 9
+	case low = 10
+	case mid = 20
+	case high = 30
 }
 
 class Note: UITextView {
@@ -31,7 +31,7 @@ class Note: UITextView {
 		center = point
         delegate = self
 		backgroundColor = color
-		layer.borderColor = UIColor.white.cgColor
+		layer.borderColor = UIColor.black.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
