@@ -27,7 +27,7 @@ class Cluster: UIView {
         }
     }
 
-    private lazy var theMerge:([Observable<Note>]) -> Disposable = { forArray in
+    private lazy var notePanMergedObservable:([Observable<Note>]) -> Disposable = { forArray in
         return Observable.merge(forArray).subscribe { event in
             event.map { note in
                 self.noteDidPan(forNote: note)
@@ -44,7 +44,7 @@ class Cluster: UIView {
 
                 var arrayOfNoteObservables = [Observable<Note>]()
                 self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
-                self.theMerge(arrayOfNoteObservables).disposed(by: self.disposeBag)
+                self.notePanMergedObservable(arrayOfNoteObservables).disposed(by: self.disposeBag)
             }
         })
     }
@@ -72,7 +72,7 @@ class Cluster: UIView {
         center = note.center
         layer.zPosition = 5
         layer.masksToBounds = false
-        theArray().disposed(by: self.disposeBag)
+        theArray().disposed(by: disposeBag)
         add(note: note)
 
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
@@ -122,10 +122,6 @@ class Cluster: UIView {
 		return center.distanceFrom(point: cluster.center) <= (sizeForNotes / 2) + 250
 	}
 	
-	func checkConsume() {
-        checkNotemapConsume.onNext(())
-	}
-	
 	func consume(cluster: Cluster) {
 		let clustersNotes = cluster.notes
         cluster.disposeBag = DisposeBag()
@@ -135,15 +131,15 @@ class Cluster: UIView {
 
     private func rebindArray() {
         disposeBag = DisposeBag()
-        theArray().disposed(by: self.disposeBag)
+        theArray().disposed(by: disposeBag)
     }
 
     func noteDidPan(forNote note: Note) {
-        self.updateView()
-        if !self.check(note:  note) {
-            self.remove(note: note)
+        updateView()
+        if !check(note:  note) {
+            remove(note: note)
         } else {
-            self.checkConsume()
+            checkNotemapConsume.onNext(())
         }
     }
 	

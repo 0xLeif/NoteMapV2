@@ -23,12 +23,10 @@ class NoteMap: UIView {
         return self.clusters.asObservable().subscribe(onNext: { cluster in
             if (self.clusters.value.count != 0) {
 
-                var arrayOfRemoval = [Observable<Note>]()
-                self.clusters.value.forEach { (arrayOfRemoval.append($0.removedNoteObservable)) }
+				var arrayOfRemoval = self.clusters.value.map{ $0.removedNoteObservable }
                 self.theRemovalMerge(arrayOfRemoval).disposed(by: self.disposeBag)
 
-                var arrayOfDidPanEvent = [Observable<()>]()
-                self.clusters.value.forEach { (arrayOfDidPanEvent.append($0.checkNotemapConsume)) }
+				var arrayOfDidPanEvent = self.clusters.value.map{ $0.checkNotemapConsume }
                 self.thePanEventMerge(arrayOfDidPanEvent).disposed(by: self.disposeBag)
             }
         })
