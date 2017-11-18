@@ -19,14 +19,6 @@ class Cluster: UIView {
     var removedNoteObservable = PublishSubject<Note>()
     var checkNotemapConsume = PublishSubject<Void>()
 
-    private lazy var updateParentMergedObservable:([Observable<()>]) -> Disposable = { forArray in
-        return Observable.merge(forArray).subscribe { event in
-            event.map { note in
-                self.updateView()
-            }
-        }
-    }
-
     private lazy var notePanMergedObservable:([Observable<Note>]) -> Disposable = { forArray in
         return Observable.merge(forArray).subscribe { event in
             event.map { note in

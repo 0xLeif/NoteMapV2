@@ -78,7 +78,7 @@ class Note: UITextView {
         }
         sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
-        updateParentObservable.onNext(())
+        noteDidPanObservable.onNext(self)
 
     }
     
