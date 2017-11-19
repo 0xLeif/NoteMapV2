@@ -7,25 +7,31 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
 
 class NoteMap: UIView {
 	fileprivate var noteMapSize: CGSize {
 		let multiplier: CGFloat = 100
 		return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
 	}
-    fileprivate var clusters: [Cluster] = []
-    fileprivate var notes: [Note] = []
+    fileprivate var clusters: Variable<[Cluster]> = Variable([])
+    fileprivate var disposeBag = DisposeBag()
+
     var selectedColor: UIColor?
-    
-	init() {
+
+    init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
 		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+
+
 		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
-		
 		addGestureRecognizer(doubleTapGestureRecognizer)
-        
+
+        clusterArraySubscriber().disposed(by: disposeBag)
 	}
+
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -35,20 +41,17 @@ class NoteMap: UIView {
 	}
 	
 	func addCluster(forNote note: Note) {
-		if note.parentCluster != nil {
-			print("WARNING: Note already has a parent!")
-		}
-		
-		let noClusterInRange = clusters.map{ $0.check(note: note) }.filter{ $0 }.isEmpty
+
+		let noClusterInRange = clusters.value.map{ $0.check(note: note) }.filter{ $0 }.isEmpty
 		
 		if noClusterInRange {
 			let cluster = Cluster(note: note)
-			cluster.notemap = self
-			clusters.append(cluster)
+            rebindArray()
+			clusters.value.append(cluster)
 			addSubview(cluster)
 			sendSubview(toBack: cluster)
 		} else {
-			let collidedClusters = clusters.filter{ $0.check(note: note) }
+			let collidedClusters = clusters.value.filter{ $0.check(note: note) }
 			var distFromNote: [CGFloat: Cluster] = [:]
 			collidedClusters.forEach{ distFromNote[$0.centerPoint.distanceFrom(point: note.center)] = $0 }
 			let min = collidedClusters.map{ $0.centerPoint.distanceFrom(point: note.center) }.sorted(by: <).first!
@@ -68,20 +71,20 @@ class NoteMap: UIView {
 		
 		checkConsume()
 		
-        notes.append(note)
         addSubview(note)
 	}
 	
 	func checkConsume() {
-		for cluster in clusters {
-			let collidingClusters = clusters.filter{ check(lhs: cluster, rhs: $0) }
+		for cluster in clusters.value {
+			let collidingClusters = clusters.value.filter{ check(lhs: cluster, rhs: $0) }
 			if !collidingClusters.isEmpty {
 				for c in collidingClusters {
-					guard let clusterIndex = clusters.index(of: c) else {
+					guard let clusterIndex = clusters.value.index(of: c) else {
 						return
 					}
 					cluster.consume(cluster: c)
-					clusters.remove(at: clusterIndex).removeFromSuperview()
+                    rebindArray()
+					clusters.value.remove(at: clusterIndex).removeFromSuperview()
 				}
 			}
 		}
@@ -89,5 +92,26 @@ class NoteMap: UIView {
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {
 		return lhs.canConsume(cluster: rhs) && lhs !== rhs && lhs.backgroundColor == rhs.backgroundColor
+    }
+}
+
+
+extension NoteMap {
+    func clusterArraySubscriber() -> Disposable {
+        return self.clusters.asObservable().subscribe(onNext: { cluster in
+
+                var arrayOfNoteRemoval = [Observable<Note>]()
+                self.clusters.value.forEach { (arrayOfNoteRemoval.append($0.removedNoteObservable)) }
+                self.removedNoteMerge(forArray: arrayOfNoteRemoval).disposed(by: self.disposeBag)
+
+                var arrayOfCheckConsumeEvent = [Observable<()>]()
+                self.clusters.value.forEach { (arrayOfCheckConsumeEvent.append($0.checkNotemapConsume)) }
+                self.checkConsumeMerge(forArray: arrayOfCheckConsumeEvent).disposed(by: self.disposeBag)
+        })
+    }
+
+    func rebindArray() {
+        disposeBag = DisposeBag()
+        clusterArraySubscriber().disposed(by: disposeBag)
     }
 }
