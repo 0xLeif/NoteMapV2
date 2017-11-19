@@ -13,33 +13,12 @@ import RxSwift
 class Cluster: UIView {
 
     private let checkingPadding: CGFloat = 500
-    private var disposeBag = DisposeBag()
 
-    private var notes: Variable<[Note]> = Variable([])
+    fileprivate var notes: Variable<[Note]> = Variable([])
+    fileprivate var disposeBag = DisposeBag()
+
     var removedNoteObservable = PublishSubject<Note>()
     var checkNotemapConsume = PublishSubject<Void>()
-
-    private lazy var notePanMergedObservable:([Observable<Note>]) -> Disposable = { forArray in
-        return Observable.merge(forArray).subscribe { event in
-            event.map { note in
-                self.noteDidPan(forNote: note)
-            }
-        }
-    }
-
-    private lazy var notesArraySubscriber:() -> Disposable = {
-        return self.notes.asObservable().subscribe(onNext: { note in
-            if (self.notes.value.count != 0) {
-
-                self.isHidden = self.notes.value.count == 1
-                self.updateView()
-
-                var arrayOfNoteObservables = [Observable<Note>]()
-                self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
-                self.notePanMergedObservable(arrayOfNoteObservables).disposed(by: self.disposeBag)
-            }
-        })
-    }
 
 	var maxRadius: CGFloat {
 		return CGFloat(notes.value.count) * checkingPadding
@@ -121,11 +100,6 @@ class Cluster: UIView {
         clustersNotes.value.forEach { self.add(note: $0) }
 	}
 
-    private func rebindArray() {
-        disposeBag = DisposeBag()
-        notesArraySubscriber().disposed(by: disposeBag)
-    }
-
     func noteDidPan(forNote note: Note) {
         updateView()
         if !check(note:  note) {
@@ -142,4 +116,24 @@ class Cluster: UIView {
 		notes.value.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * self.transform.a, y: $0.center.y + translation.y * self.transform.a) }
         checkNotemapConsume.onNext(())
 	}
+}
+
+
+extension Cluster {
+    func notesArraySubscriber() -> Disposable {
+        return self.notes.asObservable().subscribe(onNext: { note in
+
+                self.isHidden = self.notes.value.count == 1
+                self.updateView()
+
+                var arrayOfNoteObservables = [Observable<Note>]()
+                self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
+                self.notePanMerge(forArray: arrayOfNoteObservables).disposed(by: self.disposeBag)
+        })
+    }
+
+    func rebindArray() {
+        disposeBag = DisposeBag()
+        notesArraySubscriber().disposed(by: disposeBag)
+    }
 }

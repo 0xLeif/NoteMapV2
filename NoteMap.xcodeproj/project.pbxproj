@@ -22,6 +22,8 @@
 		929129E31EFDC61700F76383 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929129E21EFDC61700F76383 /* Note.swift */; };
 		92B945DA1FB11450004AE9A8 /* UIColor+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B945D91FB11450004AE9A8 /* UIColor+NM.swift */; };
 		92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD400B1EFE1B120054DBD7 /* Cluster.swift */; };
+		9E9236FF8768C529C197A8C4 /* Cluster+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */; };
+		9E9237AD600A55C1E2E0B543 /* NoteMap+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E923036B432901FC2470A5F /* NoteMap+Rx.swift */; };
 		DCEB787A5B18E4817FD9A80A /* Pods_NoteMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7200E9D3F47433A9EC8956B /* Pods_NoteMap.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +58,8 @@
 		929129E21EFDC61700F76383 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		92B945D91FB11450004AE9A8 /* UIColor+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NM.swift"; sourceTree = "<group>"; };
 		92BD400B1EFE1B120054DBD7 /* Cluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cluster.swift; sourceTree = "<group>"; };
+		9E923036B432901FC2470A5F /* NoteMap+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NoteMap+Rx.swift"; sourceTree = "<group>"; };
+		9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cluster+Rx.swift"; sourceTree = "<group>"; };
 		CF20A68D2C02503CA53CB4EA /* Pods-NoteMapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMapTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMapTests/Pods-NoteMapTests.release.xcconfig"; sourceTree = "<group>"; };
 		D42DA05B3ABA30BA67CA8847 /* Pods-NoteMapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMapTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMapTests/Pods-NoteMapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F0BF1267E1581A87FF8C2CF1 /* Pods-NoteMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMap.release.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMap/Pods-NoteMap.release.xcconfig"; sourceTree = "<group>"; };
@@ -98,6 +102,8 @@
 				92906FC41EFE146000B31025 /* ViewController+NM.swift */,
 				92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */,
 				92B945D91FB11450004AE9A8 /* UIColor+NM.swift */,
+				9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */,
+				9E923036B432901FC2470A5F /* NoteMap+Rx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -394,6 +400,8 @@
 				92906FC31EFE0CF700B31025 /* NoteMap.swift in Sources */,
 				92906FC51EFE146000B31025 /* ViewController+NM.swift in Sources */,
 				92906FC11EFE0B3200B31025 /* UIScreen+NM.swift in Sources */,
+				9E9236FF8768C529C197A8C4 /* Cluster+Rx.swift in Sources */,
+				9E9237AD600A55C1E2E0B543 /* NoteMap+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

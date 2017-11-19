@@ -15,40 +15,10 @@ class NoteMap: UIView {
 		let multiplier: CGFloat = 100
 		return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
 	}
-    private var clusters: Variable<[Cluster]> = Variable([])
+    fileprivate var clusters: Variable<[Cluster]> = Variable([])
+    fileprivate var disposeBag = DisposeBag()
+
     var selectedColor: UIColor?
-    private var disposeBag = DisposeBag()
-
-    lazy var clusterArraySubscriber:() -> Disposable = {
-        return self.clusters.asObservable().subscribe(onNext: { cluster in
-            if (self.clusters.value.count != 0) {
-
-                var arrayOfRemoval = [Observable<Note>]()
-                self.clusters.value.forEach { (arrayOfRemoval.append($0.removedNoteObservable)) }
-                self.theRemovalMerge(arrayOfRemoval).disposed(by: self.disposeBag)
-
-                var arrayOfDidPanEvent = [Observable<()>]()
-                self.clusters.value.forEach { (arrayOfDidPanEvent.append($0.checkNotemapConsume)) }
-                self.thePanEventMerge(arrayOfDidPanEvent).disposed(by: self.disposeBag)
-            }
-        })
-    }
-
-    lazy var theRemovalMerge:([Observable<Note>]) -> Disposable = { arrayOfRemoval in
-        return Observable.merge(arrayOfRemoval).subscribe { event in
-            event.map { note in
-                self.addCluster(forNote: note)
-            }
-        }
-    }
-
-    lazy var thePanEventMerge:([Observable<()>]) -> Disposable = { arrayOfDidPanEvent in
-        return Observable.merge(arrayOfDidPanEvent).subscribe { event in
-            event.map { note in
-                self.checkConsume()
-            }
-        }
-    }
 
     init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
@@ -89,11 +59,6 @@ class NoteMap: UIView {
 			cluster?.add(note: note)
 		}
 	}
-
-    private func rebindArray() {
-        disposeBag = DisposeBag()
-        clusterArraySubscriber().disposed(by: disposeBag)
-    }
 	
 	private func addNote(atCenter point: CGPoint) {
         guard let color = selectedColor else {
@@ -127,5 +92,26 @@ class NoteMap: UIView {
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {
 		return lhs.canConsume(cluster: rhs) && lhs !== rhs && lhs.backgroundColor == rhs.backgroundColor
+    }
+}
+
+
+extension NoteMap {
+    func clusterArraySubscriber() -> Disposable {
+        return self.clusters.asObservable().subscribe(onNext: { cluster in
+
+                var arrayOfNoteRemoval = [Observable<Note>]()
+                self.clusters.value.forEach { (arrayOfNoteRemoval.append($0.removedNoteObservable)) }
+                self.removedNoteMerge(forArray: arrayOfNoteRemoval).disposed(by: self.disposeBag)
+
+                var arrayOfCheckConsumeEvent = [Observable<()>]()
+                self.clusters.value.forEach { (arrayOfCheckConsumeEvent.append($0.checkNotemapConsume)) }
+                self.checkConsumeMerge(forArray: arrayOfCheckConsumeEvent).disposed(by: self.disposeBag)
+        })
+    }
+
+    func rebindArray() {
+        disposeBag = DisposeBag()
+        clusterArraySubscriber().disposed(by: disposeBag)
     }
 }
