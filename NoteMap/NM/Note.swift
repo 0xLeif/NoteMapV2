@@ -26,6 +26,8 @@ class Note: UITextView {
     var noteDidPanObservable = PublishSubject<Note>()
     var updateParentObservable = PublishSubject<Void>()
 
+    var deleteNoteObservable = PublishSubject<Note>()
+
     var importance: NoteImportance = .none {
 		didSet {
 			layer.borderWidth = importance.rawValue

@@ -108,6 +108,14 @@ class Cluster: UIView {
             checkNotemapConsume.onNext(())
         }
     }
+
+    func deleteNote(forNote note: Note) {
+        guard let noteIndex = notes.value.index(of: note) else {
+            return
+        }
+        notes.value[noteIndex].removeFromSuperview()
+        notes.value.remove(at: noteIndex)
+    }
 	
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
@@ -123,12 +131,16 @@ extension Cluster {
     func notesArraySubscriber() -> Disposable {
         return self.notes.asObservable().subscribe(onNext: { note in
 
-                self.isHidden = self.notes.value.count == 1
-                self.updateView()
+            self.isHidden = self.notes.value.count == 1
+            self.updateView()
 
-                var arrayOfNoteObservables = [Observable<Note>]()
-                self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
-                self.notePanMerge(forArray: arrayOfNoteObservables).disposed(by: self.disposeBag)
+            var arrayOfNoteObservables = [Observable<Note>]()
+            self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
+            self.notePanMerge(forArray: arrayOfNoteObservables).disposed(by: self.disposeBag)
+
+            var arrayOfDeleteNote = [Observable<Note>]()
+            self.notes.value.forEach{ (arrayOfDeleteNote.append($0.deleteNoteObservable)) }
+            self.noteDeleteMerge(forArray: arrayOfDeleteNote).disposed(by: self.disposeBag)
         })
     }
 
