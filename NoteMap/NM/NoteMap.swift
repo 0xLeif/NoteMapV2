@@ -89,8 +89,7 @@ class NoteMap: UIView {
     
     
     func checkBounds(of: Cluster, forTranslation point: CGPoint) -> Bool {
-        let badNotes = of.notes.filter{ !bounds.contains(CGPoint(x: $0.center.x + point.x, y: $0.center.y + point.y)) }
-        return badNotes.isEmpty
+        return of.notes.filter{ !bounds.contains(CGPoint(x: $0.center.x + point.x, y: $0.center.y + point.y)) }.isEmpty
     }
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {

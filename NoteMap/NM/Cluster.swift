@@ -15,7 +15,6 @@ class Cluster: UIView {
     private var isPanning = false
     var notes: [Note] = [] {
         didSet {
-			//isHidden = notes.count == 1
             updateView()
         }
     }
@@ -95,7 +94,6 @@ class Cluster: UIView {
 	
 	func noteDidPan() {
 		notemap?.checkConsume()
-        
 	}
 	
 	func consume(cluster: Cluster) {
@@ -110,9 +108,9 @@ class Cluster: UIView {
         }
 		let translation = sender.translation(in: self)
         if notemap.checkBounds(of: self, forTranslation: translation) {
-            sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
+            center = CGPoint(x: center.x + translation.x * transform.a, y: center.y + translation.y * transform.a)
             sender.setTranslation(CGPoint.zero, in: self)
-            notes.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * self.transform.a, y: $0.center.y + translation.y * self.transform.a) }
+            notes.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * transform.a, y: $0.center.y + translation.y * transform.a) }
             noteDidPan()
             isPanning = false
         }else{
