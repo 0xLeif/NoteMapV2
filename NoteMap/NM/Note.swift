@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
+
 enum NoteImportance: CGFloat {
 	// The values are for the borderWidth
 	case none = 0
@@ -16,9 +19,14 @@ enum NoteImportance: CGFloat {
 }
 
 class Note: UITextView {
+
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
-	var parentCluster: Cluster?
-	var importance: NoteImportance = .none {
+
+    var disposeBag = DisposeBag()
+    var noteDidPanObservable = PublishSubject<Note>()
+    var updateParentObservable = PublishSubject<Void>()
+
+    var importance: NoteImportance = .none {
 		didSet {
 			layer.borderWidth = importance.rawValue
 		}
@@ -35,19 +43,15 @@ class Note: UITextView {
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
-		
+
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
         
         inputAccessoryView = setUpLocalColorPicker()
 	}
-	
+
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-	
-	func setNew(parent: Cluster?) {
-		parentCluster = parent
 	}
 	
     func setUpLocalColorPicker() -> UIView{
@@ -66,6 +70,7 @@ class Note: UITextView {
         }
         return view
     }
+
     @objc func localColorPicked(sender: UIButton){
         let buttons = inputAccessoryView?.subviews.flatMap{ $0 as? UIButton }
         for button in buttons!{
@@ -73,35 +78,16 @@ class Note: UITextView {
         }
         sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
-        updateParent()
-        
-        
+        noteDidPanObservable.onNext(self)
+
     }
     
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
-        guard let parentCluster = parentCluster,
-            let notemap = parentCluster.notemap else{
-                return
-        }
 		let translation = sender.translation(in: self)
-        if notemap.checkBounds(of: parentCluster, forTranslation: translation){
-            sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
-            sender.setTranslation(CGPoint.zero, in: self)
-            updateParent()
-        }
-    }
-    
-    private func updateParent() {
-        guard let parent = parentCluster else {
-            return
-        }
-        if !parent.check(note: self) {
-            parent.remove(note: self)
-        } else {
-            parent.noteDidPan()
-        }
-        parent.updateView()
-    }
+		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * transform.a, y: sender.view!.center.y + translation.y * transform.a)
+		sender.setTranslation(CGPoint.zero, in: self)
+        noteDidPanObservable.onNext(self)
+	}
 }
 
 extension Note: UITextViewDelegate {
