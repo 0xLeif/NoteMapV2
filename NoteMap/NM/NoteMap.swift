@@ -10,11 +10,12 @@ import UIKit
 import RxCocoa
 import RxSwift
 
+public var noteMapSize: CGSize {
+	let multiplier: CGFloat = 100
+	return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
+}
+
 class NoteMap: UIView {
-	fileprivate var noteMapSize: CGSize {
-		let multiplier: CGFloat = 100
-		return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
-	}
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
 
