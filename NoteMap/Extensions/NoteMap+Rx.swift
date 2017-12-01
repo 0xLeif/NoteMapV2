@@ -16,7 +16,7 @@ extension NoteMap {
 
     func checkConsumeMerge(forArray observableArray: [Observable<Cluster>]) -> Disposable {
         return Observable.merge(observableArray).subscribe(onNext: { cluster in
-			cluster.isInBounds(self.bounds, cluster)
+			cluster.check(bounds: self.bounds)
             self.checkConsume()
         })
     }
