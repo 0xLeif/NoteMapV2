@@ -69,6 +69,7 @@ class Cluster: UIView {
 	}
     
     func updateView() {
+        isHidden = notes.value.count == 1
         frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
 		checkBorder()
         center = centerPoint
@@ -113,8 +114,7 @@ class Cluster: UIView {
         guard let noteIndex = notes.value.index(of: note) else {
             return
         }
-        notes.value[noteIndex].removeFromSuperview()
-        notes.value.remove(at: noteIndex)
+        notes.value.remove(at: noteIndex).removeFromSuperview()
     }
 	
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
@@ -129,9 +129,8 @@ class Cluster: UIView {
 
 extension Cluster {
     func notesArraySubscriber() -> Disposable {
-        return self.notes.asObservable().subscribe(onNext: { note in
+        return notes.asObservable().subscribe(onNext: { note in
 
-            self.isHidden = self.notes.value.count == 1
             self.updateView()
 
             var arrayOfNoteObservables = [Observable<Note>]()
