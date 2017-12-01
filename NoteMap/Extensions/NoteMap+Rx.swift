@@ -14,8 +14,9 @@ extension NoteMap {
         })
     }
 
-    func checkConsumeMerge(forArray observableArray: [Observable<()>]) -> Disposable {
-        return Observable.merge(observableArray).subscribe(onNext: { _ in
+    func checkConsumeMerge(forArray observableArray: [Observable<Cluster>]) -> Disposable {
+        return Observable.merge(observableArray).subscribe(onNext: { cluster in
+			cluster.check(bounds: self.bounds)
             self.checkConsume()
         })
     }

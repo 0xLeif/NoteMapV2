@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RxCocoa
 import RxSwift
 
 class Cluster: UIView {
@@ -18,8 +17,11 @@ class Cluster: UIView {
     fileprivate var disposeBag = DisposeBag()
 
     var removedNoteObservable = PublishSubject<Note>()
-    var checkNotemapConsume = PublishSubject<Void>()
+    var checkNotemapConsume = PublishSubject<Cluster>()
 
+	private var newPoint: CGPoint = .zero
+	private var inBounds: Bool = true
+	
 	var maxRadius: CGFloat {
 		return CGFloat(notes.value.count) * checkingPadding
 	}
@@ -54,6 +56,10 @@ class Cluster: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+	
+	func check(bounds: CGRect) {
+		inBounds = notes.value.filter{ !bounds.contains(CGPoint(x: $0.center.x + newPoint.x, y: $0.center.y + newPoint.y)) }.isEmpty
+	}
     
     func add(note: Note) {
         notes.value.append(note)
@@ -69,7 +75,8 @@ class Cluster: UIView {
 	}
     
     func updateView() {
-        frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
+		let isSingleNote = notes.value.count == 1
+		frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
 		checkBorder()
         center = centerPoint
         layer.cornerRadius = sizeForNotes / 2
@@ -97,37 +104,40 @@ class Cluster: UIView {
 		let clustersNotes = cluster.notes
         cluster.disposeBag = DisposeBag()
 		cluster.notes = Variable([])
-        clustersNotes.value.forEach { self.add(note: $0) }
+        clustersNotes.value.forEach { add(note: $0) }
 	}
-
+	
     func noteDidPan(forNote note: Note) {
         updateView()
         if !check(note:  note) {
             remove(note: note)
         } else {
-            checkNotemapConsume.onNext(())
+            checkNotemapConsume.onNext(self)
         }
     }
 	
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
-		let translation = sender.translation(in: self)
-		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
+		newPoint = sender.translation(in: self)
 		sender.setTranslation(CGPoint.zero, in: self)
-		notes.value.forEach{ $0.center = CGPoint(x: $0.center.x + translation.x * self.transform.a, y: $0.center.y + translation.y * self.transform.a) }
-        checkNotemapConsume.onNext(())
+		if inBounds {
+			center = CGPoint(x: center.x + newPoint.x * transform.a, y: center.y + newPoint.y * transform.a)
+			notes.value.forEach{ $0.center = CGPoint(x: $0.center.x + newPoint.x * transform.a, y: $0.center.y + newPoint.y * transform.a) }
+		} else {
+			UINotificationFeedbackGenerator().notificationOccurred(.error)
+		}
+		checkNotemapConsume.onNext(self)
 	}
 }
 
 
 extension Cluster {
     func notesArraySubscriber() -> Disposable {
-        return self.notes.asObservable().subscribe(onNext: { note in
+        return notes.asObservable().subscribe(onNext: { note in
 
-                self.isHidden = self.notes.value.count == 1
                 self.updateView()
 
                 var arrayOfNoteObservables = [Observable<Note>]()
-                self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
+			self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
                 self.notePanMerge(forArray: arrayOfNoteObservables).disposed(by: self.disposeBag)
         })
     }

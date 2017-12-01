@@ -21,7 +21,7 @@ enum NoteImportance: CGFloat {
 class Note: UITextView {
 
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
-
+	private var newPoint: CGPoint = .zero
     var disposeBag = DisposeBag()
     var noteDidPanObservable = PublishSubject<Note>()
     var updateParentObservable = PublishSubject<Void>()
@@ -84,9 +84,14 @@ class Note: UITextView {
     
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		let translation = sender.translation(in: self)
-		sender.view!.center = CGPoint(x: sender.view!.center.x + translation.x * self.transform.a, y: sender.view!.center.y + translation.y * self.transform.a)
 		sender.setTranslation(CGPoint.zero, in: self)
-        noteDidPanObservable.onNext(self)
+		newPoint = CGPoint(x: center.x + translation.x * transform.a, y: center.y + translation.y * transform.a)
+		if CGRect(origin: .zero, size: noteMapSize).contains(newPoint) {
+			center = newPoint
+			noteDidPanObservable.onNext(self)
+		} else {
+			UINotificationFeedbackGenerator().notificationOccurred(.error)
+		}
 	}
 }
 

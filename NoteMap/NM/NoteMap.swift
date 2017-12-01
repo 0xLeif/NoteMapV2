@@ -10,11 +10,12 @@ import UIKit
 import RxCocoa
 import RxSwift
 
+public var noteMapSize: CGSize {
+	let multiplier: CGFloat = 100
+	return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
+}
+
 class NoteMap: UIView {
-	fileprivate var noteMapSize: CGSize {
-		let multiplier: CGFloat = 100
-		return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
-	}
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
 
@@ -37,7 +38,7 @@ class NoteMap: UIView {
 	}
 	
 	@objc func doubleTap(sender: UITapGestureRecognizer) {
-		addNote(atCenter: sender.location(in: self))
+        addNote(atCenter: sender.location(in: self))
 	}
 	
 	func addCluster(forNote note: Note) {
@@ -104,7 +105,7 @@ extension NoteMap {
                 self.clusters.value.forEach { (arrayOfNoteRemoval.append($0.removedNoteObservable)) }
                 self.removedNoteMerge(forArray: arrayOfNoteRemoval).disposed(by: self.disposeBag)
 
-                var arrayOfCheckConsumeEvent = [Observable<()>]()
+                var arrayOfCheckConsumeEvent = [Observable<(Cluster)>]()
                 self.clusters.value.forEach { (arrayOfCheckConsumeEvent.append($0.checkNotemapConsume)) }
                 self.checkConsumeMerge(forArray: arrayOfCheckConsumeEvent).disposed(by: self.disposeBag)
         })
