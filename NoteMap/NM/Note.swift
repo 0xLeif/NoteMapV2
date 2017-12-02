@@ -17,6 +17,9 @@ class Note: UITextView {
     var disposeBag = DisposeBag()
     var noteDidPanObservable = PublishSubject<Note>()
     var updateParentObservable = PublishSubject<Void>()
+
+    var deleteNoteObservable = PublishSubject<Note>()
+
 	
 	init(atCenter point: CGPoint, withColor color: UIColor) {
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)

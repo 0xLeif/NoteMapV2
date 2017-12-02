@@ -13,4 +13,10 @@ extension Cluster {
             self.noteDidPan(forNote: note)
         })
     }
+
+    func noteDeleteMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
+        return Observable.merge(observableArray).subscribe(onNext: { note in
+            self.deleteNote(forNote: note)
+        })
+    }
 }

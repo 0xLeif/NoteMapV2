@@ -77,6 +77,8 @@ class Cluster: UIView {
     func updateView() {
 		let isSingleNote = notes.value.count == 1
 		frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
+        isHidden = notes.value.count == 1
+        frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
 		checkBorder()
         center = centerPoint
         layer.cornerRadius = sizeForNotes / 2
@@ -115,6 +117,13 @@ class Cluster: UIView {
             checkNotemapConsume.onNext(self)
         }
     }
+
+    func deleteNote(forNote note: Note) {
+        guard let noteIndex = notes.value.index(of: note) else {
+            return
+        }
+        notes.value.remove(at: noteIndex).removeFromSuperview()
+    }
 	
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		newPoint = sender.translation(in: self)
@@ -134,11 +143,15 @@ extension Cluster {
     func notesArraySubscriber() -> Disposable {
         return notes.asObservable().subscribe(onNext: { note in
 
-                self.updateView()
+            self.updateView()
 
-                var arrayOfNoteObservables = [Observable<Note>]()
-			self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
-                self.notePanMerge(forArray: arrayOfNoteObservables).disposed(by: self.disposeBag)
+            var arrayOfNoteObservables = [Observable<Note>]()
+            self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
+            self.notePanMerge(forArray: arrayOfNoteObservables).disposed(by: self.disposeBag)
+
+            var arrayOfDeleteNote = [Observable<Note>]()
+            self.notes.value.forEach{ (arrayOfDeleteNote.append($0.deleteNoteObservable)) }
+            self.noteDeleteMerge(forArray: arrayOfDeleteNote).disposed(by: self.disposeBag)
         })
     }
 
