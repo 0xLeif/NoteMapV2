@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4CEFDBCD6F07567C0BCF9C39 /* Pods_NoteMapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A607DF1F81D81333D9D9EC /* Pods_NoteMapTests.framework */; };
+		922252D51FD11182002A2238 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922252D41FD11182002A2238 /* BottomSheet.swift */; };
 		926F96431FA94FF000A4A98D /* CGPoint+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926F96421FA94FF000A4A98D /* CGPoint+NM.swift */; };
 		92906FBF1EFE0AC200B31025 /* NoteMapScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */; };
 		92906FC11EFE0B3200B31025 /* UIScreen+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */; };
@@ -40,6 +41,7 @@
 /* Begin PBXFileReference section */
 		40D7DC94A44C9A6A1F8DC35D /* Pods-NoteMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMap/Pods-NoteMap.debug.xcconfig"; sourceTree = "<group>"; };
 		65A607DF1F81D81333D9D9EC /* Pods_NoteMapTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NoteMapTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		922252D41FD11182002A2238 /* BottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		926F96421FA94FF000A4A98D /* CGPoint+NM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+NM.swift"; sourceTree = "<group>"; };
 		92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteMapScrollView.swift; sourceTree = "<group>"; };
 		92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+NM.swift"; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 		928B79311EFF4EE8001E9269 /* NM */ = {
 			isa = PBXGroup;
 			children = (
+				922252D41FD11182002A2238 /* BottomSheet.swift */,
 				92BD400B1EFE1B120054DBD7 /* Cluster.swift */,
 				92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */,
 				92906FC21EFE0CF700B31025 /* NoteMap.swift */,
@@ -401,6 +404,7 @@
 				92906FC51EFE146000B31025 /* ViewController+NM.swift in Sources */,
 				92906FC11EFE0B3200B31025 /* UIScreen+NM.swift in Sources */,
 				9E9236FF8768C529C197A8C4 /* Cluster+Rx.swift in Sources */,
+				922252D51FD11182002A2238 /* BottomSheet.swift in Sources */,
 				9E9237AD600A55C1E2E0B543 /* NoteMap+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

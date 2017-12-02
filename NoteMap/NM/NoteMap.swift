@@ -19,8 +19,6 @@ class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
 
-    var selectedColor: UIColor?
-
     init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
 		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)

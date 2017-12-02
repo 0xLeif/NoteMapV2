@@ -10,14 +10,6 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-enum NoteImportance: CGFloat {
-	// The values are for the borderWidth
-	case none = 0
-	case low = 3
-	case medium = 6
-	case high = 9
-}
-
 class Note: UITextView {
 
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
@@ -28,11 +20,6 @@ class Note: UITextView {
 
     var deleteNoteObservable = PublishSubject<Note>()
 
-    var importance: NoteImportance = .none {
-		didSet {
-			layer.borderWidth = importance.rawValue
-		}
-	}
 	
 	init(atCenter point: CGPoint, withColor color: UIColor) {
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
@@ -41,7 +28,7 @@ class Note: UITextView {
 		center = point
         delegate = self
 		backgroundColor = color
-		layer.borderColor = UIColor.white.cgColor
+		layer.borderColor = UIColor.black.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
