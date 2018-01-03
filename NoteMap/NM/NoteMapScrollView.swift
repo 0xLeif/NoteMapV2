@@ -9,9 +9,12 @@
 import UIKit
 
 class NoteMapScrollView: UIScrollView {
-	var noteMap: NoteMap
+	fileprivate var noteMap: NoteMap
 	var centerViewPoint: CGPoint {
 		return contentOffset
+	}
+	var noteMapBackgroundColor: UIColor? {
+		return noteMap.backgroundColor
 	}
 	
 	required init?(coder aDecoder: NSCoder) {

@@ -39,7 +39,7 @@ class ViewController: UIViewController {
 			colorPickerView.delegate = self
 			colorPickerView.dataSource = self
 			colorPickerView.frame = CGRect(x: 0, y: 0, width: UIScreen.width, height: 200)
-			colorPickerView.backgroundColor = noteMapScrollView.noteMap.backgroundColor
+			colorPickerView.backgroundColor = noteMapScrollView.noteMapBackgroundColor
 			return colorPickerView
 		}
 		func createToolbar() -> UIToolbar{
