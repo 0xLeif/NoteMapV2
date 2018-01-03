@@ -99,7 +99,7 @@ class Cluster: UIView {
     }
 	
 	func canConsume(cluster: Cluster) -> Bool {
-		return center.distanceFrom(point: cluster.center) <= (sizeForNotes / 2) + 250
+		return center.distanceFrom(point: cluster.center) <= (sizeForNotes / 2)
 	}
 	
 	func consume(cluster: Cluster) {
