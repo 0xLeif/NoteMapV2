@@ -17,17 +17,18 @@ class Note: UITextView {
     var disposeBag = DisposeBag()
     var noteDidPanObservable = PublishSubject<Note>()
     var updateParentObservable = PublishSubject<Void>()
-
     var deleteNoteObservable = PublishSubject<Note>()
-
 	
-	init(atCenter point: CGPoint, withColor color: UIColor) {
+	var color: Color
+	
+	init(atCenter point: CGPoint, withColor color: Color) {
+		self.color = color
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
 		adjustsFontForContentSizeCategory = true
 		font = UIFont.systemFont(ofSize: 16)
 		center = point
         delegate = self
-		backgroundColor = color
+		backgroundColor = colorData.filter{ $0.color == color }.first?.uicolor
 		layer.borderColor = UIColor.black.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
@@ -45,17 +46,16 @@ class Note: UITextView {
 	
     func setUpLocalColorPicker() -> UIView{
         let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
-        for color in colorData{
-            guard let index = colorData.index(of: color) else{
-                return UIView()
-            }
+		var count = 0
+        for color in colorData {
             let width  = Int(UIScreen.width) / colorData.count
-            let button : UIButton = UIButton(frame: CGRect(x: index * width, y: 0, width: width, height: 48))
-            button.backgroundColor = color
+            let button : UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
+            button.backgroundColor = color.uicolor
             button.layer.borderColor = UIColor.white.cgColor
-            button.layer.borderWidth = color == backgroundColor ? 2 : 0
+            button.layer.borderWidth = color.uicolor == backgroundColor ? 2 : 0
             button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
             view.addSubview(button)
+			count += 1
         }
         return view
     }
@@ -80,6 +80,16 @@ class Note: UITextView {
 			noteDidPanObservable.onNext(self)
 		} else {
 			UINotificationFeedbackGenerator().notificationOccurred(.error)
+		}
+	}
+}
+
+extension Note: Themeable {
+	func updateTheme() {
+		backgroundColor = colorData.filter{ $0.color == color}.first?.uicolor
+		inputAccessoryView = setUpLocalColorPicker()
+		if isFirstResponder {
+			resignFirstResponder()
 		}
 	}
 }

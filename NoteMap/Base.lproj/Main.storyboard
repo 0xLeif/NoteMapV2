@@ -14,6 +14,7 @@
             <objects>
                 <navigationController id="zN8-Ix-JY3" sceneMemberID="viewController">
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="G1L-CJ-KY3">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -47,10 +48,20 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Vi9-xm-yGd"/>
                     </view>
-                    <navigationItem key="navigationItem" id="WdU-Ht-7Z2"/>
+                    <navigationItem key="navigationItem" id="WdU-Ht-7Z2">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="fvP-dv-Cso">
+                            <switch key="customView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="QUS-Bs-Vmr">
+                                <rect key="frame" x="308" y="6.5" width="51" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="onTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="thumbTintColor" red="0.2616758347" green="0.68603235480000002" blue="0.86980766060000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </switch>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
                     <connections>
                         <outlet property="noteMapScrollView" destination="e8g-ef-MKM" id="skQ-lr-ZNB"/>
+                        <outlet property="themeToggle" destination="fvP-dv-Cso" id="kzo-sH-bB2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
