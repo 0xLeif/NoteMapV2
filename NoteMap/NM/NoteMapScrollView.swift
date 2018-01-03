@@ -13,6 +13,9 @@ class NoteMapScrollView: UIScrollView {
 	var centerViewPoint: CGPoint {
 		return contentOffset
 	}
+	var noteMapBackgroundColor: UIColor? {
+		return noteMap.backgroundColor
+	}
 	
 	required init?(coder aDecoder: NSCoder) {
 		noteMap = NoteMap()
