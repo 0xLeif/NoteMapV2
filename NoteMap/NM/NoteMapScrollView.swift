@@ -9,7 +9,7 @@
 import UIKit
 
 class NoteMapScrollView: UIScrollView {
-	fileprivate var noteMap: NoteMap
+	var noteMap: NoteMap
 	var centerViewPoint: CGPoint {
 		return contentOffset
 	}

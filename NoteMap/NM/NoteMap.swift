@@ -60,11 +60,7 @@ class NoteMap: UIView {
 	}
 	
 	private func addNote(atCenter point: CGPoint) {
-        guard let color = selectedColor else {
-            print("invalid color")
-            return
-        }
-		let note = Note(atCenter: point, withColor: color)
+		let note = Note(atCenter: point, withColor: selectedColor)
 		
 		addCluster(forNote: note)
 		
