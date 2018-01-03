@@ -90,7 +90,6 @@ class NoteMap: UIView {
     }
 }
 
-
 extension NoteMap {
     func clusterArraySubscriber() -> Disposable {
         return self.clusters.asObservable().subscribe(onNext: { cluster in
@@ -109,4 +108,12 @@ extension NoteMap {
         disposeBag = DisposeBag()
         clusterArraySubscriber().disposed(by: disposeBag)
     }
+}
+
+extension NoteMap: Themeable {
+	
+	func updateTheme() {
+		clusters.value.forEach{ $0.updateTheme() }
+		backgroundColor = backgroundColorData
+	}
 }

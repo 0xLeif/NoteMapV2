@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol Themeable {
+	func updateTheme()
+}
+
 class NoteMapScrollView: UIScrollView {
 	fileprivate var noteMap: NoteMap
 	var centerViewPoint: CGPoint {
@@ -25,6 +29,10 @@ class NoteMapScrollView: UIScrollView {
 		delegate = self
 		minimumZoomScale = 0.01
 		maximumZoomScale = 4
+	}
+	
+	func updateTheme() {
+		noteMap.updateTheme()
 	}
 	
 	func scrollTo(point: CGPoint) {

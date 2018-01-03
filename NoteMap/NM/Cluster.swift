@@ -138,6 +138,13 @@ class Cluster: UIView {
 	}
 }
 
+extension Cluster: Themeable {
+	func updateTheme() {
+		notes.value.forEach{ $0.updateTheme() }
+		backgroundColor = notes.value.first?.backgroundColor?.withAlphaComponent(0.25)
+	}
+}
+
 
 extension Cluster {
     func notesArraySubscriber() -> Disposable {
