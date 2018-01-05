@@ -49,8 +49,13 @@ class Cluster: UIView {
         add(note: note)
 
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
+		panGestureRecognizer.maximumNumberOfTouches = 1
 		addGestureRecognizer(panGestureRecognizer)
 
+		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
+		deleteTapRecognizer.numberOfTouchesRequired = 2
+		deleteTapRecognizer.numberOfTapsRequired = 3
+		addGestureRecognizer(deleteTapRecognizer)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -122,8 +127,12 @@ class Cluster: UIView {
         guard let noteIndex = notes.value.index(of: note) else {
             return
         }
-        notes.value.remove(at: noteIndex).removeFromSuperview()
+		notes.value.remove(at: noteIndex)
     }
+	
+	@objc func deleteSelf() {
+		delete()
+	}
 	
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
 		newPoint = sender.translation(in: self)
@@ -142,6 +151,14 @@ extension Cluster: Themeable {
 	func updateTheme() {
 		notes.value.forEach{ $0.updateTheme() }
 		backgroundColor = notes.value.first?.backgroundColor?.withAlphaComponent(0.25)
+	}
+}
+
+extension Cluster: Deletable {
+	func delete() {
+		notes.value.forEach{ $0.delete() }
+		notes.value = []
+		removeFromSuperview()
 	}
 }
 

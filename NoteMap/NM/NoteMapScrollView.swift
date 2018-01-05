@@ -12,6 +12,10 @@ protocol Themeable {
 	func updateTheme()
 }
 
+protocol Deletable {
+	func delete()
+}
+
 class NoteMapScrollView: UIScrollView {
 	fileprivate var noteMap: NoteMap
 	var centerViewPoint: CGPoint {
@@ -28,7 +32,8 @@ class NoteMapScrollView: UIScrollView {
 		contentSize = noteMap.bounds.size
 		delegate = self
 		minimumZoomScale = 0.01
-		maximumZoomScale = 4
+		maximumZoomScale = 1
+		zoomScale = 0.5
 	}
 	
 	func updateTheme() {
@@ -45,7 +50,6 @@ class NoteMapScrollView: UIScrollView {
 }
 
 extension NoteMapScrollView: UIScrollViewDelegate {
-	
 	func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 		return noteMap
 	}
