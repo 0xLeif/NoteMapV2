@@ -35,6 +35,7 @@ class Note: UITextView {
 		isScrollEnabled = false
 
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
+		panGestureRecognizer.maximumNumberOfTouches = 1
 		addGestureRecognizer(panGestureRecognizer)
 		
 		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
