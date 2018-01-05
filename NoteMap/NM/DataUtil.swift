@@ -4,3 +4,17 @@
 //
 
 import Foundation
+import UIKit
+
+struct NoteModel {
+    var center: CGPoint
+    var color: UIColor
+}
+
+struct NoteMapModel {
+    var notes: [NoteModel]
+}
+
+struct Map : Codable {
+    var notemap: [NoteMapModel]
+}

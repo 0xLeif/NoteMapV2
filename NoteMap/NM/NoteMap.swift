@@ -18,6 +18,7 @@ public var noteMapSize: CGSize {
 class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
+    static var vvNote = [Note]
 
     init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
@@ -101,6 +102,8 @@ extension NoteMap {
                 var arrayOfCheckConsumeEvent = [Observable<(Cluster)>]()
                 self.clusters.value.forEach { (arrayOfCheckConsumeEvent.append($0.checkNotemapConsume)) }
                 self.checkConsumeMerge(forArray: arrayOfCheckConsumeEvent).disposed(by: self.disposeBag)
+
+                NoteMap.vvNote = self.clusters.value
         })
     }
 
