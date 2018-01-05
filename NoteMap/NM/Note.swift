@@ -36,8 +36,17 @@ class Note: UITextView {
 
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		addGestureRecognizer(panGestureRecognizer)
-        
+		
+		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
+		deleteTapRecognizer.numberOfTouchesRequired = 2
+		deleteTapRecognizer.numberOfTapsRequired = 2
+        addGestureRecognizer(deleteTapRecognizer)
+		
         inputAccessoryView = setUpLocalColorPicker()
+	}
+	
+	@objc func deleteSelf() {
+		delete()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -91,6 +100,13 @@ extension Note: Themeable {
 		if isFirstResponder {
 			resignFirstResponder()
 		}
+	}
+}
+
+extension Note: Deletable {
+	func delete() {
+		removeFromSuperview()
+		deleteNoteObservable.onNext(self)
 	}
 }
 

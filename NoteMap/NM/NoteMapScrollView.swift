@@ -12,7 +12,7 @@ protocol Themeable {
 	func updateTheme()
 }
 
-protocol Deleteable {
+protocol Deletable {
 	func delete()
 }
 
