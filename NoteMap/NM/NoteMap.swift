@@ -21,14 +21,17 @@ class NoteMap: UIView {
 
     init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
+		NMinit()
+	}
+	
+	private func NMinit() {
 		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
-
-
+		
 		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
 		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		addGestureRecognizer(doubleTapGestureRecognizer)
-
-        clusterArraySubscriber().disposed(by: disposeBag)
+		
+		clusterArraySubscriber().disposed(by: disposeBag)
 	}
 
 	required init?(coder aDecoder: NSCoder) {

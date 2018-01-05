@@ -24,10 +24,14 @@ class Note: UITextView {
 	init(atCenter point: CGPoint, withColor color: Color) {
 		self.color = color
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
+		NMinit(atCenter: point)
+	}
+	
+	private func NMinit(atCenter point: CGPoint) {
 		adjustsFontForContentSizeCategory = true
 		font = UIFont.systemFont(ofSize: 16)
 		center = point
-        delegate = self
+		delegate = self
 		backgroundColor = colorData.filter{ $0.color == color }.first?.uicolor
 		layer.borderColor = UIColor.black.cgColor
 		layer.cornerRadius = 15
@@ -35,6 +39,7 @@ class Note: UITextView {
 		isScrollEnabled = false
 		tintColor = .white
 		textAlignment = .center
+		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		panGestureRecognizer.maximumNumberOfTouches = 1
 		addGestureRecognizer(panGestureRecognizer)
@@ -42,9 +47,9 @@ class Note: UITextView {
 		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
 		deleteTapRecognizer.numberOfTouchesRequired = 2
 		deleteTapRecognizer.numberOfTapsRequired = 2
-        addGestureRecognizer(deleteTapRecognizer)
+		addGestureRecognizer(deleteTapRecognizer)
 		
-        inputAccessoryView = setUpLocalColorPicker()
+		inputAccessoryView = setUpLocalColorPicker()
 	}
 	
 	@objc func deleteSelf() {
