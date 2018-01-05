@@ -33,7 +33,8 @@ class Note: UITextView {
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
-
+		tintColor = .white
+		textAlignment = .center
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		panGestureRecognizer.maximumNumberOfTouches = 1
 		addGestureRecognizer(panGestureRecognizer)
@@ -114,7 +115,7 @@ extension Note: Deletable {
 extension Note: UITextViewDelegate {
     //max characters: 384
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        textAlignment = NSTextAlignment.center
+		
         
         let textViewSize = textView.frame.size
         let fixedWidth = textViewSize.width-100
