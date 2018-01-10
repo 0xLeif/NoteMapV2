@@ -28,6 +28,10 @@ class NoteMapScrollView: UIScrollView {
 	required init?(coder aDecoder: NSCoder) {
 		noteMap = NoteMap()
 		super.init(coder: aDecoder)
+		NMinit()
+	}
+	
+	private func NMinit() {
 		addSubview(noteMap)
 		contentSize = noteMap.bounds.size
 		delegate = self

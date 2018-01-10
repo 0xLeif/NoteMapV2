@@ -20,6 +20,7 @@
 		929129CD1EFDC5F400F76383 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 929129CB1EFDC5F400F76383 /* LaunchScreen.storyboard */; };
 		929129D81EFDC5F500F76383 /* NoteMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929129D71EFDC5F500F76383 /* NoteMapTests.swift */; };
 		929129E31EFDC61700F76383 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929129E21EFDC61700F76383 /* Note.swift */; };
+		92B5A8341FFF3BD100EC27C5 /* NMColorField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B5A8331FFF3BD100EC27C5 /* NMColorField.swift */; };
 		92B945DA1FB11450004AE9A8 /* UIColor+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B945D91FB11450004AE9A8 /* UIColor+NM.swift */; };
 		92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD400B1EFE1B120054DBD7 /* Cluster.swift */; };
 		9E9236FF8768C529C197A8C4 /* Cluster+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */; };
@@ -56,6 +57,7 @@
 		929129D71EFDC5F500F76383 /* NoteMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteMapTests.swift; sourceTree = "<group>"; };
 		929129D91EFDC5F500F76383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		929129E21EFDC61700F76383 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		92B5A8331FFF3BD100EC27C5 /* NMColorField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMColorField.swift; sourceTree = "<group>"; };
 		92B945D91FB11450004AE9A8 /* UIColor+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NM.swift"; sourceTree = "<group>"; };
 		92BD400B1EFE1B120054DBD7 /* Cluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cluster.swift; sourceTree = "<group>"; };
 		9E923036B432901FC2470A5F /* NoteMap+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NoteMap+Rx.swift"; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				929129C41EFDC5F400F76383 /* ViewController.swift */,
 				928B79301EFF4ED9001E9269 /* Extensions */,
 				928B79311EFF4EE8001E9269 /* NM */,
+				92B5A8351FFF3BEB00EC27C5 /* Views */,
 				929129C61EFDC5F400F76383 /* Main.storyboard */,
 				929129C91EFDC5F400F76383 /* Assets.xcassets */,
 				929129CB1EFDC5F400F76383 /* LaunchScreen.storyboard */,
@@ -161,6 +164,14 @@
 				929129D91EFDC5F500F76383 /* Info.plist */,
 			);
 			path = NoteMapTests;
+			sourceTree = "<group>";
+		};
+		92B5A8351FFF3BEB00EC27C5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				92B5A8331FFF3BD100EC27C5 /* NMColorField.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		EE7D9AB529B71894CA7C562E /* Pods */ = {
@@ -393,6 +404,7 @@
 				926F96431FA94FF000A4A98D /* CGPoint+NM.swift in Sources */,
 				92906FBF1EFE0AC200B31025 /* NoteMapScrollView.swift in Sources */,
 				929129C51EFDC5F400F76383 /* ViewController.swift in Sources */,
+				92B5A8341FFF3BD100EC27C5 /* NMColorField.swift in Sources */,
 				92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */,
 				929129C31EFDC5F400F76383 /* AppDelegate.swift in Sources */,
 				929129E31EFDC61700F76383 /* Note.swift in Sources */,
