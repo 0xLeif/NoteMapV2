@@ -18,7 +18,9 @@ public var noteMapSize: CGSize {
 class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
-    static var vvNote = [Note]
+
+	private var clusterModelArray: [ClusterModel] = []
+	private var notemapModel = NoteMapModel(clusters: [])
 
     init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
@@ -103,7 +105,13 @@ extension NoteMap {
                 self.clusters.value.forEach { (arrayOfCheckConsumeEvent.append($0.checkNotemapConsume)) }
                 self.checkConsumeMerge(forArray: arrayOfCheckConsumeEvent).disposed(by: self.disposeBag)
 
-                NoteMap.vvNote = self.clusters.value
+				self.clusterModelArray.removeAll()
+				self.clusters.value.forEach { self.clusterModelArray.append($0.clusterModel)}
+				self.notemapModel.clusters = self.clusterModelArray
+
+				let encode = try? JSONEncoder().encode(self.notemapModel)
+				let a = String(data: encode!, encoding: String.Encoding.utf8)
+				print("After Encode : \(a!)")
         })
     }
 

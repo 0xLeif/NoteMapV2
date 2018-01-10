@@ -6,15 +6,22 @@
 import Foundation
 import UIKit
 
-struct NoteModel {
+struct NoteModel: Placeable {
     var center: CGPoint
-    var color: UIColor
 }
 
-struct NoteMapModel {
+struct ClusterModel: Placeable {
+
     var notes: [NoteModel]
+
+    var center: CGPoint
 }
 
-struct Map : Codable {
-    var notemap: [NoteMapModel]
+struct NoteMapModel: Codable {
+    var clusters: [ClusterModel]
+}
+
+protocol Placeable: Codable {
+    var center: CGPoint { get set }
+    //var color: UIColor { get set }
 }
