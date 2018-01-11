@@ -28,6 +28,7 @@ class Note: UITextView {
 	}
 	
 	private func NMinit(atCenter point: CGPoint) {
+        logAnalytic()
 		adjustsFontForContentSizeCategory = true
 		font = UIFont.systemFont(ofSize: 16)
 		center = point
@@ -98,6 +99,12 @@ class Note: UITextView {
 			UINotificationFeedbackGenerator().notificationOccurred(.error)
 		}
 	}
+}
+
+extension Note: LogAnalytic {
+    func logAnalytic() {
+        AnalyticsService.log(type: .Note)
+    }
 }
 
 extension Note: Themeable {

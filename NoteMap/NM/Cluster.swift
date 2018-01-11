@@ -151,6 +151,12 @@ class Cluster: UIView {
 	}
 }
 
+extension Cluster: LogAnalytic {
+    func logAnalytic() {
+        AnalyticsService.log(type: .Cluster)
+    }
+}
+
 extension Cluster: Themeable {
 	func updateTheme() {
 		notes.value.forEach{ $0.updateTheme() }

@@ -25,6 +25,7 @@ class NoteMap: UIView {
 	}
 	
 	private func NMinit() {
+        logAnalytic()
 		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
 		
 		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
@@ -90,6 +91,12 @@ class NoteMap: UIView {
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {
 		return lhs.canConsume(cluster: rhs) && lhs !== rhs && lhs.backgroundColor == rhs.backgroundColor
+    }
+}
+
+extension NoteMap: LogAnalytic {
+    func logAnalytic() {
+        AnalyticsService.log(type: .Notemap)
     }
 }
 
