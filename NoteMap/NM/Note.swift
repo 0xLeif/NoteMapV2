@@ -68,6 +68,7 @@ class Note: UITextView {
             let button : UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
             button.backgroundColor = color.uicolor
             button.layer.borderColor = UIColor.white.cgColor
+			button.tag = count
             button.layer.borderWidth = color.uicolor == backgroundColor ? 2 : 0
             button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
             view.addSubview(button)
@@ -83,8 +84,8 @@ class Note: UITextView {
         }
         sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
+		color = Color(rawValue: sender.tag)!
         noteDidPanObservable.onNext(self)
-
     }
     
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
