@@ -21,6 +21,10 @@ struct NoteMapModel: Codable {
     var clusters: [ClusterModel]
 }
 
+struct MapModel: Codable {
+    var notemaps: [NoteMapModel]
+}
+
 protocol Placeable: Codable {
     var center: CGPoint { get set }
     //var color: UIColor { get set }

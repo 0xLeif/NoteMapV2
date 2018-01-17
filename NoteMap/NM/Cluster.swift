@@ -39,9 +39,6 @@ class Cluster: UIView {
         return notes.value.isEmpty ? .zero : CGPoint(x: avgX, y: avgY)
     }
 
-    private var noteModelArray: [NoteModel] = []
-    var clusterModel = ClusterModel(notes: [], center: .zero)
-
     init(note: Note) {
 
 
@@ -61,11 +58,6 @@ class Cluster: UIView {
 		deleteTapRecognizer.numberOfTouchesRequired = 2
 		deleteTapRecognizer.numberOfTapsRequired = 3
 		addGestureRecognizer(deleteTapRecognizer)
-
-        notes.value.forEach { noteModelArray.append($0.noteModel) }
-        //clusterModel = ClusterModel(center: center, color: backgroundColor!, notes: noteModelArray)
-        clusterModel.center = center
-        clusterModel.notes = noteModelArray
     }
     
     required init?(coder aDecoder: NSCoder) {

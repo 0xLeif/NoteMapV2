@@ -20,8 +20,7 @@ class Note: UITextView {
     var deleteNoteObservable = PublishSubject<Note>()
 	
 	var color: Color
-    var noteModel: NoteModel = NoteModel(center: .zero)
-	
+
 	init(atCenter point: CGPoint, withColor color: Color) {
 		self.color = color
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
@@ -45,10 +44,6 @@ class Note: UITextView {
         addGestureRecognizer(deleteTapRecognizer)
 		
         inputAccessoryView = setUpLocalColorPicker()
-
-		//noteModel = NoteModel(center: center, color: backgroundColor)
-        noteModel.center = center
-
     }
 	
 	@objc func deleteSelf() {
