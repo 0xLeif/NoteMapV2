@@ -111,6 +111,13 @@ extension Note: Deletable {
 	}
 }
 
+extension Note: SnapshotProtocol {
+    func generateSnapshot() -> BaseModel {
+        let baseModel: BaseModel = (.Note, NoteModel(center: center))
+        return baseModel
+    }
+}
+
 extension Note: UITextViewDelegate {
     //max characters: 384
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

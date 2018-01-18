@@ -128,3 +128,20 @@ extension NoteMap: Themeable {
 		backgroundColor = backgroundColorData
 	}
 }
+
+extension NoteMap: SnapshotProtocol {
+	func generateSnapshot() -> Placeable {
+		var a: [ClusterModel]
+		self.clusters.value.forEach { a.append($0.generateSnapshot()) }
+		let b = NoteMapModel(clusters: a)
+		return b
+	}
+}
+
+extension NoteMap {
+	func bindSave() {
+		SaveDataObservable.subscribe(onNext: {
+			print("hi")
+		})
+	}
+}

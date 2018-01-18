@@ -5,6 +5,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 struct NoteModel: Placeable {
     var center: CGPoint
@@ -13,7 +14,6 @@ struct NoteModel: Placeable {
 struct ClusterModel: Placeable {
 
     var notes: [NoteModel]
-
     var center: CGPoint
 }
 
@@ -28,4 +28,15 @@ struct MapModel: Codable {
 protocol Placeable: Codable {
     var center: CGPoint { get set }
     //var color: UIColor { get set }
+}
+
+protocol SnapshotProtocol {
+    func generateSnapshot() -> BaseModel
+}
+
+var SaveDataObservable = PublishSubject<Void>()
+typealias BaseModel = (type: ComponentName, model: AnyObject)
+
+enum ComponentName{
+    case Note, Cluster, Notemap
 }
