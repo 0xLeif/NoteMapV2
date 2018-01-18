@@ -130,11 +130,11 @@ extension NoteMap: Themeable {
 }
 
 extension NoteMap: SnapshotProtocol {
-	func generateSnapshot() -> Placeable {
-		var a: [ClusterModel]
-		self.clusters.value.forEach { a.append($0.generateSnapshot()) }
-		let b = NoteMapModel(clusters: a)
-		return b
+	func generateSnapshot() -> BaseModel {
+		var clusterModels: [ClusterModel] = []
+		self.clusters.value.forEach { clusterModels.append($0.generateSnapshot().model as! ClusterModel) }
+		let model: BaseModel = (.Notemap, NoteMapModel(clusters: clusterModels))
+		return model
 	}
 }
 

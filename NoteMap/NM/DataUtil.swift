@@ -35,8 +35,7 @@ protocol SnapshotProtocol {
 }
 
 var SaveDataObservable = PublishSubject<Void>()
-typealias BaseModel = (type: ComponentName, model: AnyObject)
-
-enum ComponentName{
+typealias BaseModel = (type: ComponentName, model: Any)
+enum ComponentName {
     case Note, Cluster, Notemap
 }
