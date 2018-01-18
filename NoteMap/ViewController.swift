@@ -50,7 +50,7 @@ var selectedUIColor: UIColor {
 class ViewController: UIViewController {
 	@IBOutlet weak var noteMapScrollView: NoteMapScrollView!
 	@IBOutlet weak var themeToggle: UIBarButtonItem!
-	var colorPicker: UITextField!
+	var colorPicker: NMColorField!
 	let colorPickerView: UIPickerView = UIPickerView()
     
 	override func viewDidLoad() {
@@ -58,12 +58,12 @@ class ViewController: UIViewController {
 		hideKeyboardWithBackgroundTap()
 		view.backgroundColor = .black
 		noteMapScrollView.scrollToCenter()
-		createColorPicker()
 		guard let theme = themeToggle.customView as? UISwitch else {
 			return
 		}
 		theme.thumbTintColor = selectedUIColor
 		theme.addTarget(self, action: #selector(toggleTheme), for: .allTouchEvents)
+		createColorPicker()
 		updateTheme()
 	}
 	
@@ -83,7 +83,7 @@ class ViewController: UIViewController {
 			return colorPickerView
 		}
 		func createToolbar() -> UIToolbar{
-			let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
+			let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 44))
 			var items = [UIBarButtonItem]()
 			let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(donePressed))
 			items.append(doneButton)
@@ -92,7 +92,7 @@ class ViewController: UIViewController {
 			return toolbar
 		}
 		func createColorTextField(withInputView inputView: UIPickerView, andToolbar toolbar: UIToolbar) {
-			colorPicker = UITextField(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
+			colorPicker = NMColorField(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
 			colorPicker.tintColor = .clear
 			colorPicker.layer.cornerRadius = 5
 			colorPicker.inputView = inputView
@@ -119,6 +119,7 @@ class ViewController: UIViewController {
 		updateThemeToggle()
 		colorPickerView.reloadAllComponents()
 		colorPicker.backgroundColor = selectedUIColor
+		colorPickerView.backgroundColor = noteMapScrollView.noteMapBackgroundColor
 	}
 	
 	@objc func donePressed() {

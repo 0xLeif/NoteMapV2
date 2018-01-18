@@ -24,16 +24,22 @@ class Note: UITextView {
 	init(atCenter point: CGPoint, withColor color: Color) {
 		self.color = color
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
+		NMinit(atCenter: point)
+	}
+	
+	private func NMinit(atCenter point: CGPoint) {
 		adjustsFontForContentSizeCategory = true
 		font = UIFont.systemFont(ofSize: 16)
 		center = point
-        delegate = self
+		delegate = self
 		backgroundColor = colorData.filter{ $0.color == color }.first?.uicolor
 		layer.borderColor = UIColor.black.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
-
+		tintColor = .white
+		textAlignment = .center
+		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		panGestureRecognizer.maximumNumberOfTouches = 1
 		addGestureRecognizer(panGestureRecognizer)
@@ -41,7 +47,7 @@ class Note: UITextView {
 		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
 		deleteTapRecognizer.numberOfTouchesRequired = 2
 		deleteTapRecognizer.numberOfTapsRequired = 2
-        addGestureRecognizer(deleteTapRecognizer)
+		addGestureRecognizer(deleteTapRecognizer)
 		
         inputAccessoryView = setUpLocalColorPicker()
     }
@@ -62,6 +68,7 @@ class Note: UITextView {
             let button : UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
             button.backgroundColor = color.uicolor
             button.layer.borderColor = UIColor.white.cgColor
+			button.tag = count
             button.layer.borderWidth = color.uicolor == backgroundColor ? 2 : 0
             button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
             view.addSubview(button)
@@ -77,8 +84,8 @@ class Note: UITextView {
         }
         sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
+		color = Color(rawValue: sender.tag)!
         noteDidPanObservable.onNext(self)
-
     }
     
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
@@ -121,7 +128,7 @@ extension Note: SnapshotProtocol {
 extension Note: UITextViewDelegate {
     //max characters: 384
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        textAlignment = NSTextAlignment.center
+		
         
         let textViewSize = textView.frame.size
         let fixedWidth = textViewSize.width-100

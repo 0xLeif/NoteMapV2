@@ -43,22 +43,26 @@ class Cluster: UIView {
 
 
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
-        backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
-        center = note.center
-        layer.zPosition = 5
-        layer.masksToBounds = false
-        notesArraySubscriber().disposed(by: disposeBag)
-        add(note: note)
-
+		NMinit(note: note)
+    }
+	
+	private func NMinit(note: Note) {
+		backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
+		center = note.center
+		layer.zPosition = 5
+		layer.masksToBounds = false
+		notesArraySubscriber().disposed(by: disposeBag)
+		add(note: note)
+		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		panGestureRecognizer.maximumNumberOfTouches = 1
 		addGestureRecognizer(panGestureRecognizer)
-
+		
 		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
 		deleteTapRecognizer.numberOfTouchesRequired = 2
 		deleteTapRecognizer.numberOfTapsRequired = 3
 		addGestureRecognizer(deleteTapRecognizer)
-    }
+	}
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
