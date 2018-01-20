@@ -5,7 +5,7 @@
 //  Created by Zach Eriksen on 6/23/17.
 //  Copyright © 2017 oneleif. All rights reserved.
 //
-
+import RxSwift
 import UIKit
 enum Color: Int {
     case red
@@ -39,16 +39,16 @@ let lightTheme = [NMColor(color: .red, uicolor: .rgba(193, 72, 72, 1)),
 				 NMColor(color: .purple, uicolor: .rgba(145, 96, 140, 1))]
 let darkBackGround: UIColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
 let lightBackGround: UIColor = .rgba(236, 240, 241,1.0)
-var selectedTheme: Theme = .light
+var selectedTheme: Variable<Theme> = Variable(.light)
+var selectedColor: Variable<Color> = Variable(.red)
 var colorData: [NMColor] {
-	return selectedTheme == .dark ? darkTheme : lightTheme
+	return selectedTheme.value == .dark ? darkTheme : lightTheme
 }
 var backgroundColorData: UIColor {
-	return selectedTheme == .dark ? darkBackGround : lightBackGround
+	return selectedTheme.value == .dark ? darkBackGround : lightBackGround
 }
-var selectedColor: Color = .red
 var selectedUIColor: UIColor {
-	return (colorData.filter{ $0.color == selectedColor }.first?.uicolor)!
+	return (colorData.filter{ $0.color == selectedColor.value }.first?.uicolor)!
 }
 
 let mockJsonData =
@@ -61,13 +61,14 @@ class ViewController: UIViewController {
 	@IBOutlet weak var themeToggle: UIBarButtonItem!
 	var colorPicker: NMColorField!
 	let colorPickerView: UIPickerView = UIPickerView()
-    private var isFirstLaunch: Bool = true
+	
+	var disposeBag = DisposeBag()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		hideKeyboardWithBackgroundTap()
 		view.backgroundColor = .black
-		noteMapScrollView.scrollToCenter()
+//		noteMapScrollView.scrollToCenter()
 		guard let theme = themeToggle.customView as? UISwitch else {
 			return
 		}
@@ -75,13 +76,31 @@ class ViewController: UIViewController {
 		theme.addTarget(self, action: #selector(toggleTheme), for: .allTouchEvents)
 		createColorPicker()
 		updateTheme()
-
-        if (isFirstLaunch) {
-            if let model = UserDefaults.standard.string(forKey: "nm") {
-                //LoadDataObservable.onNext(model)
-            }
-            isFirstLaunch = false
-        }
+		bindObservables()
+		if let model = UserDefaults.standard.string(forKey: "nm") {
+			LoadDataObservable.onNext(model)
+		}
+	}
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		current_x = UserDefaults.standard.double(forKey: "xcoord")
+		current_y = UserDefaults.standard.double(forKey: "ycoord")
+		current_z = UserDefaults.standard.double(forKey: "zcoord")
+		if current_z != 0 || current_y != 0 || current_x != 0 {
+			noteMapScrollView.zoomScale = CGFloat(current_z)
+			noteMapScrollView.contentOffset = CGPoint(x: current_x, y: current_y)
+		}
+	}
+	
+	private func bindObservables() {
+		selectedTheme.asObservable().subscribe(onNext: { (theme) in
+			self.updateTheme()
+		}).disposed(by: disposeBag)
+		selectedColor.asObservable().subscribe(onNext: { (color) in
+			self.colorPicker.backgroundColor = selectedUIColor
+			self.updateThemeToggle()
+		}).disposed(by: disposeBag)
 	}
 	
 	private func updateThemeToggle() {
@@ -127,8 +146,7 @@ class ViewController: UIViewController {
 		guard let toggle = themeToggle.customView as? UISwitch else {
 			return
 		}
-		//isDarkTheme = !toggle.isOn
-		updateTheme()
+		selectedTheme.value = toggle.isOn ? .dark : .light
 	}
 	
 	private func updateTheme() {
@@ -146,9 +164,7 @@ class ViewController: UIViewController {
 
 extension ViewController: UIPickerViewDelegate {
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		selectedColor = Color(rawValue: row)!
-		colorPicker.backgroundColor = selectedUIColor
-		updateThemeToggle()
+		selectedColor.value = Color(rawValue: row)!
 	}
 }
 extension ViewController: UIPickerViewDataSource{

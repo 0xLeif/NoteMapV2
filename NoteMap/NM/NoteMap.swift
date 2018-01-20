@@ -65,7 +65,7 @@ class NoteMap: UIView {
 	}
 	
 	private func addNote(atCenter point: CGPoint) {
-		let note = Note(atCenter: point, withColor: selectedColor)
+		let note = Note(atCenter: point, withColor: selectedColor.value)
 		
 		addCluster(forNote: note)
 		
@@ -127,7 +127,7 @@ extension NoteMap: SnapshotProtocol {
 	func generateSnapshot() -> Any {
 		var clusterModels: [ClusterModel] = []
 		self.clusters.value.forEach { clusterModels.append($0.generateSnapshot() as! ClusterModel) }
-        let settings =  NMDefaults(selectedColor: selectedColor.rawValue, secletedTheme: selectedTheme.rawValue)
+        let settings =  NMDefaults(selectedColor: selectedColor.value.rawValue, secletedTheme: selectedTheme.value.rawValue)
 		let model = NoteMapModel(clusters: clusterModels, settings: settings)
 		return model
 	}
@@ -142,14 +142,10 @@ extension NoteMap {
 			let a = String(data: encode!, encoding: String.Encoding.utf8)
             print("Saved data : \(a!)")
             UserDefaults.standard.set(a!, forKey: "nm")
-            UserDefaults.standard.set(current_x, forKey: "xcoord")
-            UserDefaults.standard.set(current_y, forKey: "ycoord")
-            UserDefaults.standard.set(current_z, forKey: "zcoord")
 		})
 	}
     
 	func bindLoad() { LoadDataObservable.subscribe(onNext: { jsonString in
-            print("jso")
 			if let jsonData = jsonString.data(using: .utf8) {
 				let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData)
                 print("Got notemapmodel : \((model as! NoteMapModel))")
@@ -162,15 +158,20 @@ extension NoteMap {
 		for clusterModel in model.clusters {
 			var notes: [Note] = []
 			clusterModel.notes.forEach {
-                let note = Note(atCenter: $0.center, withColor: Color(rawValue: $0.color)!)
+				let note = Note(atCenter: $0.center, withColor: Color(rawValue: $0.color)!, withText: $0.text)
 				notes.append(note)
-				//addCluster(forNote: note)
-				self.addSubview(note)
+				addSubview(note)
 			}
            let cluster = Cluster(notes: notes)
-            self.clusters.value.append(cluster	)
-            self.addSubview(cluster)
-			//createCluster(centerPoint: clusterModel.center, notes: notes)
+            clusters.value.append(cluster)
+            addSubview(cluster)
+		}
+		let color = model.settings.selectedColor
+		let theme = model.settings.secletedTheme
+		if let loadedColor = Color(rawValue: color),
+			let loadedTheme = Theme(rawValue: theme) {
+			selectedColor.value = loadedColor
+			selectedTheme.value = loadedTheme
 		}
 	}
 }

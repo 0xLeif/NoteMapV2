@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 protocol Themeable {
 	func updateTheme()
@@ -22,7 +23,7 @@ var current_z: Double = 0
 
 class NoteMapScrollView: UIScrollView {
 	fileprivate var noteMap: NoteMap
-    
+    fileprivate var disposeBag = DisposeBag()
 	var centerViewPoint: CGPoint {
 		return contentOffset
 	}
@@ -43,14 +44,7 @@ class NoteMapScrollView: UIScrollView {
 		minimumZoomScale = 0.01
 		maximumZoomScale = 1
 		zoomScale = 0.5
-        
-           let x = UserDefaults.standard.double(forKey: "xcoord")
-            let y = UserDefaults.standard.double(forKey: "ycoord")
-            let z = UserDefaults.standard.float(forKey: "zcoord")
-        if x != 0 && y != 0 && z != 0{
-            contentOffset = CGPoint(x: x, y: y)
-            zoomScale = CGFloat(z)
-        }
+		bindSave()
 	}
 	
 	func updateTheme() {
@@ -79,4 +73,15 @@ extension NoteMapScrollView: UIScrollViewDelegate {
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
         current_z = Double(scrollView.zoomScale)
     }
+}
+
+extension NoteMapScrollView {
+	func bindSave() {
+		SaveDataObservable.subscribe(onNext: {
+			UserDefaults.standard.set(current_x, forKey: "xcoord")
+			UserDefaults.standard.set(current_y, forKey: "ycoord")
+			UserDefaults.standard.set(current_z, forKey: "zcoord")
+			print("x: \(current_x), y: \(current_y), z: \(current_z)")
+		})
+	}
 }

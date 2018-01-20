@@ -21,15 +21,16 @@ class Note: UITextView {
 	
 	var color: Color
 
-	init(atCenter point: CGPoint, withColor color: Color) {
+	init(atCenter point: CGPoint, withColor color: Color, withText text: String? = nil) {
 		self.color = color
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
 		NMinit(atCenter: point)
+		self.text = text
 	}
 	
 	private func NMinit(atCenter point: CGPoint) {
 		adjustsFontForContentSizeCategory = true
-		font = UIFont.systemFont(ofSize: 16)
+		font = UIFont.systemFont(ofSize: 100)
 		center = point
 		delegate = self
 		backgroundColor = colorData.filter{ $0.color == color }.first?.uicolor
@@ -120,8 +121,7 @@ extension Note: Deletable {
 
 extension Note: SnapshotProtocol {
     func generateSnapshot() -> Any {
-        var model = NoteModel(center: center, color: color.rawValue)
-        return model
+		return NoteModel(center: center, color: color.rawValue, text: text)
     }
 }
 

@@ -10,6 +10,7 @@ import RxSwift
 struct NoteModel: Codable {
     var center: CGPoint
     var color: Int
+	var text: String
 }
 
 struct ClusterModel: Codable {
