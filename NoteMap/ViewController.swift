@@ -68,6 +68,7 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 		hideKeyboardWithBackgroundTap()
 		view.backgroundColor = .black
+		navigationController?.navigationBar.shadowImage = UIImage()
 		noteMapScrollView.loadCoords()
 		guard let theme = themeToggle.customView as? UISwitch else {
 			return
