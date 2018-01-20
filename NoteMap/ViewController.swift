@@ -21,6 +21,10 @@ struct NMColor {
 	var color: Color
 	var uicolor: UIColor
 }
+enum Theme: String {
+    case light = "light"
+    case dark = "dark"
+}
 let darkTheme = [NMColor(color: .red, uicolor: .rgba(231, 76, 60,1.0)),
 				 NMColor(color: .orange, uicolor: .rgba(230, 126, 34,1.0)),
 				 NMColor(color: .yellow, uicolor: .rgba(241, 196, 15,1.0)),
@@ -35,12 +39,12 @@ let lightTheme = [NMColor(color: .red, uicolor: .rgba(193, 72, 72, 1)),
 				 NMColor(color: .purple, uicolor: .rgba(145, 96, 140, 1))]
 let darkBackGround: UIColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
 let lightBackGround: UIColor = .rgba(236, 240, 241,1.0)
-var isDarkTheme = false
+var selectedTheme: Theme = .light
 var colorData: [NMColor] {
-	return isDarkTheme ? darkTheme : lightTheme
+	return selectedTheme == .dark ? darkTheme : lightTheme
 }
 var backgroundColorData: UIColor {
-	return isDarkTheme ? darkBackGround : lightBackGround
+	return selectedTheme == .dark ? darkBackGround : lightBackGround
 }
 var selectedColor: Color = .red
 var selectedUIColor: UIColor {
@@ -74,7 +78,7 @@ class ViewController: UIViewController {
 
         if (isFirstLaunch) {
             if let model = UserDefaults.standard.string(forKey: "nm") {
-                LoadDataObservable.onNext(model)
+                //LoadDataObservable.onNext(model)
             }
             isFirstLaunch = false
         }
@@ -123,7 +127,7 @@ class ViewController: UIViewController {
 		guard let toggle = themeToggle.customView as? UISwitch else {
 			return
 		}
-		isDarkTheme = !toggle.isOn
+		//isDarkTheme = !toggle.isOn
 		updateTheme()
 	}
 	

@@ -18,6 +18,12 @@ struct ClusterModel: Codable {
 
 struct NoteMapModel: Codable {
     var clusters: [ClusterModel]
+    var settings: NMDefaults
+}
+
+struct NMDefaults: Codable {
+    var selectedColor: Int
+    var secletedTheme: String
 }
 
 protocol SnapshotProtocol {

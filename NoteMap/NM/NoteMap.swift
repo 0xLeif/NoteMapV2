@@ -127,7 +127,8 @@ extension NoteMap: SnapshotProtocol {
 	func generateSnapshot() -> Any {
 		var clusterModels: [ClusterModel] = []
 		self.clusters.value.forEach { clusterModels.append($0.generateSnapshot() as! ClusterModel) }
-		let model = NoteMapModel(clusters: clusterModels)
+        let settings =  NMDefaults(selectedColor: selectedColor.rawValue, secletedTheme: selectedTheme.rawValue)
+		let model = NoteMapModel(clusters: clusterModels, settings: settings)
 		return model
 	}
 }
@@ -141,11 +142,13 @@ extension NoteMap {
 			let a = String(data: encode!, encoding: String.Encoding.utf8)
             print("Saved data : \(a!)")
             UserDefaults.standard.set(a!, forKey: "nm")
+            UserDefaults.standard.set(current_x, forKey: "xcoord")
+            UserDefaults.standard.set(current_y, forKey: "ycoord")
+            UserDefaults.standard.set(current_z, forKey: "zcoord")
 		})
 	}
     
-	func bindLoad() {
-		LoadDataObservable.subscribe(onNext: { jsonString in
+	func bindLoad() { LoadDataObservable.subscribe(onNext: { jsonString in
             print("jso")
 			if let jsonData = jsonString.data(using: .utf8) {
 				let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData)
