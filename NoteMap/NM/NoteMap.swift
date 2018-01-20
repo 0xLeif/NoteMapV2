@@ -124,10 +124,10 @@ extension NoteMap: Themeable {
 }
 
 extension NoteMap: SnapshotProtocol {
-	func generateSnapshot() -> BaseModel {
+	func generateSnapshot() -> Any {
 		var clusterModels: [ClusterModel] = []
-		self.clusters.value.forEach { clusterModels.append($0.generateSnapshot().model as! ClusterModel) }
-		let model: BaseModel = (.Notemap, NoteMapModel(clusters: clusterModels))
+		self.clusters.value.forEach { clusterModels.append($0.generateSnapshot() as! ClusterModel) }
+		let model = NoteMapModel(clusters: clusterModels)
 		return model
 	}
 }
@@ -136,17 +136,20 @@ extension NoteMap {
 	func bindSave() {
 		SaveDataObservable.subscribe(onNext: {
 			let toBeSavedModel = self.generateSnapshot()
-			let b = toBeSavedModel.model as! NoteMapModel
+			let b = toBeSavedModel as! NoteMapModel
 			let encode = try? JSONEncoder().encode(b)
 			let a = String(data: encode!, encoding: String.Encoding.utf8)
+            print("Saved data : \(a!)")
+            UserDefaults.standard.set(a!, forKey: "nm")
 		})
 	}
-
+    
 	func bindLoad() {
 		LoadDataObservable.subscribe(onNext: { jsonString in
+            print("jso")
 			if let jsonData = jsonString.data(using: .utf8) {
 				let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData)
-				print("Got notemapmodel : \((model as! NoteMapModel).clusters.count)")
+                print("Got notemapmodel : \((model as! NoteMapModel))")
 				self.loadFromModel(model: model as! NoteMapModel)
 			}
 		})
@@ -155,13 +158,14 @@ extension NoteMap {
 	func loadFromModel(model: NoteMapModel) {
 		for clusterModel in model.clusters {
 			var notes: [Note] = []
+            let cluster = Cluster()
 			clusterModel.notes.forEach {
-				let note = Note(atCenter: $0.center, withColor: .blue)
+                let note = Note(atCenter: $0.center, withColor: Color(rawValue: $0.color)!)
 				notes.append(note)
 				//addCluster(forNote: note)
-				//self.addSubview(note)
+				self.addSubview(note)
 			}
-			createCluster(centerPoint: clusterModel.center, notes: notes)
+			//createCluster(centerPoint: clusterModel.center, notes: notes)
 		}
 	}
 

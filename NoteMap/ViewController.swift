@@ -73,7 +73,9 @@ class ViewController: UIViewController {
 		updateTheme()
 
         if (isFirstLaunch) {
-            LoadDataObservable.onNext(mockJsonData)
+            if let model = UserDefaults.standard.string(forKey: "nm") {
+                LoadDataObservable.onNext(model)
+            }
             isFirstLaunch = false
         }
 	}

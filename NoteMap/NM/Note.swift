@@ -119,8 +119,8 @@ extension Note: Deletable {
 }
 
 extension Note: SnapshotProtocol {
-    func generateSnapshot() -> BaseModel {
-        var model: BaseModel = (.Note, NoteModel(center: center))
+    func generateSnapshot() -> Any {
+        var model = NoteModel(center: center, color: color.rawValue)
         return model
     }
 }

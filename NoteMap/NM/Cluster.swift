@@ -178,10 +178,10 @@ extension Cluster: Deletable {
 }
 
 extension Cluster: SnapshotProtocol {
-    func generateSnapshot() -> BaseModel {
+    func generateSnapshot() -> Any {
         var modelArray: [NoteModel] = []
-        self.notes.value.forEach { modelArray.append($0.generateSnapshot().model as! NoteModel) }
-        let model: BaseModel = (.Cluster, ClusterModel(notes: modelArray, center: center))
+        self.notes.value.forEach { modelArray.append($0.generateSnapshot() as! NoteModel) }
+        let model  = ClusterModel(notes: modelArray)
         return model
     }
 }
