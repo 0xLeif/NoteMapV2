@@ -158,21 +158,16 @@ extension NoteMap {
 	func loadFromModel(model: NoteMapModel) {
 		for clusterModel in model.clusters {
 			var notes: [Note] = []
-            let cluster = Cluster()
 			clusterModel.notes.forEach {
                 let note = Note(atCenter: $0.center, withColor: Color(rawValue: $0.color)!)
 				notes.append(note)
 				//addCluster(forNote: note)
 				self.addSubview(note)
 			}
+           let cluster = Cluster(notes: notes)
+            self.clusters.value.append(cluster	)
+            self.addSubview(cluster)
 			//createCluster(centerPoint: clusterModel.center, notes: notes)
 		}
-	}
-
-	func createCluster(centerPoint: CGPoint, notes: [Note]) {
-		notes.forEach { self.addSubview($0) }
-		let cluster = Cluster(center: centerPoint, notes: notes)
-		self.addSubview(cluster)
-		self.clusters.value.append(cluster)
 	}
 }

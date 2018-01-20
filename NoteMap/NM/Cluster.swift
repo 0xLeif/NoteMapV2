@@ -40,23 +40,24 @@ class Cluster: UIView {
     }
 
     init(note: Note) {
-
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
-		NMinit(note: note)
+        backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
+        add(note: note)
+        NMinit()
     }
 
-	init(center: CGPoint, notes: [Note]) {
-		super.init(frame: CGRect(origin: center, size: CGSize(width: 50, height: 50)))
-		notes.forEach{ self.add(note: $0) }
-	}
+    init(notes: [Note]){
+        super.init(frame: .zero)
+        backgroundColor = notes.first?.backgroundColor?.withAlphaComponent(0.25)
+        notes.forEach{ add(note: $0) }
+        NMinit()
+    }
 	
-	private func NMinit(note: Note) {
-		backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
-		center = note.center
+	private func NMinit() {
+        center = centerPoint
 		layer.zPosition = 5
 		layer.masksToBounds = false
 		notesArraySubscriber().disposed(by: disposeBag)
-		add(note: note)
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		panGestureRecognizer.maximumNumberOfTouches = 1
