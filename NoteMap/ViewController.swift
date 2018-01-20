@@ -68,7 +68,7 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 		hideKeyboardWithBackgroundTap()
 		view.backgroundColor = .black
-//		noteMapScrollView.scrollToCenter()
+		noteMapScrollView.loadCoords()
 		guard let theme = themeToggle.customView as? UISwitch else {
 			return
 		}
@@ -82,19 +82,12 @@ class ViewController: UIViewController {
 		}
 	}
 	
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		current_x = UserDefaults.standard.double(forKey: "xcoord")
-		current_y = UserDefaults.standard.double(forKey: "ycoord")
-		current_z = UserDefaults.standard.double(forKey: "zcoord")
-		if current_z != 0 || current_y != 0 || current_x != 0 {
-			noteMapScrollView.zoomScale = CGFloat(current_z)
-			noteMapScrollView.contentOffset = CGPoint(x: current_x, y: current_y)
-		}
-	}
-	
 	private func bindObservables() {
 		selectedTheme.asObservable().subscribe(onNext: { (theme) in
+			guard let toggle = self.themeToggle.customView as? UISwitch else {
+				return
+			}
+			toggle.isOn = selectedTheme.value == .dark
 			self.updateTheme()
 		}).disposed(by: disposeBag)
 		selectedColor.asObservable().subscribe(onNext: { (color) in
