@@ -20,16 +20,17 @@ class Note: UITextView {
     var deleteNoteObservable = PublishSubject<Note>()
 	
 	var color: Color
-	
-	init(atCenter point: CGPoint, withColor color: Color) {
+
+	init(atCenter point: CGPoint, withColor color: Color, withText text: String? = nil) {
 		self.color = color
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
 		NMinit(atCenter: point)
+		self.text = text
 	}
 	
 	private func NMinit(atCenter point: CGPoint) {
 		adjustsFontForContentSizeCategory = true
-		font = UIFont.systemFont(ofSize: 16)
+		font = UIFont.systemFont(ofSize: 100)
 		center = point
 		delegate = self
 		backgroundColor = colorData.filter{ $0.color == color }.first?.uicolor
@@ -49,8 +50,8 @@ class Note: UITextView {
 		deleteTapRecognizer.numberOfTapsRequired = 2
 		addGestureRecognizer(deleteTapRecognizer)
 		
-		inputAccessoryView = setUpLocalColorPicker()
-	}
+        inputAccessoryView = setUpLocalColorPicker()
+    }
 	
 	@objc func deleteSelf() {
 		delete()
@@ -116,6 +117,12 @@ extension Note: Deletable {
 		removeFromSuperview()
 		deleteNoteObservable.onNext(self)
 	}
+}
+
+extension Note: SnapshotProtocol {
+    func generateSnapshot() -> Any {
+		return NoteModel(center: center, color: color.rawValue, text: text)
+    }
 }
 
 extension Note: UITextViewDelegate {
