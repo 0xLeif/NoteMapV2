@@ -80,11 +80,6 @@ class Cluster: UIView {
     func add(note: Note) {
         notes.value.append(note)
     }
-
-	/*func add(noteModel: NoteModel) {
-		let note = Note(atCenter: noteModel.center, withColor: backgroundColor)
-		notes.value.append(note)
-	}*/
 	
 	func remove(note: Note) {
 		guard let index = notes.value.index(of: note) else {
@@ -181,7 +176,7 @@ extension Cluster: Deletable {
 extension Cluster: SnapshotProtocol {
     func generateSnapshot() -> Any {
         var modelArray: [NoteModel] = []
-        self.notes.value.forEach { modelArray.append($0.generateSnapshot() as! NoteModel) }
+        notes.value.forEach { modelArray.append($0.generateSnapshot() as! NoteModel) }
         let model  = ClusterModel(notes: modelArray)
         return model
     }
