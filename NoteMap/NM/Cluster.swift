@@ -41,10 +41,14 @@ class Cluster: UIView {
 
     init(note: Note) {
 
-
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
 		NMinit(note: note)
     }
+
+	init(center: CGPoint, notes: [Note]) {
+		super.init(frame: CGRect(origin: center, size: CGSize(width: 50, height: 50)))
+		notes.forEach{ self.add(note: $0) }
+	}
 	
 	private func NMinit(note: Note) {
 		backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
@@ -75,6 +79,11 @@ class Cluster: UIView {
     func add(note: Note) {
         notes.value.append(note)
     }
+
+	/*func add(noteModel: NoteModel) {
+		let note = Note(atCenter: noteModel.center, withColor: backgroundColor)
+		notes.value.append(note)
+	}*/
 	
 	func remove(note: Note) {
 		guard let index = notes.value.index(of: note) else {

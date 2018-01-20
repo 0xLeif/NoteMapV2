@@ -19,9 +19,6 @@ class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
 
-	//private var clusterModelArray: [ClusterModel] = []
-	//private var notemapModel = NoteMapModel(clusters: [])
-
     init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
 		NMinit()
@@ -35,6 +32,8 @@ class NoteMap: UIView {
 		addGestureRecognizer(doubleTapGestureRecognizer)
 		
 		clusterArraySubscriber().disposed(by: disposeBag)
+		bindSave()
+		bindLoad()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -107,14 +106,6 @@ extension NoteMap {
                 var arrayOfCheckConsumeEvent = [Observable<(Cluster)>]()
                 self.clusters.value.forEach { (arrayOfCheckConsumeEvent.append($0.checkNotemapConsume)) }
                 self.checkConsumeMerge(forArray: arrayOfCheckConsumeEvent).disposed(by: self.disposeBag)
-
-				/*self.clusterModelArray.removeAll()
-				self.clusters.value.forEach { self.clusterModelArray.append($0.clusterModel)}
-				self.notemapModel.clusters = self.clusterModelArray*/
-
-				/*let encode = try? JSONEncoder().encode(self.notemapModel)
-				let a = String(data: encode!, encoding: String.Encoding.utf8)
-				print("After Encode : \(a!)")*/
         })
     }
 
@@ -144,7 +135,40 @@ extension NoteMap: SnapshotProtocol {
 extension NoteMap {
 	func bindSave() {
 		SaveDataObservable.subscribe(onNext: {
-			print("hi")
+			let toBeSavedModel = self.generateSnapshot()
+			let b = toBeSavedModel.model as! NoteMapModel
+			let encode = try? JSONEncoder().encode(b)
+			let a = String(data: encode!, encoding: String.Encoding.utf8)
 		})
+	}
+
+	func bindLoad() {
+		LoadDataObservable.subscribe(onNext: { jsonString in
+			if let jsonData = jsonString.data(using: .utf8) {
+				let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData)
+				print("Got notemapmodel : \((model as! NoteMapModel).clusters.count)")
+				self.loadFromModel(model: model as! NoteMapModel)
+			}
+		})
+	}
+
+	func loadFromModel(model: NoteMapModel) {
+		for clusterModel in model.clusters {
+			var notes: [Note] = []
+			clusterModel.notes.forEach {
+				let note = Note(atCenter: $0.center, withColor: .blue)
+				notes.append(note)
+				//addCluster(forNote: note)
+				//self.addSubview(note)
+			}
+			createCluster(centerPoint: clusterModel.center, notes: notes)
+		}
+	}
+
+	func createCluster(centerPoint: CGPoint, notes: [Note]) {
+		notes.forEach { self.addSubview($0) }
+		let cluster = Cluster(center: centerPoint, notes: notes)
+		self.addSubview(cluster)
+		self.clusters.value.append(cluster)
 	}
 }
