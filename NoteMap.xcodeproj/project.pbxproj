@@ -24,6 +24,7 @@
 		92B5A8341FFF3BD100EC27C5 /* NMColorField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B5A8331FFF3BD100EC27C5 /* NMColorField.swift */; };
 		92B945DA1FB11450004AE9A8 /* UIColor+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B945D91FB11450004AE9A8 /* UIColor+NM.swift */; };
 		92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD400B1EFE1B120054DBD7 /* Cluster.swift */; };
+		92F3296D2013B809009802E4 /* IMG_1440.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92F3296C2013B809009802E4 /* IMG_1440.jpg */; };
 		9E9236FF8768C529C197A8C4 /* Cluster+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */; };
 		9E9237AD600A55C1E2E0B543 /* NoteMap+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E923036B432901FC2470A5F /* NoteMap+Rx.swift */; };
 		DCEB787A5B18E4817FD9A80A /* Pods_NoteMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7200E9D3F47433A9EC8956B /* Pods_NoteMap.framework */; };
@@ -62,6 +63,7 @@
 		92B5A8331FFF3BD100EC27C5 /* NMColorField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NMColorField.swift; sourceTree = "<group>"; };
 		92B945D91FB11450004AE9A8 /* UIColor+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NM.swift"; sourceTree = "<group>"; };
 		92BD400B1EFE1B120054DBD7 /* Cluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cluster.swift; sourceTree = "<group>"; };
+		92F3296C2013B809009802E4 /* IMG_1440.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_1440.jpg; sourceTree = "<group>"; };
 		9E923036B432901FC2470A5F /* NoteMap+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NoteMap+Rx.swift"; sourceTree = "<group>"; };
 		9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cluster+Rx.swift"; sourceTree = "<group>"; };
 		CF20A68D2C02503CA53CB4EA /* Pods-NoteMapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMapTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMapTests/Pods-NoteMapTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				92B5A8351FFF3BEB00EC27C5 /* Views */,
 				929129C61EFDC5F400F76383 /* Main.storyboard */,
 				929129C91EFDC5F400F76383 /* Assets.xcassets */,
+				92F3296C2013B809009802E4 /* IMG_1440.jpg */,
 				929129CB1EFDC5F400F76383 /* LaunchScreen.storyboard */,
 				929129CE1EFDC5F400F76383 /* Info.plist */,
 			);
@@ -275,6 +278,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92F3296D2013B809009802E4 /* IMG_1440.jpg in Resources */,
 				929129CD1EFDC5F400F76383 /* LaunchScreen.storyboard in Resources */,
 				929129CA1EFDC5F400F76383 /* Assets.xcassets in Resources */,
 				929129C81EFDC5F400F76383 /* Main.storyboard in Resources */,
