@@ -21,5 +21,5 @@ The clusters is dynamic in two ways: it  automatically 'consumes' new notes of t
 * Analytics (notes added, distance moved)
 
 ### Beta Release
-Signup- https://docs.google.com/forms/d/e/1FAIpQLSeLlf6vfMLjdYwbCHzxIN-ljn9WqLcKEgufSpGl5mm7zpqi4w/viewform
+[Beta Signup](https://docs.google.com/forms/d/e/1FAIpQLSeLlf6vfMLjdYwbCHzxIN-ljn9WqLcKEgufSpGl5mm7zpqi4w/viewform)
 
