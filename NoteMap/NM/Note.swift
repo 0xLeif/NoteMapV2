@@ -20,17 +20,18 @@ class Note: UITextView {
     var deleteNoteObservable = PublishSubject<Note>()
 	
 	var color: Color
-	
-	init(atCenter point: CGPoint, withColor color: Color) {
+
+	init(atCenter point: CGPoint, withColor color: Color, withText text: String? = nil) {
 		self.color = color
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
 		NMinit(atCenter: point)
+		self.text = text
 	}
 	
 	private func NMinit(atCenter point: CGPoint) {
         logAnalytic()
 		adjustsFontForContentSizeCategory = true
-		font = UIFont.systemFont(ofSize: 16)
+		font = UIFont.systemFont(ofSize: 100)
 		center = point
 		delegate = self
 		backgroundColor = colorData.filter{ $0.color == color }.first?.uicolor
@@ -50,8 +51,8 @@ class Note: UITextView {
 		deleteTapRecognizer.numberOfTapsRequired = 2
 		addGestureRecognizer(deleteTapRecognizer)
 		
-		inputAccessoryView = setUpLocalColorPicker()
-	}
+        inputAccessoryView = setUpLocalColorPicker()
+    }
 	
 	@objc func deleteSelf() {
 		delete()
@@ -69,6 +70,7 @@ class Note: UITextView {
             let button : UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
             button.backgroundColor = color.uicolor
             button.layer.borderColor = UIColor.white.cgColor
+			button.tag = count
             button.layer.borderWidth = color.uicolor == backgroundColor ? 2 : 0
             button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
             view.addSubview(button)
@@ -84,8 +86,8 @@ class Note: UITextView {
         }
         sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
+		color = Color(rawValue: sender.tag)!
         noteDidPanObservable.onNext(self)
-
     }
     
 	@objc func userDidPan(sender: UIPanGestureRecognizer) {
@@ -122,6 +124,12 @@ extension Note: Deletable {
 		removeFromSuperview()
 		deleteNoteObservable.onNext(self)
 	}
+}
+
+extension Note: SnapshotProtocol {
+    func generateSnapshot() -> Any {
+		return NoteModel(center: center, color: color.rawValue, text: text)
+    }
 }
 
 extension Note: UITextViewDelegate {

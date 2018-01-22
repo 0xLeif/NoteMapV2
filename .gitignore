@@ -3,7 +3,5 @@
 NoteMap.xcodeproj/xcuserdata
 NoteMap.xcworkspace/xcuserdata
 Pods/Pods.xcodeproj/xcuserdata
-Pods/
-Pods/Firebase/
 
-NoteMap/GoogleService-Info\.plist
+\.DS_Store

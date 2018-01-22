@@ -38,19 +38,26 @@ class Cluster: UIView {
                             totalY / numberOfPoints)
         return notes.value.isEmpty ? .zero : CGPoint(x: avgX, y: avgY)
     }
-    
+
     init(note: Note) {
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
-		NMinit(note: note)
+        backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
+        add(note: note)
+        NMinit()
+    }
+
+    init(notes: [Note]){
+        super.init(frame: .zero)
+        backgroundColor = notes.first?.backgroundColor?.withAlphaComponent(0.25)
+        notes.forEach{ add(note: $0) }
+        NMinit()
     }
 	
-	private func NMinit(note: Note) {
-		backgroundColor = note.backgroundColor?.withAlphaComponent(0.25)
-		center = note.center
+	private func NMinit() {
+        center = centerPoint
 		layer.zPosition = 5
 		layer.masksToBounds = false
 		notesArraySubscriber().disposed(by: disposeBag)
-		add(note: note)
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
 		panGestureRecognizer.maximumNumberOfTouches = 1
@@ -172,6 +179,14 @@ extension Cluster: Deletable {
 	}
 }
 
+extension Cluster: SnapshotProtocol {
+    func generateSnapshot() -> Any {
+        var modelArray: [NoteModel] = []
+        notes.value.forEach { modelArray.append($0.generateSnapshot() as! NoteModel) }
+        let model  = ClusterModel(notes: modelArray)
+        return model
+    }
+}
 
 extension Cluster {
     func notesArraySubscriber() -> Disposable {

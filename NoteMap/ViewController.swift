@@ -5,7 +5,7 @@
 //  Created by Zach Eriksen on 6/23/17.
 //  Copyright © 2017 oneleif. All rights reserved.
 //
-
+import RxSwift
 import UIKit
 enum Color: Int {
     case red
@@ -21,6 +21,10 @@ struct NMColor {
 	var color: Color
 	var uicolor: UIColor
 }
+enum Theme: String {
+    case light = "light"
+    case dark = "dark"
+}
 let darkTheme = [NMColor(color: .red, uicolor: .rgba(231, 76, 60,1.0)),
 				 NMColor(color: .orange, uicolor: .rgba(230, 126, 34,1.0)),
 				 NMColor(color: .yellow, uicolor: .rgba(241, 196, 15,1.0)),
@@ -35,29 +39,37 @@ let lightTheme = [NMColor(color: .red, uicolor: .rgba(193, 72, 72, 1)),
 				 NMColor(color: .purple, uicolor: .rgba(145, 96, 140, 1))]
 let darkBackGround: UIColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
 let lightBackGround: UIColor = .rgba(236, 240, 241,1.0)
-var isDarkTheme = false
+var selectedTheme: Variable<Theme> = Variable(.light)
+var selectedColor: Variable<Color> = Variable(.red)
 var colorData: [NMColor] {
-	return isDarkTheme ? darkTheme : lightTheme
+	return selectedTheme.value == .dark ? darkTheme : lightTheme
 }
 var backgroundColorData: UIColor {
-	return isDarkTheme ? darkBackGround : lightBackGround
+	return selectedTheme.value == .dark ? darkBackGround : lightBackGround
 }
-var selectedColor: Color = .red
 var selectedUIColor: UIColor {
-	return (colorData.filter{ $0.color == selectedColor }.first?.uicolor)!
+	return (colorData.filter{ $0.color == selectedColor.value }.first?.uicolor)!
 }
+
+let mockJsonData =
+		"""
+		{"clusters":[{"notes":[{"center":[18930.565034116524,38512.21754534565]},{"center":[17558.4949555535,39577.197808182646]},{"center":[18782.472960697447,42029.74474272153]},{"center":[20301.780579816335,40612.94883102019]},{"center":[17629.3239749151,41312.13303509432]}],"center":[18640.52750101978,40408.84839247287]},{"notes":[{"center":[21302.842702831767,42119.6648922478]},{"center":[20306.544466581738,45590.719979617454]},{"center":[20314.16816807454,44790.25575110297]},{"center":[22037.07201026651,45788.930285860224]},{"center":[23195.839390726658,44447.1996531682]}],"center":[21431.293347696246,44547.354112399335]}]}
+		"""
 
 class ViewController: UIViewController {
 	@IBOutlet weak var noteMapScrollView: NoteMapScrollView!
 	@IBOutlet weak var themeToggle: UIBarButtonItem!
 	var colorPicker: NMColorField!
 	let colorPickerView: UIPickerView = UIPickerView()
-    
+	
+	var disposeBag = DisposeBag()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		hideKeyboardWithBackgroundTap()
 		view.backgroundColor = .black
-		noteMapScrollView.scrollToCenter()
+		navigationController?.navigationBar.shadowImage = UIImage()
+		noteMapScrollView.loadCoords()
 		guard let theme = themeToggle.customView as? UISwitch else {
 			return
 		}
@@ -65,6 +77,24 @@ class ViewController: UIViewController {
 		theme.addTarget(self, action: #selector(toggleTheme), for: .allTouchEvents)
 		createColorPicker()
 		updateTheme()
+		bindObservables()
+		if let model = UserDefaults.standard.string(forKey: "nm") {
+			LoadDataObservable.onNext(model)
+		}
+	}
+	
+	private func bindObservables() {
+		selectedTheme.asObservable().subscribe(onNext: { (theme) in
+			guard let toggle = self.themeToggle.customView as? UISwitch else {
+				return
+			}
+			toggle.isOn = selectedTheme.value == .dark
+			self.updateTheme()
+		}).disposed(by: disposeBag)
+		selectedColor.asObservable().subscribe(onNext: { (color) in
+			self.colorPicker.backgroundColor = selectedUIColor
+			self.updateThemeToggle()
+		}).disposed(by: disposeBag)
 	}
 	
 	private func updateThemeToggle() {
@@ -110,8 +140,7 @@ class ViewController: UIViewController {
 		guard let toggle = themeToggle.customView as? UISwitch else {
 			return
 		}
-		isDarkTheme = !toggle.isOn
-		updateTheme()
+		selectedTheme.value = toggle.isOn ? .dark : .light
 	}
 	
 	private func updateTheme() {
@@ -129,9 +158,7 @@ class ViewController: UIViewController {
 
 extension ViewController: UIPickerViewDelegate {
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		selectedColor = Color(rawValue: row)!
-		colorPicker.backgroundColor = selectedUIColor
-		updateThemeToggle()
+		selectedColor.value = Color(rawValue: row)!
 	}
 }
 extension ViewController: UIPickerViewDataSource{
