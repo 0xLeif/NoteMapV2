@@ -13,7 +13,7 @@ class Cluster: UIView {
 
     private let checkingPadding: CGFloat = 500
 
-    fileprivate var notes: Variable<[Note]> = Variable([])
+    fileprivate var notes: Variable<Set<Note>> = Variable(Set<Note>())
     fileprivate var disposeBag = DisposeBag()
 
     var removedNoteObservable = PublishSubject<Note>()
@@ -78,7 +78,7 @@ class Cluster: UIView {
 	}
     
     func add(note: Note) {
-        notes.value.append(note)
+        notes.value.insert(note)
     }
 	
 	func remove(note: Note) {
@@ -126,12 +126,12 @@ class Cluster: UIView {
 	}
 	
     func noteDidPan(forNote note: Note) {
-        updateView()
         if !check(note:  note) {
             remove(note: note)
         } else {
             checkNotemapConsume.onNext(self)
         }
+		updateView()
     }
 
     func deleteNote(forNote note: Note) {
