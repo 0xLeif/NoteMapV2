@@ -66,7 +66,7 @@ class Note: UITextView {
 		var count = 0
         for color in colorData {
             let width  = Int(UIScreen.width) / colorData.count
-            let button : UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
+            let button: UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
             button.backgroundColor = color.uicolor
             button.layer.borderColor = UIColor.white.cgColor
 			button.tag = count
