@@ -22,6 +22,9 @@ class NoteMap: UIView {
     init() {
 		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
 		NMinit()
+		if !UserDefaults.standard.bool(forKey: "tutorialNotesViewed") {
+			addTutorialNotes()
+		}
 	}
 	
 	private func NMinit() {
@@ -64,14 +67,14 @@ class NoteMap: UIView {
 		}
 	}
 	
-	private func addNote(atCenter point: CGPoint) {
+	private func addNote(atCenter point: CGPoint) -> Note {
 		let note = Note(atCenter: point, withColor: selectedColor.value)
 		
 		addCluster(forNote: note)
-		
 		checkConsume()
-		
         addSubview(note)
+		
+		return note
 	}
 	
 	func checkConsume() {
@@ -88,6 +91,35 @@ class NoteMap: UIView {
 				}
 			}
 		}
+	}
+	private func addTutorialNotes() {
+		clusters.value.forEach{ $0.removeFromSuperview() }
+		clusters.value = []
+		func create(noteWithText text: String, displacementPoint point: CGPoint, andColor color: Color) {
+			let note = addNote(atCenter: CGPoint(x: point.x + center.x, y: point.y + center.y))
+			note.text = text
+			note.tag = 10
+			note.color = color
+		}
+		create(noteWithText: "double tap to create a note",
+			   displacementPoint: CGPoint(x: 300, y: 400),
+			   andColor: .red)
+		create(noteWithText: "double tap to create a note",
+			   displacementPoint: CGPoint(x: 900, y: 400),
+			   andColor: .orange)
+		create(noteWithText: "double tap to create a note",
+			   displacementPoint: CGPoint(x: 300, y: 1000),
+			   andColor: .yellow)
+		create(noteWithText: "double tap to create a note",
+			   displacementPoint: CGPoint(x: 900, y: 1000),
+			   andColor: .green)
+		create(noteWithText: "double tap to create a note",
+			   displacementPoint: CGPoint(x: 300, y: 1600),
+			   andColor: .blue)
+		create(noteWithText: "double tap to create a note",
+			   displacementPoint: CGPoint(x: 900, y: 1600),
+			   andColor: .purple)
+		UserDefaults.standard.set(true, forKey: "tutorialNotesViewed")
 	}
 	
 	private func check(lhs: Cluster, rhs: Cluster) -> Bool {
