@@ -43,7 +43,7 @@ class NoteMapScrollView: UIScrollView {
 		delegate = self
 		minimumZoomScale = 0.01
 		maximumZoomScale = 1
-		zoomScale = 0.5
+		zoomScale = 0.3
 		bindSave()
 	}
 	
