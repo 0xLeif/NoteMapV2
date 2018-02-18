@@ -26,6 +26,7 @@ class Note: UITextView {
 		super.init(frame: CGRect(origin: .zero, size: noteSize), textContainer: nil)
 		NMinit(atCenter: point)
 		self.text = text
+		resizeText()
 	}
 	
 	private func NMinit(atCenter point: CGPoint) {
@@ -52,6 +53,27 @@ class Note: UITextView {
 		
         inputAccessoryView = setUpLocalColorPicker()
     }
+	
+	private func resizeText() {
+		let textViewSize = frame.size
+		let fixedWidth = textViewSize.width-100
+		let expectSize = sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(1000)))
+		
+		var expectFont = font
+		if (expectSize.height > textViewSize.height) {
+			while (sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(500))).height > textViewSize.height && (font!.pointSize > CGFloat(24))) {
+				expectFont = font!.withSize(font!.pointSize - 1)
+				font = expectFont
+			}
+		}
+		else {
+			while (sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height < textViewSize.height && (font!.pointSize < CGFloat(100))) {
+				expectFont = font;
+				font = font!.withSize(font!.pointSize + 1)
+			}
+			font = expectFont
+		}
+	}
 	
 	@objc func deleteSelf() {
 		delete()
