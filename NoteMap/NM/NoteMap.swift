@@ -67,12 +67,14 @@ class NoteMap: UIView {
 		}
 	}
 	
-	private func addNote(atCenter point: CGPoint) -> Note {
-		let note = Note(atCenter: point, withColor: selectedColor.value)
-		
+	private func addNote(atCenter point: CGPoint, withText text: String = "") -> Note {
+		return add(note: Note(atCenter: point, withColor: selectedColor.value, withText: text))
+	}
+	
+	private func add(note: Note) -> Note {
 		addCluster(forNote: note)
 		checkConsume()
-        addSubview(note)
+		addSubview(note)
 		
 		return note
 	}
@@ -96,27 +98,24 @@ class NoteMap: UIView {
 		clusters.value.forEach{ $0.removeFromSuperview() }
 		clusters.value = []
 		func create(noteWithText text: String, displacementPoint point: CGPoint, andColor color: Color) {
-			let note = addNote(atCenter: CGPoint(x: point.x + center.x, y: point.y + center.y))
-			note.text = text
-			note.tag = 10
-			note.color = color
+			_ = add(note: Note(atCenter: CGPoint(x: point.x + center.x, y: point.y + center.y), withColor: color, withText: text))
 		}
-		create(noteWithText: "double tap to create a note",
+		create(noteWithText: "Double tap with one finger to create a note of the selected color. Double tap with two fingers to delete a note",
 			   displacementPoint: CGPoint(x: 300, y: 400),
 			   andColor: .red)
-		create(noteWithText: "double tap to create a note",
+		create(noteWithText: "Use the button in the top left to change your selected color",
 			   displacementPoint: CGPoint(x: 900, y: 400),
 			   andColor: .orange)
-		create(noteWithText: "double tap to create a note",
+		create(noteWithText: "Use the keyboard color picker when typing to change the note's color",
 			   displacementPoint: CGPoint(x: 300, y: 1000),
 			   andColor: .yellow)
-		create(noteWithText: "double tap to create a note",
+		create(noteWithText: "Drag notes of the same color together to make a cluster. Triple tap with two fingers to delete",
 			   displacementPoint: CGPoint(x: 900, y: 1000),
 			   andColor: .green)
-		create(noteWithText: "double tap to create a note",
+		create(noteWithText: "Pinch to zoom in and out. Your position and zoom will be saved",
 			   displacementPoint: CGPoint(x: 300, y: 1600),
 			   andColor: .blue)
-		create(noteWithText: "double tap to create a note",
+		create(noteWithText: "Flip the switch in the top right to change the theme. NoteMap will auto save",
 			   displacementPoint: CGPoint(x: 900, y: 1600),
 			   andColor: .purple)
 		UserDefaults.standard.set(true, forKey: "tutorialNotesViewed")
