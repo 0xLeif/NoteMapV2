@@ -583,11 +583,11 @@
 			baseConfigurationReference = 40D7DC94A44C9A6A1F8DC35D /* Pods-NoteMap.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = F3Y86DYW9G;
+				DEVELOPMENT_TEAM = 8M8SAX62V2;
 				INFOPLIST_FILE = NoteMap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ol.notemap;
+				PRODUCT_BUNDLE_IDENTIFIER = oneleif.notemap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -599,11 +599,11 @@
 			baseConfigurationReference = F0BF1267E1581A87FF8C2CF1 /* Pods-NoteMap.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = F3Y86DYW9G;
+				DEVELOPMENT_TEAM = 8M8SAX62V2;
 				INFOPLIST_FILE = NoteMap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ol.notemap;
+				PRODUCT_BUNDLE_IDENTIFIER = oneleif.notemap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
