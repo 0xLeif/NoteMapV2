@@ -9,18 +9,6 @@
 import UIKit
 import RxSwift
 
-protocol Themeable {
-	func updateTheme()
-}
-
-protocol Deletable {
-	func delete()
-}
-
-var current_x: Int = 0
-var current_y: Int = 0
-var current_z: Double = 0
-
 class NoteMapScrollView: UIScrollView {
 	fileprivate var noteMap: NoteMap
     fileprivate var disposeBag = DisposeBag()

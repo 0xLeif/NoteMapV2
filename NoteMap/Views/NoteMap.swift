@@ -10,11 +10,6 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-public var noteMapSize: CGSize {
-	let multiplier: CGFloat = 100
-	return CGSize(width: UIScreen.width * multiplier, height: UIScreen.height * multiplier)
-}
-
 class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
@@ -44,7 +39,7 @@ class NoteMap: UIView {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	@objc func doubleTap(sender: UITapGestureRecognizer) {
+	@objc func doubleTap(sender: UITapGestureRecognizer) {	
         addNote(atCenter: sender.location(in: self))
 	}
 	
