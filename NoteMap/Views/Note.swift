@@ -28,7 +28,11 @@ class Note: UITextView {
 		self.text = text
 		resizeText()
 	}
-	
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 	private func NMinit(atCenter point: CGPoint) {
         logAnalytic()
 		adjustsFontForContentSizeCategory = true
