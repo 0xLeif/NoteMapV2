@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+struct ClusterModel: Codable {
+    var notes: [NoteModel]
+}

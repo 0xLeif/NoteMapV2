@@ -34,34 +34,36 @@ class NoteMapScrollView: UIScrollView {
 		zoomScale = 0.3
 		bindSave()
 	}
-	
-	func updateTheme() {
-		noteMap.updateTheme()
-	}
-	
-	func scrollTo(point: CGPoint) {
-		setContentOffset(point, animated: true)
-		saveCoords()
-	}
-	
-	func scrollToCenter() {
-		scrollTo(point: noteMap.center)
-	}
-	
-	func loadCoords() {
-		current_x = UserDefaults.standard.integer(forKey: "currentx")
-		current_y = UserDefaults.standard.integer(forKey: "currenty")
-		current_z = UserDefaults.standard.double(forKey: "currentz")
-		if current_z != 0 && current_y >= 0 && current_x >= 0 {
-			let viewingPoint = CGPoint(x: current_x, y: current_y)
-			zoomScale = CGFloat(current_z)
-			contentOffset = viewingPoint
-			print("[Loaded Coords] zoomScale: \(zoomScale), contentOffset: \(contentOffset), viewingPoint: \(viewingPoint)")
-		} else {
-			scrollToCenter()
-			print("Scrolling to Center")
-		}
-	}
+}
+
+extension NoteMapScrollView {
+    func updateTheme() {
+        noteMap.updateTheme()
+    }
+    
+    func scrollTo(point: CGPoint) {
+        setContentOffset(point, animated: true)
+        saveCoords()
+    }
+    
+    func scrollToCenter() {
+        scrollTo(point: noteMap.center)
+    }
+    
+    func loadCoords() {
+        current_x = UserDefaults.standard.integer(forKey: "currentx")
+        current_y = UserDefaults.standard.integer(forKey: "currenty")
+        current_z = UserDefaults.standard.double(forKey: "currentz")
+        if current_z != 0 && current_y >= 0 && current_x >= 0 {
+            let viewingPoint = CGPoint(x: current_x, y: current_y)
+            zoomScale = CGFloat(current_z)
+            contentOffset = viewingPoint
+            print("[Loaded Coords] zoomScale: \(zoomScale), contentOffset: \(contentOffset), viewingPoint: \(viewingPoint)")
+        } else {
+            scrollToCenter()
+            print("Scrolling to Center")
+        }
+    }
 }
 
 extension NoteMapScrollView: UIScrollViewDelegate {

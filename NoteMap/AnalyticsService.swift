@@ -17,13 +17,3 @@ class AnalyticsService {
             ])
     }
 }
-
-protocol LogAnalytic {
-    func logAnalytic()
-}
-
-enum Component: String {
-    case Notemap = "Notemap"
-    case Cluster = "Cluster"
-    case Note = "Note"
-}

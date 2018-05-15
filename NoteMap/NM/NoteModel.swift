@@ -7,3 +7,10 @@
 //
 
 import Foundation
+import UIKit
+
+struct NoteModel: Codable {
+    var center: CGPoint
+    var color: Int
+    var text: String
+}

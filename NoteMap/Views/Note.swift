@@ -54,52 +54,10 @@ class Note: UITextView {
 		
         inputAccessoryView = setUpLocalColorPicker()
     }
-	
-	private func resizeText() {
-		let textViewSize = frame.size
-		let fixedWidth = textViewSize.width-100
-		let expectSize = sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(1000)))
-		
-		var expectFont = font
-		if (expectSize.height > textViewSize.height) {
-			while (sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(500))).height > textViewSize.height && (font!.pointSize > CGFloat(24))) {
-				expectFont = font!.withSize(font!.pointSize - 1)
-				font = expectFont
-			}
-		}
-		else {
-			while (sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height < textViewSize.height && (font!.pointSize < CGFloat(100))) {
-				expectFont = font;
-				font = font!.withSize(font!.pointSize + 1)
-			}
-			font = expectFont
-		}
-	}
-	
+    
 	@objc func deleteSelf() {
 		delete()
 	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-	
-    func setUpLocalColorPicker() -> UIView{
-        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
-		var count = 0
-        for color in colorData {
-            let width  = Int(UIScreen.width) / colorData.count
-            let button: UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
-            button.backgroundColor = color.uicolor
-            button.layer.borderColor = UIColor.white.cgColor
-			button.tag = count
-            button.layer.borderWidth = color.uicolor == backgroundColor ? 2 : 0
-            button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
-            view.addSubview(button)
-			count += 1
-        }
-        return view
-    }
 
     @objc func localColorPicked(sender: UIButton){
         let buttons = inputAccessoryView?.subviews.flatMap{ $0 as? UIButton }
@@ -123,6 +81,46 @@ class Note: UITextView {
 			UINotificationFeedbackGenerator().notificationOccurred(.error)
 		}
 	}
+}
+
+extension Note {
+    private func resizeText() {
+        let textViewSize = frame.size
+        let fixedWidth = textViewSize.width-100
+        let expectSize = sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(1000)))
+        
+        var expectFont = font
+        if (expectSize.height > textViewSize.height) {
+            while (sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(500))).height > textViewSize.height && (font!.pointSize > CGFloat(24))) {
+                expectFont = font!.withSize(font!.pointSize - 1)
+                font = expectFont
+            }
+        }
+        else {
+            while (sizeThatFits(CGSize(width: fixedWidth, height:  CGFloat(500))).height < textViewSize.height && (font!.pointSize < CGFloat(100))) {
+                expectFont = font;
+                font = font!.withSize(font!.pointSize + 1)
+            }
+            font = expectFont
+        }
+    }
+    
+    func setUpLocalColorPicker() -> UIView{
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
+        var count = 0
+        for color in colorData {
+            let width  = Int(UIScreen.width) / colorData.count
+            let button: UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
+            button.backgroundColor = color.uicolor
+            button.layer.borderColor = UIColor.white.cgColor
+            button.tag = count
+            button.layer.borderWidth = color.uicolor == backgroundColor ? 2 : 0
+            button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
+            view.addSubview(button)
+            count += 1
+        }
+        return view
+    }
 }
 
 extension Note: LogAnalytic {

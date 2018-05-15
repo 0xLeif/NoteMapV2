@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+struct NoteMapModel: Codable {
+    var clusters: [ClusterModel]
+    var settings: NMDefaults
+}

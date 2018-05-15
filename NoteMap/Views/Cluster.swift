@@ -73,74 +73,6 @@ class Cluster: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 	
-	func check(bounds: CGRect) {
-		inBounds = notes.value.filter{ !bounds.contains(CGPoint(x: $0.center.x + newPoint.x, y: $0.center.y + newPoint.y)) }.isEmpty
-	}
-    
-    func add(note: Note) {
-        notes.value.insert(note)
-    }
-	
-	func remove(note: Note) {
-		guard let index = notes.value.index(of: note) else {
-			return
-		}
-		notes.value.remove(at: index)
-        rebindArray()
-        removedNoteObservable.onNext(note)
-	}
-    
-    func updateView() {
-		let isSingleNote = notes.value.count == 1
-		frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
-        isHidden = notes.value.count == 1
-        frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
-		checkBorder()
-        center = centerPoint
-        layer.cornerRadius = sizeForNotes / 2
-    }
-	
-	private func checkBorder() {
-		if (sizeForNotes / 2) >= maxRadius {
-			layer.borderColor = backgroundColor?.withAlphaComponent(1).cgColor
-			layer.borderWidth = CGFloat(notes.value.count) * 10
-		} else {
-			layer.borderWidth = 0
-		}
-	}
-    
-    func check(note: Note) -> Bool{
-		let checkingDistance = (sizeForNotes / 2) + (notes.value.count == 1 ? checkingPadding : 0)
-        return note.center.distanceFrom(point: centerPoint) < min(checkingDistance, maxRadius) && note.backgroundColor == backgroundColor?.withAlphaComponent(1)
-    }
-	
-	func canConsume(cluster: Cluster) -> Bool {
-		return center.distanceFrom(point: cluster.center) <= (sizeForNotes / 2)
-	}
-	
-	func consume(cluster: Cluster) {
-		let clustersNotes = cluster.notes
-        cluster.disposeBag = DisposeBag()
-		cluster.notes = Variable([])
-        clustersNotes.value.forEach { add(note: $0) }
-	}
-	
-    func noteDidPan(forNote note: Note) {
-        if !check(note:  note) {
-            remove(note: note)
-        } else {
-            checkNotemapConsume.onNext(self)
-        }
-		updateView()
-    }
-
-    func deleteNote(forNote note: Note) {
-        guard let noteIndex = notes.value.index(of: note) else {
-            return
-        }
-		notes.value.remove(at: noteIndex)
-    }
-	
 	@objc func deleteSelf() {
 		delete()
 	}
@@ -156,6 +88,76 @@ class Cluster: UIView {
 		}
 		checkNotemapConsume.onNext(self)
 	}
+}
+
+extension Cluster {
+    func check(bounds: CGRect) {
+        inBounds = notes.value.filter{ !bounds.contains(CGPoint(x: $0.center.x + newPoint.x, y: $0.center.y + newPoint.y)) }.isEmpty
+    }
+    
+    func add(note: Note) {
+        notes.value.insert(note)
+    }
+    
+    func remove(note: Note) {
+        guard let index = notes.value.index(of: note) else {
+            return
+        }
+        notes.value.remove(at: index)
+        rebindArray()
+        removedNoteObservable.onNext(note)
+    }
+    
+    func updateView() {
+        let isSingleNote = notes.value.count == 1
+        frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
+        isHidden = notes.value.count == 1
+        frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
+        checkBorder()
+        center = centerPoint
+        layer.cornerRadius = sizeForNotes / 2
+    }
+    
+    private func checkBorder() {
+        if (sizeForNotes / 2) >= maxRadius {
+            layer.borderColor = backgroundColor?.withAlphaComponent(1).cgColor
+            layer.borderWidth = CGFloat(notes.value.count) * 10
+        } else {
+            layer.borderWidth = 0
+        }
+    }
+    
+    func check(note: Note) -> Bool{
+        let checkingDistance = (sizeForNotes / 2) + (notes.value.count == 1 ? checkingPadding : 0)
+        return note.center.distanceFrom(point: centerPoint) < min(checkingDistance, maxRadius) && note.backgroundColor == backgroundColor?.withAlphaComponent(1)
+    }
+    
+    func canConsume(cluster: Cluster) -> Bool {
+        return center.distanceFrom(point: cluster.center) <= (sizeForNotes / 2)
+    }
+    
+    func consume(cluster: Cluster) {
+        let clustersNotes = cluster.notes
+        cluster.disposeBag = DisposeBag()
+        cluster.notes = Variable([])
+        clustersNotes.value.forEach { add(note: $0) }
+    }
+    
+    func noteDidPan(forNote note: Note) {
+        if !check(note:  note) {
+            remove(note: note)
+        } else {
+            checkNotemapConsume.onNext(self)
+        }
+        updateView()
+    }
+    
+    func deleteNote(forNote note: Note) {
+        guard let noteIndex = notes.value.index(of: note) else {
+            return
+        }
+        notes.value.remove(at: noteIndex)
+    }
 }
 
 extension Cluster: LogAnalytic {

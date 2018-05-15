@@ -7,3 +7,20 @@
 //
 
 import Foundation
+
+protocol SnapshotProtocol {
+    func generateSnapshot() -> Any
+}
+
+protocol LogAnalytic {
+    func logAnalytic()
+}
+
+protocol Themeable {
+    func updateTheme()
+}
+
+protocol Deletable {
+    func delete()
+}
+
