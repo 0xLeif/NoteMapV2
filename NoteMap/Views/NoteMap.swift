@@ -58,6 +58,19 @@ extension NoteMap: LogAnalytic {
 
 extension NoteMap {
     //MARK: Public helpers
+    func removedNoteMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
+        return Observable.merge(observableArray).subscribe(onNext: { note in
+            self.addCluster(forNote: note)
+        })
+    }
+    
+    func checkConsumeMerge(forArray observableArray: [Observable<Cluster>]) -> Disposable {
+        return Observable.merge(observableArray).subscribe(onNext: { cluster in
+            cluster.check(bounds: self.bounds)
+            self.checkConsume()
+        })
+    }
+    
     func clusterArraySubscriber() -> Disposable {
         return clusters.asObservable().subscribe(onNext: { cluster in
 

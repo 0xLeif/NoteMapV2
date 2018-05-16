@@ -193,6 +193,18 @@ extension Cluster: SnapshotProtocol {
 }
 
 extension Cluster {
+    func notePanMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
+        return Observable.merge(observableArray).subscribe(onNext: { note in
+            self.noteDidPan(forNote: note)
+        })
+    }
+    
+    func noteDeleteMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
+        return Observable.merge(observableArray).subscribe(onNext: { note in
+            self.deleteNote(forNote: note)
+        })
+    }
+    
     func notesArraySubscriber() -> Disposable {
         return notes.asObservable().subscribe(onNext: { note in
 
