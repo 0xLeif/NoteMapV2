@@ -45,7 +45,7 @@ class NoteMap: UIView {
 	}
 	
 	@objc func doubleTap(sender: UITapGestureRecognizer) {	
-        addNote(atCenter: sender.location(in: self))
+        _ = addNote(atCenter: sender.location(in: self))
         logAnalytic()
 	}
 }
@@ -97,10 +97,10 @@ extension NoteMap {
     
     func bindLoad() -> Disposable {
         return LoadDataObservable.subscribe(onNext: { jsonString in
-            if let jsonData = jsonString.data(using: .utf8) {
-                let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData)
-                print("Got notemapmodel : \((model as? NoteMapModel))")
-                self.loadFromModel(model: model as! NoteMapModel)
+            if let jsonData = jsonString.data(using: .utf8),
+                let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData) as NoteMapModel {
+                print("Got notemapmodel : \((model))")
+                self.loadFromModel(model: model)
             }
         })
     }

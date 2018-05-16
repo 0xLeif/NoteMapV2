@@ -50,7 +50,9 @@
 }
 
 -(BOOL)isCoordsLoaded {
-    return _currentZ != 0 && _currentY >= 0 && _currentX >= 0;
+    return _currentZ != 0 &&
+            _currentY >= 0 &&
+            _currentX >= 0;
 }
 
 -(void)saveCoords {
