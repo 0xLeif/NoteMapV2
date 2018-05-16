@@ -12,17 +12,17 @@ import RxSwift
 
 class Note: UITextView {
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
-    private let userPanGestureRecognizer: UIPanGestureRecognizer = {
+    private var userPanGestureRecognizer: UIPanGestureRecognizer {
         let pgr = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
         pgr.maximumNumberOfTouches = 1
         return pgr
-    }()
-    private let deleteTapRecognizer: UITapGestureRecognizer = {
+    }
+    private var deleteTapRecognizer: UITapGestureRecognizer {
         let tgr = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
         tgr.numberOfTouchesRequired = 2
         tgr.numberOfTapsRequired = 2
         return tgr
-    }()
+    }
 	private var newPoint: CGPoint = .zero
     var disposeBag = DisposeBag()
     var noteDidPanObservable = PublishSubject<Note>()

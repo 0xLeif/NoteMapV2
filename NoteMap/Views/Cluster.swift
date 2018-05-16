@@ -12,17 +12,17 @@ import RxSwift
 class Cluster: UIView {
 
     private let checkingPadding: CGFloat = 500
-    private let panGestureRecognizer: UIPanGestureRecognizer = {
+    private var panGestureRecognizer: UIPanGestureRecognizer {
         let pgr = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
         pgr.maximumNumberOfTouches = 1
         return pgr
-    }()
-    private let deleteTapRecognizer: UITapGestureRecognizer = {
+    }
+    private var deleteTapRecognizer: UITapGestureRecognizer {
         let tgr = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
         tgr.numberOfTouchesRequired = 2
         tgr.numberOfTapsRequired = 3
         return tgr
-    }()
+    }
 
     fileprivate var notes: Variable<Set<Note>> = Variable(Set<Note>())
     fileprivate var disposeBag = DisposeBag()

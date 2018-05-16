@@ -13,11 +13,11 @@ import RxSwift
 class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
-    private let doubleTapGestureRecognizer: UITapGestureRecognizer = {
+    private var doubleTapGestureRecognizer: UITapGestureRecognizer {
         let tgr = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
         tgr.numberOfTapsRequired = 2
         return tgr
-    }()
+    }
 
     init() {
 		super.init(frame: CGRect(origin: .zero, size: Singleton.standard().noteMapSize()))
