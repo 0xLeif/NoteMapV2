@@ -12,6 +12,17 @@ import RxSwift
 class Cluster: UIView {
 
     private let checkingPadding: CGFloat = 500
+    private let panGestureRecognizer: UIPanGestureRecognizer = {
+        let pgr = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
+        pgr.maximumNumberOfTouches = 1
+        return pgr
+    }()
+    private let deleteTapRecognizer: UITapGestureRecognizer = {
+        let tgr = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
+        tgr.numberOfTouchesRequired = 2
+        tgr.numberOfTapsRequired = 3
+        return tgr
+    }()
 
     fileprivate var notes: Variable<Set<Note>> = Variable(Set<Note>())
     fileprivate var disposeBag = DisposeBag()
@@ -58,15 +69,8 @@ class Cluster: UIView {
 		layer.zPosition = 5
 		layer.masksToBounds = false
 		notesArraySubscriber().disposed(by: disposeBag)
-		
-		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
-		panGestureRecognizer.maximumNumberOfTouches = 1
-		addGestureRecognizer(panGestureRecognizer)
-		
-		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
-		deleteTapRecognizer.numberOfTouchesRequired = 2
-		deleteTapRecognizer.numberOfTapsRequired = 3
-		addGestureRecognizer(deleteTapRecognizer)
+        addGestureRecognizer(panGestureRecognizer)
+        addGestureRecognizer(deleteTapRecognizer)
 	}
     
     required init?(coder aDecoder: NSCoder) {
@@ -109,8 +113,6 @@ extension Cluster {
     }
     
     func updateView() {
-        let isSingleNote = notes.value.count == 1
-        frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
         isHidden = notes.value.count == 1
         frame = CGRect(origin: .zero, size: CGSize(width: sizeForNotes, height: sizeForNotes))
         checkBorder()

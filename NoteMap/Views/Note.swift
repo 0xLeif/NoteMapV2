@@ -11,8 +11,18 @@ import RxCocoa
 import RxSwift
 
 class Note: UITextView {
-
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
+    private let userPanGestureRecognizer: UIPanGestureRecognizer = {
+        let pgr = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
+        pgr.maximumNumberOfTouches = 1
+        return pgr
+    }()
+    private let deleteTapRecognizer: UITapGestureRecognizer = {
+        let tgr = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
+        tgr.numberOfTouchesRequired = 2
+        tgr.numberOfTapsRequired = 2
+        return tgr
+    }()
 	private var newPoint: CGPoint = .zero
     var disposeBag = DisposeBag()
     var noteDidPanObservable = PublishSubject<Note>()
@@ -46,16 +56,8 @@ class Note: UITextView {
 		isScrollEnabled = false
 		tintColor = .white
 		textAlignment = .center
-		
-		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
-		panGestureRecognizer.maximumNumberOfTouches = 1
-		addGestureRecognizer(panGestureRecognizer)
-		
-		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
-		deleteTapRecognizer.numberOfTouchesRequired = 2
-		deleteTapRecognizer.numberOfTapsRequired = 2
+		addGestureRecognizer(userPanGestureRecognizer)
 		addGestureRecognizer(deleteTapRecognizer)
-		
         inputAccessoryView = setUpLocalColorPicker()
     }
     
@@ -64,10 +66,7 @@ class Note: UITextView {
 	}
 
     @objc func localColorPicked(sender: UIButton){
-        let buttons = inputAccessoryView?.subviews.flatMap{ $0 as? UIButton }
-        for button in buttons!{
-            button.layer.borderWidth = 0
-        }
+        inputAccessoryView?.subviews.compactMap{ $0 as? UIButton }.forEach{ $0.layer.borderWidth = 0 }
         sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
 		color = Color(rawValue: sender.tag)!
@@ -112,7 +111,7 @@ extension Note {
     func setUpLocalColorPicker() -> UIView{
         let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
         var count = 0
-        for (color, uicolor) in colorData {
+        for (_, uicolor) in colorData {
             let width  = Int(UIScreen.width) / colorData.count
             let button: UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
             button.backgroundColor = uicolor

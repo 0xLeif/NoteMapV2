@@ -13,6 +13,11 @@ import RxSwift
 class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
+    private let doubleTapGestureRecognizer: UITapGestureRecognizer = {
+        let tgr = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
+        tgr.numberOfTapsRequired = 2
+        return tgr
+    }()
 
     init() {
 		super.init(frame: CGRect(origin: .zero, size: Singleton.standard().noteMapSize()))
@@ -23,13 +28,8 @@ class NoteMap: UIView {
 	}
 	
 	private func NMinit() {
-        logAnalytic()
 		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
-		
-		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
-		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		addGestureRecognizer(doubleTapGestureRecognizer)
-		
 		clusterArraySubscriber().disposed(by: disposeBag)
 		bindSave()
 		bindLoad()
@@ -41,6 +41,7 @@ class NoteMap: UIView {
 	
 	@objc func doubleTap(sender: UITapGestureRecognizer) {	
         addNote(atCenter: sender.location(in: self))
+        logAnalytic()
 	}
 }
 
