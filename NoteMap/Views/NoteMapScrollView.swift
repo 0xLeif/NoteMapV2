@@ -32,7 +32,7 @@ class NoteMapScrollView: UIScrollView {
 		minimumZoomScale = 0.01
 		maximumZoomScale = 1
 		zoomScale = 0.3
-		bindSave()
+		bindSave().disposed(by: disposeBag)
 	}
 }
 
@@ -82,8 +82,8 @@ extension NoteMapScrollView: UIScrollViewDelegate {
 }
 
 extension NoteMapScrollView {
-	func bindSave() {
-        SaveDataObservable.subscribe({_ in 
+	func bindSave() -> Disposable {
+        return SaveDataObservable.subscribe({_ in
 			Singleton.standard().saveCoords()
 		})
 	}
