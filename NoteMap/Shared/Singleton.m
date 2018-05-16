@@ -44,9 +44,9 @@
 }
 
 -(CGSize)noteMapSize {
-    CGSize bounds = [[UIScreen mainScreen] bounds].size;
     CGFloat multipler = 100;
-    return CGSizeMake(bounds.width * multipler, bounds.height * multipler);
+    return CGSizeMake([UIScreen width] * multipler,
+                      [UIScreen height] * multipler);
 }
 
 -(BOOL)isCoordsLoaded {

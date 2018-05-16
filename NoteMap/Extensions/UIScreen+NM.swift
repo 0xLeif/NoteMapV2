@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-extension UIScreen {
+@objc extension UIScreen {
 	static public var height: CGFloat {
 		return UIScreen.main.bounds.height
 	}
