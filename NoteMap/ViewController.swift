@@ -131,7 +131,7 @@ extension ViewController: UIPickerViewDataSource{
 	
 	func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
 		let pickerLabel = UILabel()
-		pickerLabel.backgroundColor = colorData[row].uicolor
+		pickerLabel.backgroundColor = colorData[Color(rawValue: row)!]
 		return pickerLabel
 	}
 }
