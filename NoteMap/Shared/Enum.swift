@@ -9,7 +9,7 @@
 import Foundation
 
 //MARK: Themes
-enum Color: Int, Codable {
+@objc enum Color: Int, Codable {
     case red
     case orange
     case yellow
@@ -18,14 +18,14 @@ enum Color: Int, Codable {
     case purple
 }
 
-enum Theme: String, Codable {
-    case light = "light"
-    case dark = "dark"
+@objc enum Theme: Int, Codable {
+    case light
+    case dark
 }
 
 
 //MARK: Analytics
-enum Component: String {
+@objc enum Component: Int {
     case Notemap
     case Cluster
     case Note

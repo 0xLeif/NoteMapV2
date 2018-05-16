@@ -33,7 +33,8 @@ class ViewController: UIViewController {
 		updateTheme()
 		bindObservables()
 		if let model = UserDefaults.standard.string(forKey: "nm") {
-			LoadDataObservable.onNext(model)
+            //Replacing to ints
+            LoadDataObservable.onNext(model.replacingOccurrences(of: "\"light\"", with: "0").replacingOccurrences(of: "\"dark\"", with: "1"))
 		}
 	}
 	
@@ -130,7 +131,7 @@ extension ViewController: UIPickerViewDataSource{
 	
 	func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
 		let pickerLabel = UILabel()
-		pickerLabel.backgroundColor = colorData[row].uicolor
+		pickerLabel.backgroundColor = colorData[Color(rawValue: row)!]
 		return pickerLabel
 	}
 }

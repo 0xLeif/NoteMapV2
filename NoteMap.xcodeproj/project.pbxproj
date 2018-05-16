@@ -16,7 +16,6 @@
 		295A47E220AA5D2700DFDE36 /* Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A47E120AA5D2700DFDE36 /* Protocol.swift */; };
 		295A47E420AA5DA800DFDE36 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A47E320AA5DA800DFDE36 /* Enum.swift */; };
 		295A47E620AA5E8300DFDE36 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A47E520AA5E8300DFDE36 /* Global.swift */; };
-		295A47E920AA60A700DFDE36 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A47E820AA60A700DFDE36 /* ThemeManager.swift */; };
 		4CEFDBCD6F07567C0BCF9C39 /* Pods_NoteMapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A607DF1F81D81333D9D9EC /* Pods_NoteMapTests.framework */; };
 		7AC3DDFF2015791700FB1A71 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7AC3DDFE2015791700FB1A71 /* GoogleService-Info.plist */; };
 		926F96431FA94FF000A4A98D /* CGPoint+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926F96421FA94FF000A4A98D /* CGPoint+NM.swift */; };
@@ -35,8 +34,6 @@
 		92B945DA1FB11450004AE9A8 /* UIColor+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B945D91FB11450004AE9A8 /* UIColor+NM.swift */; };
 		92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD400B1EFE1B120054DBD7 /* Cluster.swift */; };
 		92F3296D2013B809009802E4 /* IMG_1440.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92F3296C2013B809009802E4 /* IMG_1440.jpg */; };
-		9E9236FF8768C529C197A8C4 /* Cluster+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */; };
-		9E9237AD600A55C1E2E0B543 /* NoteMap+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E923036B432901FC2470A5F /* NoteMap+Rx.swift */; };
 		A5D96CA92006F0BB00C64C55 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D96CA82006F0BB00C64C55 /* AnalyticsService.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,7 +59,6 @@
 		295A47E120AA5D2700DFDE36 /* Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocol.swift; sourceTree = "<group>"; };
 		295A47E320AA5DA800DFDE36 /* Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enum.swift; sourceTree = "<group>"; };
 		295A47E520AA5E8300DFDE36 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
-		295A47E820AA60A700DFDE36 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		40D7DC94A44C9A6A1F8DC35D /* Pods-NoteMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMap/Pods-NoteMap.debug.xcconfig"; sourceTree = "<group>"; };
 		65A607DF1F81D81333D9D9EC /* Pods_NoteMapTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NoteMapTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AC3DDFE2015791700FB1A71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -86,8 +82,6 @@
 		92B945D91FB11450004AE9A8 /* UIColor+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NM.swift"; sourceTree = "<group>"; };
 		92BD400B1EFE1B120054DBD7 /* Cluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cluster.swift; sourceTree = "<group>"; };
 		92F3296C2013B809009802E4 /* IMG_1440.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_1440.jpg; sourceTree = "<group>"; };
-		9E923036B432901FC2470A5F /* NoteMap+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NoteMap+Rx.swift"; sourceTree = "<group>"; };
-		9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cluster+Rx.swift"; sourceTree = "<group>"; };
 		A5D96CA82006F0BB00C64C55 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		CF20A68D2C02503CA53CB4EA /* Pods-NoteMapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMapTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMapTests/Pods-NoteMapTests.release.xcconfig"; sourceTree = "<group>"; };
 		D42DA05B3ABA30BA67CA8847 /* Pods-NoteMapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMapTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMapTests/Pods-NoteMapTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -131,8 +125,8 @@
 		295A47E720AA607E00DFDE36 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A5D96CA82006F0BB00C64C55 /* AnalyticsService.swift */,
 				295A47E520AA5E8300DFDE36 /* Global.swift */,
-				295A47E820AA60A700DFDE36 /* ThemeManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -154,8 +148,6 @@
 				92906FC41EFE146000B31025 /* ViewController+NM.swift */,
 				92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */,
 				92B945D91FB11450004AE9A8 /* UIColor+NM.swift */,
-				9E923A2D42E8FA4C972FE074 /* Cluster+Rx.swift */,
-				9E923036B432901FC2470A5F /* NoteMap+Rx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -193,19 +185,18 @@
 		929129C11EFDC5F400F76383 /* NoteMap */ = {
 			isa = PBXGroup;
 			children = (
-				295A47D820AA556700DFDE36 /* Shared */,
-				7AC3DDFE2015791700FB1A71 /* GoogleService-Info.plist */,
 				929129C21EFDC5F400F76383 /* AppDelegate.swift */,
 				929129C41EFDC5F400F76383 /* ViewController.swift */,
-				A5D96CA82006F0BB00C64C55 /* AnalyticsService.swift */,
+				295A47D820AA556700DFDE36 /* Shared */,
 				928B79301EFF4ED9001E9269 /* Extensions */,
 				928B79311EFF4EE8001E9269 /* NM */,
 				92B5A8351FFF3BEB00EC27C5 /* Views */,
-				929129C61EFDC5F400F76383 /* Main.storyboard */,
 				929129C91EFDC5F400F76383 /* Assets.xcassets */,
 				92F3296C2013B809009802E4 /* IMG_1440.jpg */,
+				929129C61EFDC5F400F76383 /* Main.storyboard */,
 				929129CB1EFDC5F400F76383 /* LaunchScreen.storyboard */,
 				929129CE1EFDC5F400F76383 /* Info.plist */,
+				7AC3DDFE2015791700FB1A71 /* GoogleService-Info.plist */,
 				295A47D420AA51D200DFDE36 /* NoteMap-Bridging-Header.h */,
 			);
 			path = NoteMap;
@@ -450,12 +441,9 @@
 				92906FC31EFE0CF700B31025 /* NoteMap.swift in Sources */,
 				295A47D620AA51D200DFDE36 /* Singleton.m in Sources */,
 				92906FC51EFE146000B31025 /* ViewController+NM.swift in Sources */,
-				295A47E920AA60A700DFDE36 /* ThemeManager.swift in Sources */,
 				92906FC11EFE0B3200B31025 /* UIScreen+NM.swift in Sources */,
-				9E9236FF8768C529C197A8C4 /* Cluster+Rx.swift in Sources */,
 				A5D96CA92006F0BB00C64C55 /* AnalyticsService.swift in Sources */,
 				295A47E220AA5D2700DFDE36 /* Protocol.swift in Sources */,
-				9E9237AD600A55C1E2E0B543 /* NoteMap+Rx.swift in Sources */,
 				295A47DA20AA583800DFDE36 /* Singleton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

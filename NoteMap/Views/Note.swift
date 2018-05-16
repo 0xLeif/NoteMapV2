@@ -11,8 +11,18 @@ import RxCocoa
 import RxSwift
 
 class Note: UITextView {
-
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
+    private var userPanGestureRecognizer: UIPanGestureRecognizer {
+        let pgr = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
+        pgr.maximumNumberOfTouches = 1
+        return pgr
+    }
+    private var deleteTapRecognizer: UITapGestureRecognizer {
+        let tgr = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
+        tgr.numberOfTouchesRequired = 2
+        tgr.numberOfTapsRequired = 2
+        return tgr
+    }
 	private var newPoint: CGPoint = .zero
     var disposeBag = DisposeBag()
     var noteDidPanObservable = PublishSubject<Note>()
@@ -39,23 +49,15 @@ class Note: UITextView {
 		font = UIFont.systemFont(ofSize: 100)
 		center = point
 		delegate = self
-		backgroundColor = colorData.filter{ $0.color == color }.first?.uicolor
+		backgroundColor = colorData[color]
 		layer.borderColor = UIColor.black.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
 		isScrollEnabled = false
 		tintColor = .white
 		textAlignment = .center
-		
-		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
-		panGestureRecognizer.maximumNumberOfTouches = 1
-		addGestureRecognizer(panGestureRecognizer)
-		
-		let deleteTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(deleteSelf))
-		deleteTapRecognizer.numberOfTouchesRequired = 2
-		deleteTapRecognizer.numberOfTapsRequired = 2
+		addGestureRecognizer(userPanGestureRecognizer)
 		addGestureRecognizer(deleteTapRecognizer)
-		
         inputAccessoryView = setUpLocalColorPicker()
     }
     
@@ -64,10 +66,7 @@ class Note: UITextView {
 	}
 
     @objc func localColorPicked(sender: UIButton){
-        let buttons = inputAccessoryView?.subviews.flatMap{ $0 as? UIButton }
-        for button in buttons!{
-            button.layer.borderWidth = 0
-        }
+        inputAccessoryView?.subviews.compactMap{ $0 as? UIButton }.forEach{ $0.layer.borderWidth = 0 }
         sender.layer.borderWidth = 2
         backgroundColor = sender.backgroundColor
 		color = Color(rawValue: sender.tag)!
@@ -78,7 +77,7 @@ class Note: UITextView {
 		let translation = sender.translation(in: self)
 		sender.setTranslation(CGPoint.zero, in: self)
 		newPoint = CGPoint(x: center.x + translation.x * transform.a, y: center.y + translation.y * transform.a)
-		if CGRect(origin: .zero, size: noteMapSize).contains(newPoint) {
+		if CGRect(origin: .zero, size: Singleton.standard().noteMapSize()).contains(newPoint) {
 			center = newPoint
 			noteDidPanObservable.onNext(self)
 		} else {
@@ -112,13 +111,13 @@ extension Note {
     func setUpLocalColorPicker() -> UIView{
         let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
         var count = 0
-        for color in colorData {
+        for (_, uicolor) in colorData {
             let width  = Int(UIScreen.width) / colorData.count
             let button: UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
-            button.backgroundColor = color.uicolor
+            button.backgroundColor = uicolor
             button.layer.borderColor = UIColor.white.cgColor
             button.tag = count
-            button.layer.borderWidth = color.uicolor == backgroundColor ? 2 : 0
+            button.layer.borderWidth = uicolor == backgroundColor ? 2 : 0
             button.addTarget(self, action: #selector(localColorPicked), for: .touchDown)
             view.addSubview(button)
             count += 1
@@ -135,7 +134,7 @@ extension Note: LogAnalytic {
 
 extension Note: Themeable {
 	func updateTheme() {
-		backgroundColor = colorData.filter{ $0.color == color}.first?.uicolor
+		backgroundColor = colorData[color]
 		inputAccessoryView = setUpLocalColorPicker()
 		if isFirstResponder {
 			resignFirstResponder()

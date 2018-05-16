@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Singleton.h"
+#import "NoteMap-Swift.h"
 
 @implementation Singleton
 
@@ -24,9 +25,60 @@
 
 - (id)init {
     if (self = [super init]) {
-        _commonString = @"this is string";
+        _isLoaded = NO;
+        _currentX = 0;
+        _currentY = 0;
+        _currentZ = 0;
     }
     return self;
+}
+
+-(NSArray *)colorOrder {
+    return [[NSArray alloc] initWithObjects:ColorRed,
+                                            ColorOrange,
+                                            ColorYellow,
+                                            ColorGreen,
+                                            ColorBlue,
+                                            ColorPurple,
+                                            nil];
+}
+
+-(CGSize)noteMapSize {
+    CGSize bounds = [[UIScreen mainScreen] bounds].size;
+    CGFloat multipler = 100;
+    return CGSizeMake(bounds.width * multipler, bounds.height * multipler);
+}
+
+-(BOOL)isCoordsLoaded {
+    return _currentZ != 0 && _currentY >= 0 && _currentX >= 0;
+}
+
+-(void)saveCoords {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setFloat: _currentX forKey: @"currentx"];
+    [defaults setFloat: _currentY forKey: @"currenty"];
+    [defaults setFloat: _currentZ forKey: @"currentz"];
+    [defaults synchronize];
+}
+
+-(void)loadCoords {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _currentX = [defaults floatForKey:@"currentx"];
+    _currentY = [defaults floatForKey:@"currenty"];
+    _currentZ = [defaults floatForKey:@"currentz"];
+}
+
+-(CGPoint)viewingPoint {
+    CGFloat x = _currentX;
+    CGFloat y = _currentY;
+    return CGPointMake(x, y);
+}
+
+-(void)updateCoords:(CGPoint)point {
+    if(point.x >= 0 && point.y >= 0) {
+        _currentX = point.x;
+        _currentY = point.y;
+    }
 }
 
 @end

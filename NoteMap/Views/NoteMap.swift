@@ -13,9 +13,14 @@ import RxSwift
 class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
+    private var doubleTapGestureRecognizer: UITapGestureRecognizer {
+        let tgr = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
+        tgr.numberOfTapsRequired = 2
+        return tgr
+    }
 
     init() {
-		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
+		super.init(frame: CGRect(origin: .zero, size: Singleton.standard().noteMapSize()))
 		NMinit()
 		if !UserDefaults.standard.bool(forKey: "tutorialNotesViewed") {
 			addTutorialNotes()
@@ -23,17 +28,17 @@ class NoteMap: UIView {
 	}
 	
 	private func NMinit() {
-        logAnalytic()
 		backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
-		
-		let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
-		doubleTapGestureRecognizer.numberOfTapsRequired = 2
 		addGestureRecognizer(doubleTapGestureRecognizer)
-		
-		clusterArraySubscriber().disposed(by: disposeBag)
-		bindSave()
-		bindLoad()
+		bindObservers()
 	}
+    
+    private func bindObservers() {
+        disposeBag = DisposeBag()
+        clusterArraySubscriber().disposed(by: disposeBag)
+        bindSave().disposed(by: disposeBag)
+        bindLoad().disposed(by: disposeBag)
+    }
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
@@ -41,6 +46,7 @@ class NoteMap: UIView {
 	
 	@objc func doubleTap(sender: UITapGestureRecognizer) {	
         addNote(atCenter: sender.location(in: self))
+        logAnalytic()
 	}
 }
 
@@ -52,8 +58,21 @@ extension NoteMap: LogAnalytic {
 
 extension NoteMap {
     //MARK: Public helpers
+    func removedNoteMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
+        return Observable.merge(observableArray).subscribe(onNext: { note in
+            self.addCluster(forNote: note)
+        })
+    }
+    
+    func checkConsumeMerge(forArray observableArray: [Observable<Cluster>]) -> Disposable {
+        return Observable.merge(observableArray).subscribe(onNext: { cluster in
+            cluster.check(bounds: self.bounds)
+            self.checkConsume()
+        })
+    }
+    
     func clusterArraySubscriber() -> Disposable {
-        return self.clusters.asObservable().subscribe(onNext: { cluster in
+        return clusters.asObservable().subscribe(onNext: { cluster in
 
                 var arrayOfNoteRemoval = [Observable<Note>]()
                 self.clusters.value.forEach { (arrayOfNoteRemoval.append($0.removedNoteObservable)) }
@@ -64,10 +83,39 @@ extension NoteMap {
                 self.checkConsumeMerge(forArray: arrayOfCheckConsumeEvent).disposed(by: self.disposeBag)
         })
     }
-
-    func rebindArray() {
-        disposeBag = DisposeBag()
-        clusterArraySubscriber().disposed(by: disposeBag)
+    
+    func bindSave() -> Disposable {
+        return SaveDataObservable.subscribe(onNext: {
+            let toBeSavedModel = self.generateSnapshot()
+            let b = toBeSavedModel as! NoteMapModel
+            let encode = try? JSONEncoder().encode(b)
+            let a = String(data: encode!, encoding: String.Encoding.utf8)
+            print("Saved data : \(a!)")
+            UserDefaults.standard.set(a!, forKey: "nm")
+        })
+    }
+    
+    func bindLoad() -> Disposable {
+        return LoadDataObservable.subscribe(onNext: { jsonString in
+            if let jsonData = jsonString.data(using: .utf8) {
+                let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData)
+                print("Got notemapmodel : \((model as? NoteMapModel))")
+                self.loadFromModel(model: model as! NoteMapModel)
+            }
+        })
+    }
+    
+    func loadFromModel(model: NoteMapModel) {
+        for clusterModel in model.clusters {
+            let notes = clusterModel.notes.map{ Note(atCenter: $0.center, withColor: Color(rawValue: $0.color)!, withText: $0.text) }
+            let cluster = Cluster(notes: notes)
+            clusters.value.append(cluster)
+            addSubview(cluster)
+            notes.forEach{ addSubview($0) }
+        }
+        selectedColor.value = model.settings.selectedColor
+        selectedTheme.value = model.settings.selectedTheme
+        
     }
     
     func checkConsume() {
@@ -79,7 +127,7 @@ extension NoteMap {
                         return
                     }
                     cluster.consume(cluster: c)
-                    rebindArray()
+                    bindObservers()
                     clusters.value.remove(at: clusterIndex).removeFromSuperview()
                 }
             }
@@ -92,7 +140,7 @@ extension NoteMap {
         
         if noClusterInRange {
             let cluster = Cluster(note: note)
-            rebindArray()
+            bindObservers()
             clusters.value.append(cluster)
             addSubview(cluster)
             sendSubview(toBack: cluster)
@@ -163,43 +211,8 @@ extension NoteMap: SnapshotProtocol {
 	func generateSnapshot() -> Any {
 		var clusterModels: [ClusterModel] = []
 		self.clusters.value.forEach { clusterModels.append($0.generateSnapshot() as! ClusterModel) }
-        let settings =  NMDefaults(selectedColor: selectedColor.value, secletedTheme: selectedTheme.value)
+        let settings =  NMDefaults(selectedColor: selectedColor.value, selectedTheme: selectedTheme.value)
 		let model = NoteMapModel(clusters: clusterModels, settings: settings)
 		return model
-	}
-}
-
-extension NoteMap {
-	func bindSave() {
-		SaveDataObservable.subscribe(onNext: {
-			let toBeSavedModel = self.generateSnapshot()
-			let b = toBeSavedModel as! NoteMapModel
-			let encode = try? JSONEncoder().encode(b)
-			let a = String(data: encode!, encoding: String.Encoding.utf8)
-            print("Saved data : \(a!)")
-            UserDefaults.standard.set(a!, forKey: "nm")
-		})
-	}
-    
-	func bindLoad() { LoadDataObservable.subscribe(onNext: { jsonString in
-			if let jsonData = jsonString.data(using: .utf8) {
-				let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData)
-                print("Got notemapmodel : \((model as! NoteMapModel))")
-				self.loadFromModel(model: model as! NoteMapModel)
-			}
-		})
-	}
-
-	func loadFromModel(model: NoteMapModel) {
-		for clusterModel in model.clusters {
-			let notes = clusterModel.notes.map{ Note(atCenter: $0.center, withColor: Color(rawValue: $0.color)!, withText: $0.text) }
-			let cluster = Cluster(notes: notes)
-            clusters.value.append(cluster)
-            addSubview(cluster)
-			notes.forEach{ addSubview($0) }
-		}
-        selectedColor.value = model.settings.selectedColor
-        selectedTheme.value = model.settings.secletedTheme
-		
 	}
 }
