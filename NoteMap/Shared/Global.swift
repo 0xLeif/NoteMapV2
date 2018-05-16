@@ -27,5 +27,5 @@ var backgroundColorData: UIColor {
     return selectedTheme.value == .dark ? Singleton.darkBackGround : Singleton.lightBackGround
 }
 var selectedUIColor: UIColor {
-    return (colorData[selectedColor.value])!
+    return colorData[selectedColor.value]!
 }

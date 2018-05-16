@@ -23,7 +23,6 @@ import Foundation
     case dark
 }
 
-
 //MARK: Analytics
 @objc enum Component: Int {
     case Notemap

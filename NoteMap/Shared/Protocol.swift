@@ -23,4 +23,3 @@ protocol Themeable {
 protocol Deletable {
     func delete()
 }
-

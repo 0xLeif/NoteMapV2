@@ -164,7 +164,7 @@ extension Cluster {
 
 extension Cluster: LogAnalytic {
     func logAnalytic() {
-        AnalyticsService.log(type: .Cluster)
+        Singleton.log(type: .Cluster)
     }
 }
 

@@ -128,7 +128,7 @@ extension Note {
 
 extension Note: LogAnalytic {
     func logAnalytic() {
-        AnalyticsService.log(type: .Note)
+        Singleton.log(type: .Note)
     }
 }
 

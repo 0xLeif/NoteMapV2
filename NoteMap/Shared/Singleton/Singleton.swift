@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 
 public extension Singleton {
     internal static let darkTheme: [Color: UIColor] = [.red: .rgba(231, 76, 60,1.0),
@@ -24,4 +25,9 @@ public extension Singleton {
     static let darkBackGround: UIColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
     static let lightBackGround: UIColor = .rgba(236, 240, 241,1.0)
     
+    internal static func log(type: Component) {
+        Analytics.logEvent("Init", parameters: [
+            "Type": type.rawValue as NSObject
+            ])
+    }
 }

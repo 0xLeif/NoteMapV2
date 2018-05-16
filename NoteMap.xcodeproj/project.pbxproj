@@ -34,7 +34,6 @@
 		92B945DA1FB11450004AE9A8 /* UIColor+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B945D91FB11450004AE9A8 /* UIColor+NM.swift */; };
 		92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD400B1EFE1B120054DBD7 /* Cluster.swift */; };
 		92F3296D2013B809009802E4 /* IMG_1440.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92F3296C2013B809009802E4 /* IMG_1440.jpg */; };
-		A5D96CA92006F0BB00C64C55 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D96CA82006F0BB00C64C55 /* AnalyticsService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,7 +81,6 @@
 		92B945D91FB11450004AE9A8 /* UIColor+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+NM.swift"; sourceTree = "<group>"; };
 		92BD400B1EFE1B120054DBD7 /* Cluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cluster.swift; sourceTree = "<group>"; };
 		92F3296C2013B809009802E4 /* IMG_1440.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_1440.jpg; sourceTree = "<group>"; };
-		A5D96CA82006F0BB00C64C55 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		CF20A68D2C02503CA53CB4EA /* Pods-NoteMapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMapTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMapTests/Pods-NoteMapTests.release.xcconfig"; sourceTree = "<group>"; };
 		D42DA05B3ABA30BA67CA8847 /* Pods-NoteMapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMapTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMapTests/Pods-NoteMapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F0BF1267E1581A87FF8C2CF1 /* Pods-NoteMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteMap.release.xcconfig"; path = "Pods/Target Support Files/Pods-NoteMap/Pods-NoteMap.release.xcconfig"; sourceTree = "<group>"; };
@@ -112,23 +110,23 @@
 		295A47D820AA556700DFDE36 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				295A47E720AA607E00DFDE36 /* Resources */,
-				295A47D520AA51D200DFDE36 /* Singleton.m */,
-				295A47D720AA51E300DFDE36 /* Singleton.h */,
-				295A47D920AA583800DFDE36 /* Singleton.swift */,
+				928B79301EFF4ED9001E9269 /* Extensions */,
+				29EC29E320ABD12C00B4A788 /* Singleton */,
+				295A47E520AA5E8300DFDE36 /* Global.swift */,
 				295A47E120AA5D2700DFDE36 /* Protocol.swift */,
 				295A47E320AA5DA800DFDE36 /* Enum.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		295A47E720AA607E00DFDE36 /* Resources */ = {
+		29EC29E320ABD12C00B4A788 /* Singleton */ = {
 			isa = PBXGroup;
 			children = (
-				A5D96CA82006F0BB00C64C55 /* AnalyticsService.swift */,
-				295A47E520AA5E8300DFDE36 /* Global.swift */,
+				295A47D520AA51D200DFDE36 /* Singleton.m */,
+				295A47D720AA51E300DFDE36 /* Singleton.h */,
+				295A47D920AA583800DFDE36 /* Singleton.swift */,
 			);
-			path = Resources;
+			path = Singleton;
 			sourceTree = "<group>";
 		};
 		84DE634DB7FD1D219296C93B /* Frameworks */ = {
@@ -188,7 +186,6 @@
 				929129C21EFDC5F400F76383 /* AppDelegate.swift */,
 				929129C41EFDC5F400F76383 /* ViewController.swift */,
 				295A47D820AA556700DFDE36 /* Shared */,
-				928B79301EFF4ED9001E9269 /* Extensions */,
 				928B79311EFF4EE8001E9269 /* NM */,
 				92B5A8351FFF3BEB00EC27C5 /* Views */,
 				929129C91EFDC5F400F76383 /* Assets.xcassets */,
@@ -442,7 +439,6 @@
 				295A47D620AA51D200DFDE36 /* Singleton.m in Sources */,
 				92906FC51EFE146000B31025 /* ViewController+NM.swift in Sources */,
 				92906FC11EFE0B3200B31025 /* UIScreen+NM.swift in Sources */,
-				A5D96CA92006F0BB00C64C55 /* AnalyticsService.swift in Sources */,
 				295A47E220AA5D2700DFDE36 /* Protocol.swift in Sources */,
 				295A47DA20AA583800DFDE36 /* Singleton.swift in Sources */,
 			);

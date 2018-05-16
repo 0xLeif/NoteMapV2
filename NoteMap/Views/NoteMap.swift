@@ -52,7 +52,7 @@ class NoteMap: UIView {
 
 extension NoteMap: LogAnalytic {
     func logAnalytic() {
-        AnalyticsService.log(type: .Notemap)
+        Singleton.log(type: .Notemap)
     }
 }
 
