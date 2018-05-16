@@ -15,7 +15,7 @@ class NoteMap: UIView {
     fileprivate var disposeBag = DisposeBag()
 
     init() {
-		super.init(frame: CGRect(origin: .zero, size: noteMapSize))
+		super.init(frame: CGRect(origin: .zero, size: Singleton.standard().noteMapSize()))
 		NMinit()
 		if !UserDefaults.standard.bool(forKey: "tutorialNotesViewed") {
 			addTutorialNotes()

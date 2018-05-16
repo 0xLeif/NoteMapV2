@@ -78,7 +78,7 @@ class Note: UITextView {
 		let translation = sender.translation(in: self)
 		sender.setTranslation(CGPoint.zero, in: self)
 		newPoint = CGPoint(x: center.x + translation.x * transform.a, y: center.y + translation.y * transform.a)
-		if CGRect(origin: .zero, size: noteMapSize).contains(newPoint) {
+		if CGRect(origin: .zero, size: Singleton.standard().noteMapSize()).contains(newPoint) {
 			center = newPoint
 			noteDidPanObservable.onNext(self)
 		} else {
