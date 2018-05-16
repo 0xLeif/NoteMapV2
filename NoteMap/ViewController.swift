@@ -33,8 +33,8 @@ class ViewController: UIViewController {
 		updateTheme()
 		bindObservables()
 		if let model = UserDefaults.standard.string(forKey: "nm") {
-        //Replacing to ints
-        LoadDataObservable.onNext(model.replacingOccurrences(of: "\"light\"", with: "0").replacingOccurrences(of: "\"dark\"", with: "1"))
+            //Replacing to ints
+            LoadDataObservable.onNext(model.replacingOccurrences(of: "\"light\"", with: "0").replacingOccurrences(of: "\"dark\"", with: "1"))
 		}
 	}
 	
