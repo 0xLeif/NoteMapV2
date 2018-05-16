@@ -12,7 +12,7 @@ import RxSwift
 //MARK: Structs
 struct NMDefaults: Codable {
     var selectedColor: Color
-    var secletedTheme: Theme
+    var selectedTheme: Theme
 }
 
 struct NMColor {
