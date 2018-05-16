@@ -43,7 +43,7 @@ extension NoteMapScrollView {
     
     func scrollTo(point: CGPoint) {
         setContentOffset(point, animated: true)
-        saveCoords()
+        Singleton.standard().saveCoords()
     }
     
     func scrollToCenter() {
@@ -51,18 +51,16 @@ extension NoteMapScrollView {
     }
     
     func loadCoords() {
-        current_x = UserDefaults.standard.integer(forKey: "currentx")
-        current_y = UserDefaults.standard.integer(forKey: "currenty")
-        current_z = UserDefaults.standard.double(forKey: "currentz")
-        if current_z != 0 && current_y >= 0 && current_x >= 0 {
-            let viewingPoint = CGPoint(x: current_x, y: current_y)
-            zoomScale = CGFloat(current_z)
-            contentOffset = viewingPoint
-            print("[Loaded Coords] zoomScale: \(zoomScale), contentOffset: \(contentOffset), viewingPoint: \(viewingPoint)")
+        Singleton.standard().loadCoords()
+        if Singleton.standard().isCoordsLoaded() {
+            print("[Loaded Coords] zoomScale: \(zoomScale), contentOffset: \(contentOffset), viewingPoint: \(Singleton.standard().viewingPoint())")
+            zoomScale = Singleton.standard().currentZ
+            contentOffset = Singleton.standard().viewingPoint()
         } else {
             scrollToCenter()
             print("Scrolling to Center")
         }
+        Singleton.standard().isLoaded = true
     }
 }
 
@@ -72,26 +70,21 @@ extension NoteMapScrollView: UIScrollViewDelegate {
 	}
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        current_x = Int(scrollView.contentOffset.x)
-        current_y = Int(scrollView.contentOffset.y)
+        if Singleton.standard().isLoaded {
+            Singleton.standard().updateCoords(scrollView.contentOffset)
+        }
     }
     
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        current_z = Double(scrollView.zoomScale)
-		saveCoords()
+        Singleton.standard().currentZ = scrollView.zoomScale
+		Singleton.standard().saveCoords()
     }
 }
 
 extension NoteMapScrollView {
-	func saveCoords() {
-		UserDefaults.standard.set(current_x, forKey: "currentx")
-		UserDefaults.standard.set(current_y, forKey: "currenty")
-		UserDefaults.standard.set(current_z, forKey: "currentz")
-	}
-	
 	func bindSave() {
-		SaveDataObservable.subscribe(onNext: {
-			self.saveCoords()
+        SaveDataObservable.subscribe({_ in 
+			Singleton.standard().saveCoords()
 		})
 	}
 }
