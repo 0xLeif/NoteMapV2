@@ -22,7 +22,7 @@
 		92906FBF1EFE0AC200B31025 /* NoteMapScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */; };
 		92906FC11EFE0B3200B31025 /* UIScreen+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */; };
 		92906FC31EFE0CF700B31025 /* NoteMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FC21EFE0CF700B31025 /* NoteMap.swift */; };
-		92906FC51EFE146000B31025 /* ViewController+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FC41EFE146000B31025 /* ViewController+NM.swift */; };
+		92906FC51EFE146000B31025 /* UIViewController+NM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92906FC41EFE146000B31025 /* UIViewController+NM.swift */; };
 		929129C31EFDC5F400F76383 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929129C21EFDC5F400F76383 /* AppDelegate.swift */; };
 		929129C51EFDC5F400F76383 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929129C41EFDC5F400F76383 /* ViewController.swift */; };
 		929129C81EFDC5F400F76383 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 929129C61EFDC5F400F76383 /* Main.storyboard */; };
@@ -65,7 +65,7 @@
 		92906FBE1EFE0AC200B31025 /* NoteMapScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteMapScrollView.swift; sourceTree = "<group>"; };
 		92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+NM.swift"; sourceTree = "<group>"; };
 		92906FC21EFE0CF700B31025 /* NoteMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteMap.swift; sourceTree = "<group>"; };
-		92906FC41EFE146000B31025 /* ViewController+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+NM.swift"; sourceTree = "<group>"; };
+		92906FC41EFE146000B31025 /* UIViewController+NM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+NM.swift"; sourceTree = "<group>"; };
 		929129BF1EFDC5F400F76383 /* NoteMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoteMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		929129C21EFDC5F400F76383 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		929129C41EFDC5F400F76383 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -143,7 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				926F96421FA94FF000A4A98D /* CGPoint+NM.swift */,
-				92906FC41EFE146000B31025 /* ViewController+NM.swift */,
+				92906FC41EFE146000B31025 /* UIViewController+NM.swift */,
 				92906FC01EFE0B3200B31025 /* UIScreen+NM.swift */,
 				92B945D91FB11450004AE9A8 /* UIColor+NM.swift */,
 			);
@@ -437,7 +437,7 @@
 				295A47E020AA5C9E00DFDE36 /* NoteMapModel.swift in Sources */,
 				92906FC31EFE0CF700B31025 /* NoteMap.swift in Sources */,
 				295A47D620AA51D200DFDE36 /* Singleton.m in Sources */,
-				92906FC51EFE146000B31025 /* ViewController+NM.swift in Sources */,
+				92906FC51EFE146000B31025 /* UIViewController+NM.swift in Sources */,
 				92906FC11EFE0B3200B31025 /* UIScreen+NM.swift in Sources */,
 				295A47E220AA5D2700DFDE36 /* Protocol.swift in Sources */,
 				295A47DA20AA583800DFDE36 /* Singleton.swift in Sources */,

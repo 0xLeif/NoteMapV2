@@ -18,14 +18,16 @@ struct NMDefaults: Codable {
 //MARK: RX
 var SaveDataObservable = PublishSubject<Void>()
 var LoadDataObservable = PublishSubject<String>()
+
 var selectedTheme: Variable<Theme> = Variable(.light)
-var selectedColor: Variable<Color> = Variable(.red)
-var colorData: [Color: UIColor] {
+var themeData: [Color: UIColor] {
     return selectedTheme.value == .dark ? Singleton.darkTheme : Singleton.lightTheme
 }
 var backgroundColorData: UIColor {
     return selectedTheme.value == .dark ? Singleton.darkBackGround : Singleton.lightBackGround
 }
+
+var selectedColor: Variable<Color> = Variable(.red)
 var selectedUIColor: UIColor {
-    return colorData[selectedColor.value]!
+    return themeData[selectedColor.value]!
 }

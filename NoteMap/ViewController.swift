@@ -11,13 +11,16 @@ import UIKit
 
 class ViewController: UIViewController {
 	@IBOutlet weak var noteMapScrollView: NoteMapScrollView!
+    
 	@IBOutlet weak var themeToggle: UIBarButtonItem!
 	var colorPicker: NMColorField!
 	let colorPickerView: UIPickerView = UIPickerView()
 	
     @IBOutlet var toolbarView: UIView!
+    
     var disposeBag = DisposeBag()
 
+    //TODO: break apart
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		hideKeyboardWithBackgroundTap()
@@ -51,7 +54,6 @@ class ViewController: UIViewController {
 }
 
 extension ViewController {
-    
     fileprivate func updateTheme() {
         noteMapScrollView.updateTheme()
         updateThemeToggle()
@@ -81,6 +83,7 @@ extension ViewController {
         theme.thumbTintColor = selectedUIColor
     }
     
+    //TODO: move this to its own file
     fileprivate func createColorPicker() {
         func createInputView() -> UIPickerView {
             colorPickerView.delegate = self
@@ -124,14 +127,13 @@ extension ViewController: UIPickerViewDataSource{
 		return 1
 	}
 	
-	
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return colorData.count
+		return themeData.count
 	}
 	
 	func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
 		let pickerLabel = UILabel()
-		pickerLabel.backgroundColor = colorData[Color(rawValue: row)!]
+		pickerLabel.backgroundColor = themeData[Color(rawValue: row)!]
 		return pickerLabel
 	}
 }

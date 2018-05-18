@@ -8,18 +8,22 @@
 
 import Foundation
 
+///Returns JSON of object's current state
 protocol SnapshotProtocol {
     func generateSnapshot() -> Any
 }
 
+///Log object's analytic data
 protocol LogAnalytic {
     func logAnalytic()
 }
 
+///Updates object's theme
 protocol Themeable {
     func updateTheme()
 }
 
+///Deletes an object
 protocol Deletable {
     func delete()
 }

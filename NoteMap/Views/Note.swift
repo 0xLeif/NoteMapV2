@@ -12,6 +12,8 @@ import RxSwift
 
 class Note: UITextView {
 	fileprivate let noteSize = CGSize(width: 500, height: 500)
+    
+    //TODO: see cluster.swift
     private var userPanGestureRecognizer: UIPanGestureRecognizer {
         let pgr = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
         pgr.maximumNumberOfTouches = 1
@@ -43,13 +45,14 @@ class Note: UITextView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //TODO: smallify this shit
 	private func NMinit(atCenter point: CGPoint) {
         logAnalytic()
 		adjustsFontForContentSizeCategory = true
 		font = UIFont.systemFont(ofSize: 100)
 		center = point
 		delegate = self
-		backgroundColor = colorData[color]
+		backgroundColor = themeData[color]
 		layer.borderColor = UIColor.black.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
@@ -87,6 +90,7 @@ class Note: UITextView {
 }
 
 extension Note {
+    //TODO: rework incoming
     private func resizeText() {
         let textViewSize = frame.size
         let fixedWidth = textViewSize.width-100
@@ -111,8 +115,9 @@ extension Note {
     func setUpLocalColorPicker() -> UIView{
         let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
         var count = 0
-        for (_, uicolor) in colorData {
-            let width  = Int(UIScreen.width) / colorData.count
+        for (_, uicolor) in themeData {
+            let width  = Int(UIScreen.width) / themeData.count
+            //TODO: extract to create button function
             let button: UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
             button.backgroundColor = uicolor
             button.layer.borderColor = UIColor.white.cgColor
@@ -134,7 +139,7 @@ extension Note: LogAnalytic {
 
 extension Note: Themeable {
 	func updateTheme() {
-		backgroundColor = colorData[color]
+		backgroundColor = themeData[color]
 		inputAccessoryView = setUpLocalColorPicker()
 		if isFirstResponder {
 			resignFirstResponder()
@@ -157,9 +162,8 @@ extension Note: SnapshotProtocol {
 
 extension Note: UITextViewDelegate {
     //max characters: 384
+    //TODO: this is fucked
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-		
-        
         let textViewSize = textView.frame.size
         let fixedWidth = textViewSize.width-100
         let expectSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat(1000)))

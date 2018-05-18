@@ -10,8 +10,9 @@ import UIKit
 import RxSwift
 
 class Cluster: UIView {
-
     private let checkingPadding: CGFloat = 500
+    
+    //TODO: talk about pulling out lines 16-32 in here and Note.swift
     private var panGestureRecognizer: UIPanGestureRecognizer {
         let pgr = UIPanGestureRecognizer(target: self, action: #selector(userDidPan))
         pgr.maximumNumberOfTouches = 1
@@ -63,7 +64,7 @@ class Cluster: UIView {
         notes.forEach{ add(note: $0) }
         NMinit()
     }
-	
+    
 	private func NMinit() {
         center = centerPoint
 		layer.zPosition = 5
@@ -133,6 +134,9 @@ extension Cluster {
         let checkingDistance = (sizeForNotes / 2) + (notes.value.count == 1 ? checkingPadding : 0)
         return note.center.distanceFrom(point: centerPoint) < min(checkingDistance, maxRadius) && note.backgroundColor == backgroundColor?.withAlphaComponent(1)
     }
+    
+    //TODO:
+    //func checkTitlePosition()
     
     func canConsume(cluster: Cluster) -> Bool {
         return center.distanceFrom(point: cluster.center) <= (sizeForNotes / 2)

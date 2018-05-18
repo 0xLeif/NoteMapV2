@@ -10,4 +10,5 @@ import Foundation
 
 struct ClusterModel: Codable {
     var notes: [NoteModel]
+    //TODO: add title: string
 }

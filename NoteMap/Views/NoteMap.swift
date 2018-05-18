@@ -14,9 +14,9 @@ class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
     private var doubleTapGestureRecognizer: UITapGestureRecognizer {
-        let tgr = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
-        tgr.numberOfTapsRequired = 2
-        return tgr
+        let tapGestureRegonizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
+        tapGestureRegonizer.numberOfTapsRequired = 2
+        return tapGestureRegonizer
     }
 
     init() {
@@ -73,7 +73,6 @@ extension NoteMap {
     
     func clusterArraySubscriber() -> Disposable {
         return clusters.asObservable().subscribe(onNext: { cluster in
-
                 var arrayOfNoteRemoval = [Observable<Note>]()
                 self.clusters.value.forEach { (arrayOfNoteRemoval.append($0.removedNoteObservable)) }
                 self.removedNoteMerge(forArray: arrayOfNoteRemoval).disposed(by: self.disposeBag)
@@ -86,8 +85,9 @@ extension NoteMap {
     
     func bindSave() -> Disposable {
         return SaveDataObservable.subscribe(onNext: {
-            let toBeSavedModel = self.generateSnapshot()
-            let b = toBeSavedModel as! NoteMapModel
+            let modelToBeSaved = self.generateSnapshot()
+            //SEE: clean code
+            let b = modelToBeSaved as! NoteMapModel
             let encode = try? JSONEncoder().encode(b)
             let a = String(data: encode!, encoding: String.Encoding.utf8)
             print("Saved data : \(a!)")
@@ -99,7 +99,7 @@ extension NoteMap {
         return LoadDataObservable.subscribe(onNext: { jsonString in
             if let jsonData = jsonString.data(using: .utf8),
                 let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData) as NoteMapModel {
-                print("Got notemapmodel : \((model))")
+                print("Got NoteMapModel : \((model))")
                 self.loadFromModel(model: model)
             }
         })
@@ -135,7 +135,6 @@ extension NoteMap {
     }
     
     func addCluster(forNote note: Note) {
-        
         let noClusterInRange = clusters.value.map{ $0.check(note: note) }.filter{ $0 }.isEmpty
         
         if noClusterInRange {
@@ -200,7 +199,6 @@ extension NoteMap {
 }
 
 extension NoteMap: Themeable {
-	
 	func updateTheme() {
 		clusters.value.forEach{ $0.updateTheme() }
 		backgroundColor = backgroundColorData
