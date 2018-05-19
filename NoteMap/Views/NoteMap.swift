@@ -86,12 +86,10 @@ extension NoteMap {
     func bindSave() -> Disposable {
         return SaveDataObservable.subscribe(onNext: {
             let modelToBeSaved = self.generateSnapshot()
-            //SEE: clean code
-            let b = modelToBeSaved as! NoteMapModel
-            let encode = try? JSONEncoder().encode(b)
-            let a = String(data: encode!, encoding: String.Encoding.utf8)
-            print("Saved data : \(a!)")
-            UserDefaults.standard.set(a!, forKey: "nm")
+            let notemapModel = modelToBeSaved as! NoteMapModel
+            let encode = try? JSONEncoder().encode(notemapModel)
+            let notemapModelString = String(data: encode!, encoding: String.Encoding.utf8)
+            UserDefaults.standard.set(notemapModelString!, forKey: "nm")
         })
     }
     
@@ -99,7 +97,6 @@ extension NoteMap {
         return LoadDataObservable.subscribe(onNext: { jsonString in
             if let jsonData = jsonString.data(using: .utf8),
                 let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData) as NoteMapModel {
-                print("Got NoteMapModel : \((model))")
                 self.loadFromModel(model: model)
             }
         })
