@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FABBAB620B122E80054B729 /* Collab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FABBAB520B122E80054B729 /* Collab.swift */; };
 		295A47D120AA2BF800DFDE36 /* Pods_NoteMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 295A47D020AA2BF800DFDE36 /* Pods_NoteMap.framework */; };
 		295A47D620AA51D200DFDE36 /* Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 295A47D520AA51D200DFDE36 /* Singleton.m */; };
 		295A47DA20AA583800DFDE36 /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A47D920AA583800DFDE36 /* Singleton.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0FABBAB520B122E80054B729 /* Collab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collab.swift; sourceTree = "<group>"; };
 		295A47D020AA2BF800DFDE36 /* Pods_NoteMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_NoteMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		295A47D420AA51D200DFDE36 /* NoteMap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NoteMap-Bridging-Header.h"; sourceTree = "<group>"; };
 		295A47D520AA51D200DFDE36 /* Singleton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Singleton.m; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				295A47E520AA5E8300DFDE36 /* Global.swift */,
 				295A47E120AA5D2700DFDE36 /* Protocol.swift */,
 				295A47E320AA5DA800DFDE36 /* Enum.swift */,
+				0FABBAB520B122E80054B729 /* Collab.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -408,6 +412,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -430,6 +435,7 @@
 				92B5A8341FFF3BD100EC27C5 /* NMColorField.swift in Sources */,
 				92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */,
 				295A47E620AA5E8300DFDE36 /* Global.swift in Sources */,
+				0FABBAB620B122E80054B729 /* Collab.swift in Sources */,
 				929129C31EFDC5F400F76383 /* AppDelegate.swift in Sources */,
 				295A47DE20AA5C7B00DFDE36 /* ClusterModel.swift in Sources */,
 				929129E31EFDC61700F76383 /* Note.swift in Sources */,
