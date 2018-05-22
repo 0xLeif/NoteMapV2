@@ -17,9 +17,9 @@ class NoteMap: UIView {
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
     private var doubleTapGestureRecognizer: UITapGestureRecognizer {
-        let tapGestureRegonizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
-        tapGestureRegonizer.numberOfTapsRequired = 2
-        return tapGestureRegonizer
+        let tgr = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
+        tgr.numberOfTapsRequired = 2
+        return tgr
     }
 
     init() {
@@ -77,6 +77,7 @@ extension NoteMap {
     
     func clusterArraySubscriber() -> Disposable {
         return clusters.asObservable().subscribe(onNext: { cluster in
+
                 var arrayOfNoteRemoval = [Observable<Note>]()
                 self.clusters.value.forEach { (arrayOfNoteRemoval.append($0.removedNoteObservable)) }
                 self.removedNoteMerge(forArray: arrayOfNoteRemoval).disposed(by: self.disposeBag)
@@ -88,19 +89,21 @@ extension NoteMap {
     }
     
     func bindSave() -> Disposable {
-        return SaveDataObservable.subscribe(onNext: {
-            let modelToBeSaved = self.generateSnapshot()
-            let notemapModel = modelToBeSaved as! NoteMapModel
-            let encode = try? JSONEncoder().encode(notemapModel)
-            let notemapModelString = String(data: encode!, encoding: String.Encoding.utf8)
-            UserDefaults.standard.set(notemapModelString!, forKey: "nm")
+        return Singleton.global.SaveDataObservable.subscribe(onNext: {
+            let toBeSavedModel = self.generateSnapshot()
+            let b = toBeSavedModel as! NoteMapModel
+            let encode = try? JSONEncoder().encode(b)
+            let a = String(data: encode!, encoding: String.Encoding.utf8)
+            print("Saved data : \(a!)")
+            UserDefaults.standard.set(a!, forKey: "nm")
         })
     }
     
     func bindLoad() -> Disposable {
-        return LoadDataObservable.subscribe(onNext: { jsonString in
+        return Singleton.global.LoadDataObservable.subscribe(onNext: { jsonString in
             if let jsonData = jsonString.data(using: .utf8),
                 let model = try? JSONDecoder().decode(NoteMapModel.self, from: jsonData) as NoteMapModel {
+                print("Got notemapmodel : \((model))")
                 self.loadFromModel(model: model)
             }
         })
@@ -114,8 +117,8 @@ extension NoteMap {
             addSubview(cluster)
             notes.forEach{ addSubview($0) }
         }
-        selectedColor.value = model.settings.selectedColor
-        selectedTheme.value = model.settings.selectedTheme
+        Singleton.global.selectedColor.value = model.settings.selectedColor
+        Singleton.global.selectedTheme.value = model.settings.selectedTheme
         
     }
     
@@ -136,6 +139,7 @@ extension NoteMap {
     }
     
     func addCluster(forNote note: Note) {
+        
         let noClusterInRange = clusters.value.map{ $0.check(note: note) }.filter{ $0 }.isEmpty
         
         if noClusterInRange {
@@ -156,7 +160,7 @@ extension NoteMap {
     
     //MARK: Private helpers
     fileprivate func addNote(atCenter point: CGPoint, withText text: String = "") -> Note {
-        return add(note: Note(atCenter: point, withColor: selectedColor.value, withText: text))
+        return add(note: Note(atCenter: point, withColor: Singleton.global.selectedColor.value, withText: text))
     }
     
     fileprivate func add(note: Note) -> Note {
@@ -200,9 +204,10 @@ extension NoteMap {
 }
 
 extension NoteMap: Themeable {
+	
 	func updateTheme() {
 		clusters.value.forEach{ $0.updateTheme() }
-		backgroundColor = backgroundColorData
+		backgroundColor = Singleton.global.backgroundColorData
 	}
 }
 
@@ -210,7 +215,7 @@ extension NoteMap: SnapshotProtocol {
 	func generateSnapshot() -> Any {
 		var clusterModels: [ClusterModel] = []
 		self.clusters.value.forEach { clusterModels.append($0.generateSnapshot() as! ClusterModel) }
-        let settings =  NMDefaults(selectedColor: selectedColor.value, selectedTheme: selectedTheme.value)
+        let settings =  NMDefaults(selectedColor: Singleton.global.selectedColor.value, selectedTheme: Singleton.global.selectedTheme.value)
 		let model = NoteMapModel(clusters: clusterModels, settings: settings)
 		return model
 	}

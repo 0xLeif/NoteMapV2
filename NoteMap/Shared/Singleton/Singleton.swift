@@ -8,6 +8,27 @@
 
 import Foundation
 import Firebase
+import RxSwift
+
+@objc class GlobalRx: NSObject {
+    var SaveDataObservable = PublishSubject<Void>()
+    var LoadDataObservable = PublishSubject<String>()
+    var selectedTheme: Variable<Theme> = Variable(.light)
+    var selectedColor: Variable<Color> = Variable(.red)
+    
+    var colorData: [Color : UIColor] {
+        return selectedTheme.value == .dark ? Singleton.darkTheme : Singleton.lightTheme
+    }
+    
+    var backgroundColorData: UIColor {
+        return selectedTheme.value == .dark ? Singleton.darkBackGround : Singleton.lightBackGround
+    }
+    
+    var selectedUIColor: UIColor {
+        return colorData[selectedColor.value]!
+    }
+    
+}
 
 public extension Singleton {
     internal static let darkTheme: [Color: UIColor] = [.red: .rgba(231, 76, 60,1.0),
@@ -30,4 +51,5 @@ public extension Singleton {
             "Type": type.rawValue as NSObject
             ])
     }
+    internal static let global: GlobalRx = GlobalRx()
 }
