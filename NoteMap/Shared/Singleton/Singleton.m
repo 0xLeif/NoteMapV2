@@ -10,6 +10,11 @@
 #import "Singleton.h"
 #import "NoteMap-Swift.h"
 
+@interface Singleton()
+
+@property (nonatomic) Color test;
+@end
+
 @implementation Singleton
 
 + (Singleton *)standard {
