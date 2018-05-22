@@ -11,6 +11,9 @@ import RxCocoa
 import RxSwift
 
 class NoteMap: UIView {
+    
+    let col: Collab!
+    
     fileprivate var clusters: Variable<[Cluster]> = Variable([])
     fileprivate var disposeBag = DisposeBag()
     private var doubleTapGestureRecognizer: UITapGestureRecognizer {
@@ -20,6 +23,7 @@ class NoteMap: UIView {
     }
 
     init() {
+        col = Collab()
 		super.init(frame: CGRect(origin: .zero, size: Singleton.standard().noteMapSize()))
 		NMinit()
 		if !UserDefaults.standard.bool(forKey: "tutorialNotesViewed") {

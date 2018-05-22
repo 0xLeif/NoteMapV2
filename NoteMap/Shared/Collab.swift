@@ -15,5 +15,7 @@ class Collab {
     
     init() {
         ref = Database.database().reference()
+        
+        ref.child("NoteMap").setValue("Initial Value")
     }
 }

@@ -24,6 +24,13 @@ class Cluster: UIView {
         tgr.numberOfTapsRequired = 3
         return tgr
     }
+    
+    private var collabGesture: UITapGestureRecognizer {
+        let tgr = UITapGestureRecognizer(target: self, action: #selector(collabAction))
+        tgr.numberOfTouchesRequired = 2
+        tgr.numberOfTapsRequired = 1
+        return tgr
+    }
 
     fileprivate var notes: Variable<Set<Note>> = Variable(Set<Note>())
     fileprivate var disposeBag = DisposeBag()
@@ -72,10 +79,15 @@ class Cluster: UIView {
 		notesArraySubscriber().disposed(by: disposeBag)
         addGestureRecognizer(panGestureRecognizer)
         addGestureRecognizer(deleteTapRecognizer)
+        addGestureRecognizer(collabGesture)
 	}
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func collabAction() {
+        print("Initiate collab for cluster")
     }
 	
 	@objc func deleteSelf() {
