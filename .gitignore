@@ -2,3 +2,5 @@
 NoteMap.xcodeproj/xcuserdata
 NoteMap.xcworkspace/xcuserdata
 Pods
+Podfile.lock
+.DS_Store
