@@ -103,7 +103,7 @@ extension ViewController {
             colorPicker.tintColor = .clear
             colorPicker.layer.cornerRadius = 5
             colorPicker.inputView = inputView
-            colorPicker.inputAccessoryView = toolbarView
+            colorPicker.inputAccessoryView = createToolbar()
             colorPicker.backgroundColor = Singleton.global.selectedUIColor
         }
         
