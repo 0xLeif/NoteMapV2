@@ -1,7 +1,4 @@
 
-\.idea/
 NoteMap.xcodeproj/xcuserdata
 NoteMap.xcworkspace/xcuserdata
-Pods/Pods.xcodeproj/xcuserdata
-
-\.DS_Store
+Pods
