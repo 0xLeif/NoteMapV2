@@ -27,14 +27,14 @@ class ViewController: UIViewController {
 		guard let theme = themeToggle.customView as? UISwitch else {
 			return
 		}
-		theme.thumbTintColor = selectedUIColor
+		theme.thumbTintColor = Singleton.global.selectedUIColor
 		theme.addTarget(self, action: #selector(toggleTheme), for: .allTouchEvents)
 		createColorPicker()
 		updateTheme()
 		bindObservables()
 		if let model = UserDefaults.standard.string(forKey: "nm") {
             //Replacing to ints
-            LoadDataObservable.onNext(model.replacingOccurrences(of: "\"light\"", with: "0").replacingOccurrences(of: "\"dark\"", with: "1"))
+            Singleton.global.LoadDataObservable.onNext(model.replacingOccurrences(of: "\"light\"", with: "0").replacingOccurrences(of: "\"dark\"", with: "1"))
 		}
 	}
 	
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
 		guard let toggle = themeToggle.customView as? UISwitch else {
 			return
 		}
-		selectedTheme.value = toggle.isOn ? .dark : .light
+		Singleton.global.selectedTheme.value = toggle.isOn ? .dark : .light
 	}
 	
 	@objc func donePressed() {
@@ -56,20 +56,20 @@ extension ViewController {
         noteMapScrollView.updateTheme()
         updateThemeToggle()
         colorPickerView.reloadAllComponents()
-        colorPicker.backgroundColor = selectedUIColor
+        colorPicker.backgroundColor = Singleton.global.selectedUIColor
         colorPickerView.backgroundColor = noteMapScrollView.noteMapBackgroundColor
     }
     
     fileprivate func bindObservables() {
-        selectedTheme.asObservable().subscribe(onNext: { (theme) in
+        Singleton.global.selectedTheme.asObservable().subscribe(onNext: { (theme) in
             guard let toggle = self.themeToggle.customView as? UISwitch else {
                 return
             }
-            toggle.isOn = selectedTheme.value == .dark
+            toggle.isOn = Singleton.global.selectedTheme.value == .dark
             self.updateTheme()
         }).disposed(by: disposeBag)
-        selectedColor.asObservable().subscribe(onNext: { (color) in
-            self.colorPicker.backgroundColor = selectedUIColor
+        Singleton.global.selectedColor.asObservable().subscribe(onNext: { (color) in
+            self.colorPicker.backgroundColor = Singleton.global.selectedUIColor
             self.updateThemeToggle()
         }).disposed(by: disposeBag)
     }
@@ -78,7 +78,7 @@ extension ViewController {
         guard let theme = themeToggle.customView as? UISwitch else {
             return
         }
-        theme.thumbTintColor = selectedUIColor
+        theme.thumbTintColor = Singleton.global.selectedUIColor
     }
     
     fileprivate func createColorPicker() {
@@ -104,7 +104,7 @@ extension ViewController {
             colorPicker.layer.cornerRadius = 5
             colorPicker.inputView = inputView
             colorPicker.inputAccessoryView = toolbarView
-            colorPicker.backgroundColor = selectedUIColor
+            colorPicker.backgroundColor = Singleton.global.selectedUIColor
         }
         
         let inputView = createInputView()
@@ -116,7 +116,7 @@ extension ViewController {
 
 extension ViewController: UIPickerViewDelegate {
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		selectedColor.value = Color(rawValue: row)!
+		Singleton.global.selectedColor.value = Color(rawValue: row)!
 	}
 }
 extension ViewController: UIPickerViewDataSource{
@@ -126,12 +126,12 @@ extension ViewController: UIPickerViewDataSource{
 	
 	
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return colorData.count
+		return Singleton.global.colorData.count
 	}
 	
 	func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
 		let pickerLabel = UILabel()
-		pickerLabel.backgroundColor = colorData[Color(rawValue: row)!]
+		pickerLabel.backgroundColor = Singleton.global.colorData[Color(rawValue: row)!]
 		return pickerLabel
 	}
 }

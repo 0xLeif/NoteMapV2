@@ -49,7 +49,7 @@ class Note: UITextView {
 		font = UIFont.systemFont(ofSize: 100)
 		center = point
 		delegate = self
-		backgroundColor = colorData[color]
+		backgroundColor = Singleton.global.colorData[color]
 		layer.borderColor = UIColor.black.cgColor
 		layer.cornerRadius = 15
 		layer.zPosition = 10
@@ -111,8 +111,8 @@ extension Note {
     func setUpLocalColorPicker() -> UIView{
         let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.width, height: 48))
         var count = 0
-        for (_, uicolor) in colorData {
-            let width  = Int(UIScreen.width) / colorData.count
+        for (_, uicolor) in Singleton.global.colorData {
+            let width  = Int(UIScreen.width) / Singleton.global.colorData.count
             let button: UIButton = UIButton(frame: CGRect(x: count * width, y: 0, width: width, height: 48))
             button.backgroundColor = uicolor
             button.layer.borderColor = UIColor.white.cgColor
@@ -134,7 +134,7 @@ extension Note: LogAnalytic {
 
 extension Note: Themeable {
 	func updateTheme() {
-		backgroundColor = colorData[color]
+		backgroundColor = Singleton.global.colorData[color]
 		inputAccessoryView = setUpLocalColorPicker()
 		if isFirstResponder {
 			resignFirstResponder()

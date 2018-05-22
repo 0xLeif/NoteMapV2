@@ -83,7 +83,7 @@ extension NoteMapScrollView: UIScrollViewDelegate {
 
 extension NoteMapScrollView {
 	func bindSave() -> Disposable {
-        return SaveDataObservable.subscribe({_ in
+        return Singleton.global.SaveDataObservable.subscribe({_ in
 			Singleton.standard().saveCoords()
 		})
 	}
