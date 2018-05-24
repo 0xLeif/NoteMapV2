@@ -32,14 +32,19 @@ class Cluster: UIView {
         return tgr
     }
 
-    fileprivate var notes: Variable<Set<Note>> = Variable(Set<Note>())
+    var notes: Variable<Set<Note>> = Variable(Set<Note>())
     fileprivate var disposeBag = DisposeBag()
 
     var removedNoteObservable = PublishSubject<Note>()
     var checkNotemapConsume = PublishSubject<Cluster>()
+    var notePanObservable = PublishSubject<Note>()
+    
+    // Also Hard coded for now
+    var id: Int = 1
 
 	private var newPoint: CGPoint = .zero
 	private var inBounds: Bool = true
+    private var collab = Collab()
 	
 	var maxRadius: CGFloat {
 		return CGFloat(notes.value.count) * checkingPadding
@@ -48,6 +53,7 @@ class Cluster: UIView {
 		let currentCenter = centerPoint
 		return (notes.value.map{ ($0.center.distanceFrom(point: currentCenter)) + checkingPadding}.sorted(by: >).first ?? 0) * 2
 	}
+    
     var centerPoint: CGPoint {
         let centerPoints = notes.value.map{ $0.center }
         let numberOfPoints: CGFloat = CGFloat(centerPoints.count)
@@ -87,7 +93,7 @@ class Cluster: UIView {
     }
     
     @objc func collabAction() {
-        print("Initiate collab for cluster")
+        collab.bindCluster(cluster: self)
     }
 	
 	@objc func deleteSelf() {
@@ -209,19 +215,22 @@ extension Cluster: SnapshotProtocol {
 }
 
 extension Cluster {
-    func notePanMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
+    private func notePanMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
         return Observable.merge(observableArray).subscribe(onNext: { note in
             self.noteDidPan(forNote: note)
+            self.notePanObservable.onNext(note)
         })
     }
     
-    func noteDeleteMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
+    private func noteDeleteMerge(forArray observableArray: [Observable<Note>]) -> Disposable {
         return Observable.merge(observableArray).subscribe(onNext: { note in
             self.deleteNote(forNote: note)
         })
     }
     
-    func notesArraySubscriber() -> Disposable {
+    //let tsNotePanObservable = PublishSubject<Note>()
+    
+    private func notesArraySubscriber() -> Disposable {
         return notes.asObservable().subscribe(onNext: { note in
 
             self.updateView()
@@ -229,6 +238,7 @@ extension Cluster {
             var arrayOfNoteObservables = [Observable<Note>]()
             self.notes.value.forEach{ (arrayOfNoteObservables.append($0.noteDidPanObservable)) }
             self.notePanMerge(forArray: arrayOfNoteObservables).disposed(by: self.disposeBag)
+
 
             var arrayOfDeleteNote = [Observable<Note>]()
             self.notes.value.forEach{ (arrayOfDeleteNote.append($0.deleteNoteObservable)) }

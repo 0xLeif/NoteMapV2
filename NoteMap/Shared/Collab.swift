@@ -1,4 +1,4 @@
-//
+
 //  Collab.swift
 //  NoteMap
 //
@@ -8,14 +8,27 @@
 
 import Foundation
 import FirebaseDatabase
+import RxSwift
 
 class Collab {
     
-    var ref: DatabaseReference
+    private var ref: DatabaseReference = Database.database().reference()
+    private var disposeBag = DisposeBag()
     
-    init() {
-        ref = Database.database().reference()
-        
-        ref.child("NoteMap").setValue("Initial Value")
+    // Poor test of dbRef
+    func bindCluster(cluster: Cluster) {
+        self.ref.child("Cluster").setValue(cluster.id)
+        cluster.notePanObservable.do(onSubscribe: {
+            self.ref.child("Cluster").child("\(cluster.id)").child("Note").setValue("1")
+        }).subscribe(onNext: { note in
+            print("in collab note")
+            
+            self.ref.child("Cluster").child("\(cluster.id)").child("Note").child("1").child("Color").setValue("\(note.color)")
+            self.ref.child("Cluster").child("\(cluster.id)").child("Note").child("1").child("Center").setValue("\(note.center)")
+        }).disposed(by: disposeBag)
+    }
+    
+    func dispose() {
+        disposeBag = DisposeBag()
     }
 }

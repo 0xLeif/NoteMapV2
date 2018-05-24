@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FCF314F20B3CC530091B2CD /* Collab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCF314E20B3CC530091B2CD /* Collab.swift */; };
 		295A47D120AA2BF800DFDE36 /* Pods_NoteMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 295A47D020AA2BF800DFDE36 /* Pods_NoteMap.framework */; };
 		295A47D620AA51D200DFDE36 /* Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 295A47D520AA51D200DFDE36 /* Singleton.m */; };
 		295A47DA20AA583800DFDE36 /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295A47D920AA583800DFDE36 /* Singleton.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0FCF314E20B3CC530091B2CD /* Collab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Collab.swift; path = NoteMap/Shared/Collab.swift; sourceTree = SOURCE_ROOT; };
 		295A47D020AA2BF800DFDE36 /* Pods_NoteMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_NoteMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		295A47D420AA51D200DFDE36 /* NoteMap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NoteMap-Bridging-Header.h"; sourceTree = "<group>"; };
 		295A47D520AA51D200DFDE36 /* Singleton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Singleton.m; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				295A47E120AA5D2700DFDE36 /* Protocol.swift */,
 				295A47E320AA5DA800DFDE36 /* Enum.swift */,
 				29F1C66F20B3B52B00095260 /* Struct.swift */,
+				0FCF314E20B3CC530091B2CD /* Collab.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 				92B5A8341FFF3BD100EC27C5 /* NMColorField.swift in Sources */,
 				92BD400C1EFE1B120054DBD7 /* Cluster.swift in Sources */,
 				29F1C67020B3B52B00095260 /* Struct.swift in Sources */,
+				0FCF314F20B3CC530091B2CD /* Collab.swift in Sources */,
 				929129C31EFDC5F400F76383 /* AppDelegate.swift in Sources */,
 				295A47DE20AA5C7B00DFDE36 /* ClusterModel.swift in Sources */,
 				929129E31EFDC61700F76383 /* Note.swift in Sources */,

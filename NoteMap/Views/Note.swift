@@ -28,7 +28,11 @@ class Note: UITextView {
     var noteDidPanObservable = PublishSubject<Note>()
     var updateParentObservable = PublishSubject<Void>()
     var deleteNoteObservable = PublishSubject<Note>()
-	
+    
+    // Hard coded ID for now.
+    var id: Int = 1
+    
+    
 	var color: Color
 
 	init(atCenter point: CGPoint, withColor color: Color, withText text: String? = nil) {
