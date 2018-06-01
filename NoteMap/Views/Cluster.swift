@@ -24,7 +24,7 @@ class Cluster: UIView {
         tgr.numberOfTapsRequired = 3
         return tgr
     }
-
+    fileprivate var title: UITextField?
     fileprivate var notes: Variable<Set<Note>> = Variable(Set<Note>())
     fileprivate var disposeBag = DisposeBag()
 
@@ -58,21 +58,26 @@ class Cluster: UIView {
         NMinit()
     }
 
-    init(notes: [Note]){
+    init(notes: [Note], withTitle text: String = ""){
         super.init(frame: .zero)
         backgroundColor = notes.first?.backgroundColor?.withAlphaComponent(0.25)
         notes.forEach{ add(note: $0) }
-        NMinit()
+        NMinit(title: text)
     }
     
-	private func NMinit() {
+    private func NMinit(title: String = "") {
         center = centerPoint
 		layer.zPosition = 5
 		layer.masksToBounds = false
 		notesArraySubscriber().disposed(by: disposeBag)
         addGestureRecognizer(panGestureRecognizer)
         addGestureRecognizer(deleteTapRecognizer)
+        addSubview(createLabel(text: title, andColor: notes.value.isEmpty ? .clear : notes.value.first!.backgroundColor!))
 	}
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        return (title?.frame.contains(point))! ? title : super.hitTest(point, with: event)
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -88,6 +93,10 @@ class Cluster: UIView {
 		if inBounds {
 			center = CGPoint(x: center.x + newPoint.x * transform.a, y: center.y + newPoint.y * transform.a)
 			notes.value.forEach{ $0.center = CGPoint(x: $0.center.x + newPoint.x * transform.a, y: $0.center.y + newPoint.y * transform.a) }
+            if let title = title {
+                title.center = CGPoint(x: sizeForNotes / 2, y: -250)
+                title.frame.size = CGSize(width: sizeForNotes, height: 500)
+            }
 		} else {
 			UINotificationFeedbackGenerator().notificationOccurred(.error)
 		}
@@ -96,6 +105,19 @@ class Cluster: UIView {
 }
 
 extension Cluster {
+    func createLabel(text: String, andColor trimColor: UIColor) -> UITextField {
+        title = UITextField(frame: CGRect(x: 0, y: 0, width: sizeForNotes, height: 500))
+        title?.center = CGPoint(x: sizeForNotes / 2, y: -250)
+        title?.font = UIFont(name: (title?.font?.fontName)!, size: 256)
+        title?.textColor = trimColor
+        title?.textAlignment = .center
+        title?.layer.borderWidth = 25
+        title?.layer.borderColor = trimColor.cgColor
+        title?.layer.cornerRadius = 25
+        title?.text = text
+        return title!
+    }
+    
     func check(bounds: CGRect) {
         inBounds = notes.value.filter{ !bounds.contains(CGPoint(x: $0.center.x + newPoint.x, y: $0.center.y + newPoint.y)) }.isEmpty
     }
@@ -191,7 +213,7 @@ extension Cluster: SnapshotProtocol {
     func generateSnapshot() -> Any {
         var modelArray: [NoteModel] = []
         notes.value.forEach { modelArray.append($0.generateSnapshot() as! NoteModel) }
-        let model  = ClusterModel(notes: modelArray)
+        let model  = ClusterModel(notes: modelArray, title: title?.text ?? "")
         return model
     }
 }
